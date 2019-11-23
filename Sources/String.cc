@@ -1,29 +1,40 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <Yolo/String.h>
 
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
 namespace String
 {
-    constexpr uint64_t ConstHash(string target, uint64_t _prefer)
+    constexpr uint64_t ConstRandom(uint64_t seed = 0)
     {
-        return prefer;
+        string time = __TIME__;
+
+        uint64_t timeNumber = 0;
+        timeNumber |= (uint64_t)time[0] << (uint64_t)(7 * 8);
+        timeNumber |= (uint64_t)time[1] << (uint64_t)(6 * 8);
+        timeNumber |= (uint64_t)time[2] << (uint64_t)(5 * 8);
+        timeNumber |= (uint64_t)time[3] << (uint64_t)(4 * 8);
+        timeNumber |= (uint64_t)time[4] << (uint64_t)(3 * 8);
+        timeNumber |= (uint64_t)time[5] << (uint64_t)(2 * 8);
+        timeNumber |= (uint64_t)time[6] << (uint64_t)(1 * 8);
+        timeNumber |= (uint64_t)time[7] << (uint64_t)(0 * 8);
+
+        return seed ^ timeNumber;
     }
 
     struct StringMeta
     {
-        int  length;
-        int  memref;
-        long memtag;
-
-        int  size;
-        char data[];
+        int         size;
+        int         length;
+        int         memref;
+        uint64_t    memtag;
     };
 
     static string   emptyString = "";
-    static uint64_t memoryTag   = ConstHash("__string_memory_tag__", 0x9000000000000009);
+    static uint64_t memoryTag   = ConstHash("__string_memory_tag__", ConstRandom(0xbf6929f592082ce9ULL));
 
     static StringMeta* CreateStringMeta(void* buffer, int bufferSize)
     {
@@ -75,47 +86,54 @@ namespace String
         {
             StringMeta* meta = CreateStringMeta(length + 1);
             meta->length = length;
-            strcpy(meta->data, source);
-            return meta->data;
+            strcpy((char*)meta + sizeof(StringMeta), source);
+            return (char*)meta + sizeof(StringMeta);
         }
     }
 
     string From(void* buffer, string source)
     {
+        int length = Length(source);
         StringMeta* meta = CreateStringMeta(buffer, length + 1);
-        meta->length = Length(source);
-        strcpy(meta->data, source);
-        return meta->data;
+        meta->length = length;
+        strcpy((char*)meta + sizeof(StringMeta), source);
+        return (char*)meta + sizeof(StringMeta);
     }
 
     string From(void* buffer, int bufferSize, string source)
     {
         StringMeta* meta = CreateStringMeta(buffer, bufferSize);
         meta->length = Length(source);
-        strcpy(meta->data, source);
-        return meta->data;
+        strcpy((char*)meta + sizeof(StringMeta), source);
+        return (char*)meta + sizeof(StringMeta);
     }
 
-    void   Free(string target)
+    void Free(string target)
     {
         if (IsManaged(target))
         {
             StringMeta* meta = GetStringMeta(target);
-            if (meta->memref-- == 0)
+            if (--meta->memref == 0)
             {
                 free(meta);
             }
         }
     }
 
-    bool   IsWeakRef(string target)
+    bool HasMeta(string target)
+    {
+        StringMeta* meta = GetStringMeta(target);
+        return meta && meta->memtag == memoryTag;
+    }
+
+    bool IsWeakRef(string target)
     {
         if (target == emptyString)
         {
             return true;
         }
         
-        SringMeta* meta = GetStringMeta(target);
+        StringMeta* meta = GetStringMeta(target);
         if (meta)
         {
             return meta->memtag == memoryTag && meta->memref < 0;
@@ -124,9 +142,9 @@ namespace String
         return true;
     }
 
-    bool   IsManaged(string target)
+    bool IsManaged(string target)
     {
-        SringMeta* meta = GetStringMeta(target);
+        StringMeta* meta = GetStringMeta(target);
         if (meta)
         {
             return meta->memtag == memoryTag && meta->memref > 0;
@@ -136,7 +154,7 @@ namespace String
     }
 
     
-    int    Length(string target)
+    int Length(string target)
     {
         if (!target || target == emptyString)
         {
@@ -154,7 +172,7 @@ namespace String
         }
     }
 
-    int    Compare(string str0, string str1)
+    int Compare(string str0, string str1)
     {
         return strcmp(str0, str1);
     }
@@ -171,8 +189,8 @@ namespace String
     string FormatArgv(int bufferSize, string format, va_list argv)
     {
         StringMeta* meta = CreateStringMeta(bufferSize);
-        meta->length = (int)vsprintf(meta->data, format, argv);
-        return meta->data;
+        meta->length = (int)vsprintf((char*)meta + sizeof(StringMeta), format, argv);
+        return (char*)meta + sizeof(StringMeta);
     }
 
     string Format(void* buffer, int bufferSize, string format, ...)
@@ -184,10 +202,63 @@ namespace String
         return result;
     }
 
-    string FormatArgv(void* buffer, int bufferSize, string format, ...)
+    string FormatArgv(void* buffer, int bufferSize, string format, va_list argv)
     {
         StringMeta* meta = CreateStringMeta(buffer, bufferSize);
-        meta->length = (int)vsprintf(meta->data, format, argv);
-        return meta->data;
+        meta->length = (int)vsprintf((char*)meta + sizeof(StringMeta), format, argv);
+        return (char*)meta + sizeof(StringMeta);
+    }
+
+    uint64_t Hash(string target, uint64_t seed)
+    {
+        uint64_t h = seed;
+
+        const int length = Length(target);
+
+        const uint64_t m = 0xc6a4a7935bd1e995ULL;
+        const uint64_t r = 47;
+        const uint32_t l = length;
+        const uint32_t n = (l >> 3) << 3;
+
+        for (uint32_t i = 0; i < n; i += 8)
+        {
+            uint64_t b0 = target[i + 0];
+            uint64_t b1 = target[i + 1];
+            uint64_t b2 = target[i + 2];
+            uint64_t b3 = target[i + 3];
+            uint64_t b4 = target[i + 4];
+            uint64_t b5 = target[i + 5];
+            uint64_t b6 = target[i + 6];
+            uint64_t b7 = target[i + 7];
+#if CPU_LITTLE_ENDIAN
+            uint64_t k = (b7 << 56) | (b6 << 48) | (b5 << 40) | (b4 << 32) | (b3 << 24) | (b2 << 16) | (b1 << 8) | (b0 << 0);
+#else
+            uint64_t k = (b0 << 56) | (b1 << 48) | (b2 << 40) | (b3 << 32) | (b4 << 24) | (b5 << 16) | (b6 << 8) | (b7 << 0);
+#endif
+
+            k *= m;
+            k ^= k >> r;
+            k *= m;
+
+            h ^= k;
+            h *= m;
+        }
+
+        switch (l & 7)
+        {
+        case 7: h ^= uint64_t((target + n)[6]) << 48;            /* fall through */
+        case 6: h ^= uint64_t((target + n)[5]) << 40;            /* fall through */
+        case 5: h ^= uint64_t((target + n)[4]) << 32;            /* fall through */
+        case 4: h ^= uint64_t((target + n)[3]) << 24;            /* fall through */
+        case 3: h ^= uint64_t((target + n)[2]) << 16;            /* fall through */
+        case 2: h ^= uint64_t((target + n)[1]) <<  8;            /* fall through */
+        case 1: h ^= uint64_t((target + n)[0]) <<  0; h *= m;    /* fall through */
+        };
+
+        h ^= h >> r;
+        h *= m;
+        h ^= h >> r;
+
+        return h;
     }
 }
