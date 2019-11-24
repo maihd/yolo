@@ -1,3 +1,4 @@
+#include <Yolo/Math.h>
 #include <Yolo/Array.h>
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
@@ -15,6 +16,10 @@ int main(void)
 
     Window::Init("Yolo Window", 800, 600);
     Graphics::Init();
+
+    float3 vec3 = { 1, 2, 3 };
+    float  vals[] = { 1, 2 };
+    float2 vec2 = float2::From(vals);
 
     while (!Window::ShouldQuit())
     {

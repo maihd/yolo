@@ -173,6 +173,9 @@
     <ClInclude Include="..\Include\Yolo\Array.h" />
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
+    <ClInclude Include="..\Include\Yolo\Math.h" />
+    <ClInclude Include="..\Include\Yolo\MathOps.h" />
+    <ClInclude Include="..\Include\Yolo\MathTypes.h" />
     <ClInclude Include="..\Include\Yolo\String.h" />
     <ClInclude Include="..\Include\Yolo\Window.h" />
     <ClInclude Include="..\Sources\Runtime.h" />
