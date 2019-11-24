@@ -40,8 +40,14 @@ project "Yolo"
 do
     kind "StaticLib"
 
+    defines {
+        "GLEW_STATIC"
+    }
+
     includedirs {
         path.join(ROOT_DIR, "Include"),
+        
+        path.join(ROOT_DIR, "ThirdParty/Sources/glew-2.1.0/include"),
     }
 
     files {
@@ -56,6 +62,8 @@ do
 
         path.join(ROOT_DIR, "Sources/*.cc"),
         path.join(ROOT_DIR, "Sources/**/*.cc"),
+
+        path.join(ROOT_DIR, "ThirdParty/Sources/glew-2.1.0/src/glew.c"),
     }
 
     filter {}

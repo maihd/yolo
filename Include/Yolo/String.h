@@ -30,16 +30,18 @@ namespace String
 
     constexpr uint64_t ConstHash(string target, uint64_t seed = 0)
     {
-        uint64_t h = seed;
-
-        int length = 0;
+        uint32_t length = 0;
         while (target[length])
         {
             length++;
         }
+        if (length == 0)
+        {
+            return seed;
+        }
 
-        const uint64_t m = 0xc6a4a7935bd1e995ULL;
-        const uint64_t r = 47;
+        uint64_t h = seed;
+
         const uint32_t l = length;
         const uint32_t n = (l >> 3) << 3;
 
@@ -59,28 +61,27 @@ namespace String
             uint64_t k = (b0 << 56) | (b1 << 48) | (b2 << 40) | (b3 << 32) | (b4 << 24) | (b5 << 16) | (b6 << 8) | (b7 << 0);
 #endif
 
-            k *= m;
-            k ^= k >> r;
-            k *= m;
+            k ^= (k << 12);
+            k ^= (k >> 47);
+            k ^= (k << 25);
 
             h ^= k;
-            h *= m;
         }
 
         switch (l & 7)
         {
-        case 7: h ^= uint64_t((target + n)[6]) << 48;            /* fall through */
-        case 6: h ^= uint64_t((target + n)[5]) << 40;            /* fall through */
-        case 5: h ^= uint64_t((target + n)[4]) << 32;            /* fall through */
-        case 4: h ^= uint64_t((target + n)[3]) << 24;            /* fall through */
-        case 3: h ^= uint64_t((target + n)[2]) << 16;            /* fall through */
-        case 2: h ^= uint64_t((target + n)[1]) <<  8;            /* fall through */
-        case 1: h ^= uint64_t((target + n)[0]) <<  0; h *= m;    /* fall through */
+        case 7: h ^= uint64_t((target + n)[6]) << 48;   /* fall through */
+        case 6: h ^= uint64_t((target + n)[5]) << 40;   /* fall through */
+        case 5: h ^= uint64_t((target + n)[4]) << 32;   /* fall through */
+        case 4: h ^= uint64_t((target + n)[3]) << 24;   /* fall through */
+        case 3: h ^= uint64_t((target + n)[2]) << 16;   /* fall through */
+        case 2: h ^= uint64_t((target + n)[1]) <<  8;   /* fall through */
+        case 1: h ^= uint64_t((target + n)[0]) <<  0;   /* fall through */
         };
 
-        h ^= h >> r;
-        h *= m;
-        h ^= h >> r;
+        h ^= (h << 12);
+        h ^= (h >> 47);
+        h ^= (h << 25);
 
         return h;
     }
