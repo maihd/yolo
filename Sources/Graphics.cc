@@ -263,7 +263,7 @@ namespace Graphics
             "void main() {"
             "fragUV = uv;"
             "fragColor = color;"
-            "gl_Position = vec4(pos, 1);"
+            "gl_Position = projection * model * vec4(pos, 1);"
             "}";
 
         string fshaderSource =
@@ -302,9 +302,9 @@ namespace Graphics
         DrawBuffer drawBuffer = DrawBuffer::New();
 
         Vertex vertices[] = {
-            { { -1, -1, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
-            { { 0, 1, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
-            { { 1, -1, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
+            { { 0, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
+            { { 50, 50, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
+            { { 100, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
         };
         DrawBuffer::AddTriangle(drawBuffer, vertices, 3);
 
@@ -336,8 +336,8 @@ namespace Graphics
         mat4 model = mat4::Translation(0, 0);
 
         glUseProgram(program);
-        //glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, false, (float*)&projection);
-        //glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, (float*)&model);
+        glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, false, (float*)&projection);
+        glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, (float*)&model);
 
         glBindVertexArray(vertexArray);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
