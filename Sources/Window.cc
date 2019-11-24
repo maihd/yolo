@@ -96,7 +96,7 @@ namespace Window
         {
         case WM_DESTROY:
             PostQuitMessage(0);
-            break;
+            return 0;
 
         //case WM_QUIT:
         //    Runtime::shouldQuit = true;

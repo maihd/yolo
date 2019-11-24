@@ -48,11 +48,17 @@
     <ClInclude Include="..\Include\Yolo\Window.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\DrawBuffer.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\Runtime.h">
       <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\DrawBuffer.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\Graphics.cc">
       <Filter>Sources</Filter>
     </ClCompile>

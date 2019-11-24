@@ -1,12 +1,29 @@
 #include <Yolo/Graphics.h>
 
+#include <Yolo/Math.h>
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
 
 #include "./Runtime.h"
+#include "./DrawBuffer.h"
 
 namespace Graphics
 {
+    HGLRC glContext;
+    
+    mat4 projection;
+
+    GLuint vshader;
+    GLuint fshader;
+    GLuint program;
+
+    GLuint vertexBuffer;
+    GLuint indexBuffer;
+    GLuint vertexArray;
+
+    void ApplyDefaultSettings(void);
+    void CreateDefaultObjects(void);
+
     bool PrepareContext(void)
     {
         string className = "DUMMY_WINDOW";
@@ -83,8 +100,6 @@ namespace Graphics
         DestroyWindow(dummyWindow);
         return true;
     }
-
-    HGLRC glContext;
    
     bool Init(void)
     {
@@ -161,8 +176,8 @@ namespace Graphics
         int contextAttribs[16] =
         {
             WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-            WGL_CONTEXT_MAJOR_VERSION_ARB, 4, // Highest current supported version
-            WGL_CONTEXT_MINOR_VERSION_ARB, 5, // Highest current supported version
+            WGL_CONTEXT_MAJOR_VERSION_ARB, 3, // Highest current supported version
+            WGL_CONTEXT_MINOR_VERSION_ARB, 3, // Highest current supported version
             WGL_CONTEXT_LAYER_PLANE_ARB, 0, // main plane
             WGL_CONTEXT_FLAGS_ARB, 0, // prevent use deprecated features
             0
@@ -188,8 +203,8 @@ namespace Graphics
         //Graphics::Viewport(0, 0, Window::GetWidth(), Window::GetHeight());
 
         // Default settings
-        //ApplyDefaultSettings();
-        //CreateDefaultObjects();
+        ApplyDefaultSettings();
+        CreateDefaultObjects();
 
         return true;
     }
@@ -200,8 +215,114 @@ namespace Graphics
         glContext = NULL;
     }
 
+    void ApplyDefaultSettings(void) 
+    {
+
+    }
+
+    GLuint CreateShader(GLenum shaderType, string source)
+    {
+        GLuint shader = glCreateShader(shaderType);
+        if (!shader)
+        {
+            return 0;
+        }
+
+        glShaderSource(shader, 1, &source, 0);
+        glCompileShader(shader);
+
+        int status;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+        if (!status)
+        {
+            char infoLog[1024];
+            glGetShaderInfoLog(shader, sizeof(infoLog), 0, infoLog);
+            glDeleteShader(shader);
+            return 0;
+        }
+
+        return shader;
+    }
+
+    void CreateDefaultObjects(void)
+    {
+        float width = (float)Window::GetWidth();
+        float height = (float)Window::GetHeight();
+
+        projection = mat4::Ortho(0, width, 0, height, -100.0f, 100.0f);
+
+        string vshaderSource =
+            "#version 330 core\n"
+            "layout (location = 0) in vec3 pos;"
+            "layout (location = 1) in vec2 uv;"
+            "layout (location = 2) in vec4 color;"
+            "out vec2 fragUV;"
+            "out vec4 fragColor;"
+            "uniform mat4 model;"
+            "uniform mat4 projection;"
+            "void main() {"
+            "fragUV = uv;"
+            "fragColor = color;"
+            "gl_Position = vec4(pos, 1);"
+            "}";
+
+        string fshaderSource =
+            "#version 330\n"
+            
+            "in vec2 fragUV;"
+            "in vec4 fragColor;"
+
+            "uniform vec4 color;"
+            
+            "out vec4 resultColor;"
+            
+            "void main() {"
+            "resultColor = vec4(1.0);"
+            "}";
+
+        vshader = CreateShader(GL_VERTEX_SHADER, vshaderSource);
+        fshader = CreateShader(GL_FRAGMENT_SHADER, fshaderSource);
+
+        program = glCreateProgram();
+
+        glAttachShader(program, vshader);
+        glAttachShader(program, fshader);
+
+        glLinkProgram(program);
+
+        int programStatus;
+        glGetProgramiv(program, GL_LINK_STATUS, &programStatus);
+        if (!programStatus)
+        {
+            char infoLog[1024];
+            glGetProgramInfoLog(program, sizeof(infoLog), 0, infoLog);
+            glDeleteProgram(program);
+        }
+
+        DrawBuffer drawBuffer = DrawBuffer::New();
+
+        Vertex vertices[] = {
+            { { -1, -1, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
+            { { 0, 1, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
+            { { 1, -1, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
+        };
+        DrawBuffer::AddTriangle(drawBuffer, vertices, 3);
+
+        vertexBuffer = DrawBuffer::CreateVertexBuffer(drawBuffer);
+        indexBuffer  = DrawBuffer::CreateIndexBuffer(drawBuffer);
+
+        glGenVertexArrays(1, &vertexArray);
+
+        DrawBuffer::Free(drawBuffer);
+    }
+
     void Clear(void)
     {
+        float width = (float)Window::GetWidth();
+        float height = (float)Window::GetHeight();
+        
+        projection = mat4::Ortho(0, width, 0, height, -100.0f, 100.0f);
+
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
@@ -212,6 +333,27 @@ namespace Graphics
 
     void Present(void)
     {
+        mat4 model = mat4::Translation(0, 0);
+
+        glUseProgram(program);
+        //glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, false, (float*)&projection);
+        //glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, false, (float*)&model);
+
+        glBindVertexArray(vertexArray);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, position));
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, uv));
+
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, color));
+
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+
         Window::SwapBuffer();
     }
 }

@@ -18,12 +18,16 @@ int main(void)
     Graphics::Init();
 
     vec3 vec3 = { 1, 2, 3 };
-    float  vals[] = { 1, 2 };
+    float vals[] = { 1, 2 };
     vec2 vec2 = vec2::From(vals);
+
+    int* intArray = Array::Empty<int>();
+    Array::Push(intArray, 10);
+    Array::Free(intArray);
 
     while (!Window::PollEvents())
     {
-        Graphics::ClearColor(0, 1, 1);
+        //Graphics::ClearColor(0, 1, 1);
         Graphics::Clear();
 
         Graphics::Present();
