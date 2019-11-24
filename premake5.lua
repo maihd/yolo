@@ -44,6 +44,10 @@ do
         "GLEW_STATIC"
     }
 
+    links {
+        "OpenGL32"
+    }
+
     includedirs {
         path.join(ROOT_DIR, "Include"),
         

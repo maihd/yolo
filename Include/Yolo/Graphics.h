@@ -2,7 +2,7 @@
 
 namespace Graphics
 {
-    void Init(void);
+    bool Init(void);
     void Quit(void);
 
     void Clear(void);
