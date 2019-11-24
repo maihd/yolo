@@ -1,5 +1,7 @@
 #include <Yolo/Graphics.h>
+
 #include <Yolo/String.h>
+#include <Yolo/Window.h>
 
 #include "./Runtime.h"
 
@@ -206,5 +208,10 @@ namespace Graphics
     void ClearColor(float r, float g, float b, float a)
     {
         glClearColor(r, g, b, a);
+    }
+
+    void Present(void)
+    {
+        Window::SwapBuffer();
     }
 }

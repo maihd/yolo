@@ -7,7 +7,7 @@ namespace Window
     bool Init(string title, int width, int height);
     void Quit(void);
 
-    void PollEvents(void);
+    bool PollEvents(void);
     void SwapBuffer(void);
 
     bool ShouldQuit(void);

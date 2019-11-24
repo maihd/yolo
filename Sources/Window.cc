@@ -61,11 +61,11 @@ namespace Window
         Runtime::mainWindow = NULL;
     }
 
-    void PollEvents(void)
+    bool PollEvents(void)
     {
         if (Runtime::shouldQuit)
         {
-            return;
+            return true;
         }
 
         MSG msg = {};
@@ -77,9 +77,11 @@ namespace Window
             if (msg.message == WM_QUIT)
             {
                 Runtime::shouldQuit = true;
-                break;
+                return true;
             }
         }
+
+        return false;
     }
 
     void SwapBuffer(void)

@@ -17,18 +17,16 @@ int main(void)
     Window::Init("Yolo Window", 800, 600);
     Graphics::Init();
 
-    float3 vec3 = { 1, 2, 3 };
+    vec3 vec3 = { 1, 2, 3 };
     float  vals[] = { 1, 2 };
-    float2 vec2 = float2::From(vals);
+    vec2 vec2 = vec2::From(vals);
 
-    while (!Window::ShouldQuit())
+    while (!Window::PollEvents())
     {
-        Window::PollEvents();
-
         Graphics::ClearColor(0, 1, 1);
         Graphics::Clear();
 
-        Window::SwapBuffer();
+        Graphics::Present();
     }
 
     Graphics::Quit();
