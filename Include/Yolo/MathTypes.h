@@ -7,8 +7,7 @@ struct mat4;
 
 struct vec2
 {
-    float x;
-    float y;
+    float x, y;
 
     static vec2 From(float x, float y);
     static vec2 From(float value[2]);
@@ -19,9 +18,7 @@ struct vec2
 
 struct vec3
 {
-    float x;
-    float y;
-    float z;
+    float x, y, z;
 
     static vec3 From(float x, float y, float z = 0.0f);
     static vec3 From(vec2 value, float z = 0.0f);
@@ -33,10 +30,7 @@ struct vec3
 
 struct vec4
 {
-    float x;
-    float y;
-    float z;
-    float w;
+    float x, y, z, w;
 
     static vec4 From(float x, float y, float z, float w);
 
