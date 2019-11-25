@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <Yolo/String.h>
+#include <Yolo/Random.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,23 +10,6 @@
 
 namespace String
 {
-    constexpr uint64 ConstRandom(uint64 seed = 0)
-    {
-        string time = __TIME__;
-
-        uint64 timeNumber = 0;
-        timeNumber |= (uint64)time[0] << (uint64)(7 * 8);
-        timeNumber |= (uint64)time[1] << (uint64)(6 * 8);
-        timeNumber |= (uint64)time[2] << (uint64)(5 * 8);
-        timeNumber |= (uint64)time[3] << (uint64)(4 * 8);
-        timeNumber |= (uint64)time[4] << (uint64)(3 * 8);
-        timeNumber |= (uint64)time[5] << (uint64)(2 * 8);
-        timeNumber |= (uint64)time[6] << (uint64)(1 * 8);
-        timeNumber |= (uint64)time[7] << (uint64)(0 * 8);
-
-        return seed ^ timeNumber;
-    }
-
     struct StringMeta
     {
         int       size;
@@ -34,7 +18,7 @@ namespace String
         uint64    memtag;
     };
 
-    constexpr uint64 MEMORY_TAG   = ConstHash("STRING_MEMORY_TAG", ConstRandom(0xbf6929f592082ce9ULL));
+    constexpr uint64 MEMORY_TAG = ConstHash("STRING_MEMORY_TAG", Random::AsCompileTimeU64(0xbf6929f592082ce9ULL));
 
     static StringMeta* CreateStringMeta(void* buffer, int bufferSize)
     {

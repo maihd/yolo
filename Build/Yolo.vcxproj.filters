@@ -42,6 +42,9 @@
     <ClInclude Include="..\Include\Yolo\MathTypes.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Random.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Shapes.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -66,6 +69,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Graphics.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Random.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Runtime.cc">
