@@ -1,5 +1,23 @@
 #pragma once
 
+#include <Yolo/Types.h>
+
+struct Shader
+{
+    Handle  handle;
+    int*    uniformLocations;
+
+    Shader LoadShader();
+    Shader CompileShader();
+};
+
+struct Texture
+{
+    Handle  handle;
+    int     width;
+    int     height;
+};
+
 namespace Graphics
 {
     bool Init(void);

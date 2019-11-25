@@ -1,6 +1,6 @@
 #include "./DrawBuffer.h"
 
-DrawBuffer DrawBuffer::New(Vertex* vertices, uint16_t* indices)
+DrawBuffer DrawBuffer::New(Vertex* vertices, uint16* indices)
 {
     return { vertices, indices };
 }
@@ -13,10 +13,10 @@ void DrawBuffer::Free(DrawBuffer* drawBuffer)
 
 void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex v0, Vertex v1, Vertex v2)
 {
-    uint16_t startIndex = (uint16_t)Array::Length(drawBuffer->vertices);
-    Array::Push(&drawBuffer->indices, (uint16_t)(startIndex + 0u));
-    Array::Push(&drawBuffer->indices, (uint16_t)(startIndex + 1u));
-    Array::Push(&drawBuffer->indices, (uint16_t)(startIndex + 2u));
+    uint16 startIndex = (uint16)Array::Length(drawBuffer->vertices);
+    Array::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
+    Array::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
+    Array::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
 
     Array::Push(&drawBuffer->vertices, v0);
     Array::Push(&drawBuffer->vertices, v1);
@@ -60,7 +60,7 @@ GLuint DrawBuffer::CreateIndexBuffer(DrawBuffer drawBuffer)
     glGenBuffers(1, &indexBuffer);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Array::Length(drawBuffer.indices) * sizeof(uint16_t), drawBuffer.indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Array::Length(drawBuffer.indices) * sizeof(uint16), drawBuffer.indices, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     return indexBuffer;

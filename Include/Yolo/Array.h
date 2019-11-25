@@ -1,22 +1,22 @@
 #pragma once
 
 #include <stdlib.h>
-#include <stdint.h>
 #include <assert.h>
 
+#include <Yolo/Types.h>
 #include <Yolo/String.h>
 
 namespace Array
 {
     struct ArrayMeta
     {
-        uint64_t memtag;
+        uint64 memtag;
 
-        int      length;
-        int      capacity;
+        int    length;
+        int    capacity;
     };
 
-    constexpr uint64_t MEMORY_TAG = String::ConstHash("ARRAY_MEMORY_TAG");
+    constexpr uint64 MEMORY_TAG = String::ConstHash("ARRAY_MEMORY_TAG");
 
     inline int NextPOT(int x)
     {

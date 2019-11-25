@@ -13,10 +13,10 @@ struct Vertex
 
 struct DrawBuffer
 {
-    Vertex*     vertices;
-    uint16_t*   indices;
+    Vertex* vertices;
+    uint16* indices;
 
-    static DrawBuffer New(Vertex* vertices = 0, uint16_t* indices = 0);
+    static DrawBuffer New(Vertex* vertices = 0, uint16* indices = 0);
     static void       Free(DrawBuffer* drawBuffer);
 
     static void       AddTriangle(DrawBuffer* drawBuffer, Vertex v0, Vertex v1, Vertex v2);

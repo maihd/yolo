@@ -5,36 +5,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 namespace String
 {
-    constexpr uint64_t ConstRandom(uint64_t seed = 0)
+    constexpr uint64 ConstRandom(uint64 seed = 0)
     {
         string time = __TIME__;
 
-        uint64_t timeNumber = 0;
-        timeNumber |= (uint64_t)time[0] << (uint64_t)(7 * 8);
-        timeNumber |= (uint64_t)time[1] << (uint64_t)(6 * 8);
-        timeNumber |= (uint64_t)time[2] << (uint64_t)(5 * 8);
-        timeNumber |= (uint64_t)time[3] << (uint64_t)(4 * 8);
-        timeNumber |= (uint64_t)time[4] << (uint64_t)(3 * 8);
-        timeNumber |= (uint64_t)time[5] << (uint64_t)(2 * 8);
-        timeNumber |= (uint64_t)time[6] << (uint64_t)(1 * 8);
-        timeNumber |= (uint64_t)time[7] << (uint64_t)(0 * 8);
+        uint64 timeNumber = 0;
+        timeNumber |= (uint64)time[0] << (uint64)(7 * 8);
+        timeNumber |= (uint64)time[1] << (uint64)(6 * 8);
+        timeNumber |= (uint64)time[2] << (uint64)(5 * 8);
+        timeNumber |= (uint64)time[3] << (uint64)(4 * 8);
+        timeNumber |= (uint64)time[4] << (uint64)(3 * 8);
+        timeNumber |= (uint64)time[5] << (uint64)(2 * 8);
+        timeNumber |= (uint64)time[6] << (uint64)(1 * 8);
+        timeNumber |= (uint64)time[7] << (uint64)(0 * 8);
 
         return seed ^ timeNumber;
     }
 
     struct StringMeta
     {
-        int         size;
-        int         length;
-        int         memref;
-        uint64_t    memtag;
+        int       size;
+        int       length;
+        int       memref;
+        uint64    memtag;
     };
 
-    constexpr string   EMPTY_STRING = "";
-    constexpr uint64_t MEMORY_TAG   = ConstHash("STRING_MEMORY_TAG", ConstRandom(0xbf6929f592082ce9ULL));
+    constexpr uint64 MEMORY_TAG   = ConstHash("STRING_MEMORY_TAG", ConstRandom(0xbf6929f592082ce9ULL));
 
     static StringMeta* CreateStringMeta(void* buffer, int bufferSize)
     {
@@ -60,7 +60,7 @@ namespace String
 
     static StringMeta* GetStringMeta(string target)
     {
-        return target && target != EMPTY_STRING ? (StringMeta*)(target - sizeof(StringMeta)) : NULL;
+        return target && target != Const::EMPTY_STRING ? (StringMeta*)(target - sizeof(StringMeta)) : NULL;
     }
 
     string From(string source)
@@ -80,7 +80,7 @@ namespace String
         int length = Length(source);
         if (length == 0)
         {
-            return EMPTY_STRING;
+            return Const::EMPTY_STRING;
         }
         else
         {
@@ -128,7 +128,7 @@ namespace String
 
     bool IsWeakRef(string target)
     {
-        if (target == EMPTY_STRING)
+        if (target == Const::EMPTY_STRING)
         {
             return true;
         }
@@ -156,7 +156,7 @@ namespace String
     
     int Length(string target)
     {
-        if (!target || target == EMPTY_STRING)
+        if (!target || target == Const::EMPTY_STRING)
         {
             return 0;
         }
@@ -209,33 +209,33 @@ namespace String
         return (char*)meta + sizeof(StringMeta);
     }
 
-    uint64_t Hash(string target, uint64_t seed)
+    uint64 Hash(string target, uint64 seed)
     {
-        uint32_t length = (uint32_t)Length(target);
+        uint32 length = (uint32)Length(target);
         if (length == 0)
         {
             return seed;
         }
 
-        uint64_t h = seed;
+        uint64 h = seed;
 
-        const uint32_t l = length;
-        const uint32_t n = (l >> 3) << 3;
+        const uint32 l = length;
+        const uint32 n = (l >> 3) << 3;
 
-        for (uint32_t i = 0; i < n; i += 8)
+        for (uint32 i = 0; i < n; i += 8)
         {
-            uint64_t b0 = target[i + 0];
-            uint64_t b1 = target[i + 1];
-            uint64_t b2 = target[i + 2];
-            uint64_t b3 = target[i + 3];
-            uint64_t b4 = target[i + 4];
-            uint64_t b5 = target[i + 5];
-            uint64_t b6 = target[i + 6];
-            uint64_t b7 = target[i + 7];
+            uint64 b0 = target[i + 0];
+            uint64 b1 = target[i + 1];
+            uint64 b2 = target[i + 2];
+            uint64 b3 = target[i + 3];
+            uint64 b4 = target[i + 4];
+            uint64 b5 = target[i + 5];
+            uint64 b6 = target[i + 6];
+            uint64 b7 = target[i + 7];
 #if CPU_LITTLE_ENDIAN
-            uint64_t k = (b7 << 56) | (b6 << 48) | (b5 << 40) | (b4 << 32) | (b3 << 24) | (b2 << 16) | (b1 << 8) | (b0 << 0);
+            uint64 k = (b7 << 56) | (b6 << 48) | (b5 << 40) | (b4 << 32) | (b3 << 24) | (b2 << 16) | (b1 << 8) | (b0 << 0);
 #else
-            uint64_t k = (b0 << 56) | (b1 << 48) | (b2 << 40) | (b3 << 32) | (b4 << 24) | (b5 << 16) | (b6 << 8) | (b7 << 0);
+            uint64 k = (b0 << 56) | (b1 << 48) | (b2 << 40) | (b3 << 32) | (b4 << 24) | (b5 << 16) | (b6 << 8) | (b7 << 0);
 #endif
 
             k ^= (k << 12);
@@ -247,13 +247,13 @@ namespace String
 
         switch (l & 7)
         {
-        case 7: h ^= uint64_t((target + n)[6]) << 48;   /* fall through */
-        case 6: h ^= uint64_t((target + n)[5]) << 40;   /* fall through */
-        case 5: h ^= uint64_t((target + n)[4]) << 32;   /* fall through */
-        case 4: h ^= uint64_t((target + n)[3]) << 24;   /* fall through */
-        case 3: h ^= uint64_t((target + n)[2]) << 16;   /* fall through */
-        case 2: h ^= uint64_t((target + n)[1]) <<  8;   /* fall through */
-        case 1: h ^= uint64_t((target + n)[0]) <<  0;   /* fall through */
+        case 7: h ^= uint64((target + n)[6]) << 48;   /* fall through */
+        case 6: h ^= uint64((target + n)[5]) << 40;   /* fall through */
+        case 5: h ^= uint64((target + n)[4]) << 32;   /* fall through */
+        case 4: h ^= uint64((target + n)[3]) << 24;   /* fall through */
+        case 3: h ^= uint64((target + n)[2]) << 16;   /* fall through */
+        case 2: h ^= uint64((target + n)[1]) <<  8;   /* fall through */
+        case 1: h ^= uint64((target + n)[0]) <<  0;   /* fall through */
         };
 
         h ^= (h << 12);

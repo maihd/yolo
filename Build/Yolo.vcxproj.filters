@@ -42,7 +42,13 @@
     <ClInclude Include="..\Include\Yolo\MathTypes.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Shapes.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\String.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Types.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Window.h">
