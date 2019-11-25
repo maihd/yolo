@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include <Yolo/Hash.h>
+#include <Yolo/Random.h>
 
 namespace Array
 {
@@ -15,7 +16,8 @@ namespace Array
         int    capacity;
     };
 
-    constexpr uint64 MEMORY_TAG = CalcHash64("ARRAY_MEMORY_TAG");
+    constexpr uint64 MEMORY_TAG   = CalcHash64("ARRAY_MEMORY_TAG", 0x474b11a82d80da68ULL);
+    constexpr int    MIN_CAPACITY = 16;
 
     inline int NextPOT(int x)
     {
@@ -96,7 +98,7 @@ namespace Array
         int length = Length(*array);
 
         int oldCapacity = Capacity(*array);
-        int newCapacity = capacity < 8 ? 8 : NextPOT(capacity);
+        int newCapacity = capacity < MIN_CAPACITY ? MIN_CAPACITY : NextPOT(capacity);
 
         ArrayMeta* oldMeta = *array ? (ArrayMeta*)(*array) - 1 : 0;
         ArrayMeta* newMeta = (ArrayMeta*)realloc(oldMeta, newCapacity * sizeof(T));

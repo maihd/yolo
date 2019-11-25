@@ -17,6 +17,8 @@ int main(void)
     Window::Init("Yolo Window", 800, 600);
     Graphics::Init();
 
+    string intTypeName = Traits::TypeName<uint16>();
+
     vec3 vec3 = { 1, 2, 3 };
     float vals[] = { 1, 2 };
     vec2 vec2 = vec2::From(vals);

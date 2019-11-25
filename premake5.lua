@@ -24,8 +24,8 @@ do
     }
 
     cppdialect "C++11"
-    staticruntime "On"
-    omitframepointer "On"
+    --staticruntime "On"
+    --omitframepointer "On"
 
     filter "configurations:Debug"
     do
