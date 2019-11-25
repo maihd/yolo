@@ -120,13 +120,6 @@ namespace Graphics
             return false;
         }
 
-        // Settings affect image result
-        // It should be check
-        //if (!IsSettingsValid(settings))
-        //{
-        //    return false;
-        //}
-
         // Modern api require differences extension to create _context
         if (!wglewIsSupported("WGL_ARB_create_context"))
         {
