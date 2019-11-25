@@ -24,24 +24,24 @@ namespace Graphics
     void ApplyDefaultSettings(void);
     void CreateDefaultObjects(void);
 
-    bool PrepareContext(void)
+    bool LoadDriver(void)
     {
-        string className = "DUMMY_WINDOW";
+        TCHAR* className = TEXT("YOLO_WINDOW_CLASS");
 
-        HINSTANCE hInstance = GetModuleHandleA(NULL);
+        HINSTANCE hInstance = GetModuleHandle(NULL);
 
-        WNDCLASSA wndClass      = {};
-        wndClass.hInstance      = hInstance;
-        wndClass.lpszClassName  = className;
-        wndClass.lpfnWndProc    = DefWindowProcA;
-        wndClass.style          = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+        //WNDCLASS wndClass       = {};
+        //wndClass.hInstance      = hInstance;
+        //wndClass.lpszClassName  = className;
+        //wndClass.lpfnWndProc    = DefWindowProc;
+        //wndClass.style          = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+        //
+        //if (!RegisterClass(&wndClass))
+        //{
+        //    return false;
+        //}
 
-        if (!RegisterClassA(&wndClass))
-        {
-            return false;
-        }
-
-        HWND dummyWindow = CreateWindowA(className, className, 0, 0, 0, 800, 600, NULL, NULL, hInstance, NULL);
+        HWND dummyWindow = CreateWindow(className, className, WS_OVERLAPPEDWINDOW, 0, 0, 800, 600, NULL, NULL, hInstance, NULL);
         if (!dummyWindow)
         {
             return false;
@@ -103,13 +103,18 @@ namespace Graphics
    
     bool Init(void)
     {
-        if (!PrepareContext())
+        if (!Runtime::mainWindow || !Runtime::mainWindowContext)
+        {
+            return false;
+        }
+
+        if (!LoadDriver())
         {
             return false;
         }
 
         // Make sure window is initialized
-        HDC hdc = GetDC(Runtime::mainWindow);
+        HDC hdc = Runtime::mainWindowContext;
         if (!hdc)
         {
             return false;
@@ -136,7 +141,7 @@ namespace Graphics
             WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
 
             WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
-            //WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
+            WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
 
             WGL_ACCUM_RED_BITS_ARB, 8,
             WGL_ACCUM_GREEN_BITS_ARB, 8,
@@ -176,8 +181,8 @@ namespace Graphics
         int contextAttribs[16] =
         {
             WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-            WGL_CONTEXT_MAJOR_VERSION_ARB, 3, // Highest current supported version
-            WGL_CONTEXT_MINOR_VERSION_ARB, 3, // Highest current supported version
+            WGL_CONTEXT_MAJOR_VERSION_ARB, 4, // Highest current supported version
+            WGL_CONTEXT_MINOR_VERSION_ARB, 5, // Highest current supported version
             WGL_CONTEXT_LAYER_PLANE_ARB, 0, // main plane
             WGL_CONTEXT_FLAGS_ARB, 0, // prevent use deprecated features
             0
@@ -196,12 +201,6 @@ namespace Graphics
             return false;
         }
 
-        // By default, vsync is enable
-        //Window::SetVSyncEnabled(true);
-
-        // Set viewport
-        //Graphics::Viewport(0, 0, Window::GetWidth(), Window::GetHeight());
-
         // Default settings
         ApplyDefaultSettings();
         CreateDefaultObjects();
@@ -211,13 +210,16 @@ namespace Graphics
 
     void Quit(void)
     {
-        wglDeleteContext(glContext);
-        glContext = NULL;
+        //wglDeleteContext(glContext);
+        //glContext = NULL;
     }
 
     void ApplyDefaultSettings(void) 
     {
+        // Set viewport
+        //Graphics::Viewport(0, 0, Window::GetWidth(), Window::GetHeight());
 
+        SetVSync(true);
     }
 
     GLuint CreateShader(GLenum shaderType, string source)
@@ -306,14 +308,14 @@ namespace Graphics
             { { 50, 50, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
             { { 100, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 } },
         };
-        DrawBuffer::AddTriangle(drawBuffer, vertices, 3);
+        DrawBuffer::AddTriangle(&drawBuffer, vertices, 3);
 
         vertexBuffer = DrawBuffer::CreateVertexBuffer(drawBuffer);
         indexBuffer  = DrawBuffer::CreateIndexBuffer(drawBuffer);
 
         glGenVertexArrays(1, &vertexArray);
 
-        DrawBuffer::Free(drawBuffer);
+        DrawBuffer::Free(&drawBuffer);
     }
 
     void Clear(void)
@@ -355,5 +357,25 @@ namespace Graphics
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
 
         Window::SwapBuffer();
+    }
+
+    bool IsVSync(void)
+    {
+        if (wglGetSwapIntervalEXT)
+        {
+            return wglGetSwapIntervalEXT() != 0;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void SetVSync(bool enable)
+    {
+        if (wglSwapIntervalEXT)
+        {
+            wglSwapIntervalEXT((int)enable);
+        }
     }
 }

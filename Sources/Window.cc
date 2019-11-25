@@ -5,7 +5,7 @@
 
 namespace Window
 {
-    constexpr string windowClassName = "className";
+    constexpr TCHAR* WINDOW_CLASS_NAME = TEXT("YOLO_WINDOW_CLASS");
 
     static LRESULT WINAPI WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -14,13 +14,13 @@ namespace Window
         static bool isRegistered = false;
         if (!isRegistered)
         {
-            WNDCLASSA wndclass      = {};
-            wndclass.hInstance      = GetModuleHandleA(NULL);
-            wndclass.lpszClassName  = windowClassName;
+            WNDCLASS wndclass       = {};
+            wndclass.hInstance      = GetModuleHandle(NULL);
+            wndclass.lpszClassName  = WINDOW_CLASS_NAME;
             wndclass.style          = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
             wndclass.lpfnWndProc    = WindowProc;
 
-            if (!::RegisterClassA(&wndclass))
+            if (!::RegisterClass(&wndclass))
             {
                 return false;
             }
@@ -41,15 +41,36 @@ namespace Window
         int screenWidth  = GetSystemMetrics(SM_CXSCREEN);
         int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-        int x = (screenWidth - width) >> 1;
-        int y = (screenHeight - height) >> 1;
+        int centerX = (screenWidth - width) >> 1;
+        int centerY = (screenHeight - height) >> 1;
 
-        HWND window = CreateWindowA(windowClassName, title, WS_OVERLAPPEDWINDOW | WS_VISIBLE, x, y, width, height, NULL, NULL, GetModuleHandleA(NULL), NULL);
+#if UNICODE
+        TCHAR unicodeTitle[1024];
+        ::MultiByteToWideChar(CP_UTF8, 0, title, -1, unicodeTitle, sizeof(unicodeTitle));
+#else
+        TCHAR* unicodeTitle = title;
+#endif
+
+        HWND window = CreateWindow(
+            WINDOW_CLASS_NAME, 
+            unicodeTitle, 
+            WS_OVERLAPPEDWINDOW | WS_VISIBLE, 
+            centerX, centerY, 
+            width, height, 
+            NULL, NULL, GetModuleHandle(NULL), NULL
+        );
         if (!window)
         {
             return false;
         }
 
+        HDC hdc = GetDC(window);
+        if (!hdc)
+        {
+            return false;
+        }
+
+        Runtime::mainWindowContext = hdc;
         Runtime::mainWindow = window;
         Runtime::shouldQuit = false;
         return true;
@@ -58,7 +79,9 @@ namespace Window
     void Quit(void)
     {
         DestroyWindow(Runtime::mainWindow);
+
         Runtime::mainWindow = NULL;
+        Runtime::mainWindowContext = NULL;
     }
 
     bool PollEvents(void)
@@ -69,10 +92,10 @@ namespace Window
         }
 
         MSG msg = {};
-        while (::PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE))
+        while (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
             ::TranslateMessage(&msg);
-            ::DispatchMessageA(&msg);
+            ::DispatchMessage(&msg);
 
             if (msg.message == WM_QUIT)
             {
@@ -86,8 +109,7 @@ namespace Window
 
     void SwapBuffer(void)
     {
-        HDC hdc = GetDC(Runtime::mainWindow);
-        ::SwapBuffers(hdc);
+        ::SwapBuffers(Runtime::mainWindowContext);
     }
 
     LRESULT WINAPI WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -95,15 +117,15 @@ namespace Window
         switch (msg)
         {
         case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
+            if (hwnd == Runtime::mainWindow)
+            {
+                PostQuitMessage(0);
+            }
 
-        //case WM_QUIT:
-        //    Runtime::shouldQuit = true;
-        //    break;
+            return 0;
         }
 
-        return DefWindowProcA(hwnd, msg, wparam, lparam);
+        return DefWindowProc(hwnd, msg, wparam, lparam);
     }
 
     bool ShouldQuit(void)

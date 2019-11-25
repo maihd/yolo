@@ -9,6 +9,7 @@
 
 namespace Runtime
 {
-    extern HWND mainWindow;
     extern bool shouldQuit;
+    extern HWND mainWindow;
+    extern HDC  mainWindowContext;
 }

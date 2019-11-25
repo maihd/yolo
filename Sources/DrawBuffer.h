@@ -17,11 +17,11 @@ struct DrawBuffer
     uint16_t*   indices;
 
     static DrawBuffer New(Vertex* vertices = 0, uint16_t* indices = 0);
-    static void       Free(DrawBuffer& drawBuffer);
+    static void       Free(DrawBuffer* drawBuffer);
 
-    static void       AddTriangle(DrawBuffer& drawBuffer, Vertex v0, Vertex v1, Vertex v2);
-    static void       AddTriangle(DrawBuffer& drawBuffer, Vertex* vertices);
-    static void       AddTriangle(DrawBuffer& drawBuffer, Vertex* vertices, int count);
+    static void       AddTriangle(DrawBuffer* drawBuffer, Vertex v0, Vertex v1, Vertex v2);
+    static void       AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices);
+    static void       AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices, int count);
 
     static GLuint     CreateVertexBuffer(DrawBuffer drawBuffer);
     static GLuint     CreateIndexBuffer(DrawBuffer drawBuffer);

@@ -22,8 +22,8 @@ int main(void)
     vec2 vec2 = vec2::From(vals);
 
     int* intArray = Array::Empty<int>();
-    Array::Push(intArray, 10);
-    Array::Free(intArray);
+    Array::Push(&intArray, 10);
+    Array::Free(&intArray);
 
     while (!Window::PollEvents())
     {

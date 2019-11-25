@@ -5,32 +5,32 @@ DrawBuffer DrawBuffer::New(Vertex* vertices, uint16_t* indices)
     return { vertices, indices };
 }
 
-void DrawBuffer::Free(DrawBuffer& drawBuffer)
+void DrawBuffer::Free(DrawBuffer* drawBuffer)
 {
-    Array::Free(drawBuffer.vertices);
-    Array::Free(drawBuffer.indices);
+    Array::Free(&drawBuffer->vertices);
+    Array::Free(&drawBuffer->indices);
 }
 
-void DrawBuffer::AddTriangle(DrawBuffer& drawBuffer, Vertex v0, Vertex v1, Vertex v2)
+void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex v0, Vertex v1, Vertex v2)
 {
-    uint16_t startIndex = (uint16_t)Array::Length(drawBuffer.vertices);
-    Array::Push(drawBuffer.indices, (uint16_t)(startIndex + 0u));
-    Array::Push(drawBuffer.indices, (uint16_t)(startIndex + 1u));
-    Array::Push(drawBuffer.indices, (uint16_t)(startIndex + 2u));
+    uint16_t startIndex = (uint16_t)Array::Length(drawBuffer->vertices);
+    Array::Push(&drawBuffer->indices, (uint16_t)(startIndex + 0u));
+    Array::Push(&drawBuffer->indices, (uint16_t)(startIndex + 1u));
+    Array::Push(&drawBuffer->indices, (uint16_t)(startIndex + 2u));
 
-    Array::Push(drawBuffer.vertices, v0);
-    Array::Push(drawBuffer.vertices, v1);
-    Array::Push(drawBuffer.vertices, v2);
+    Array::Push(&drawBuffer->vertices, v0);
+    Array::Push(&drawBuffer->vertices, v1);
+    Array::Push(&drawBuffer->vertices, v2);
 }
 
-void DrawBuffer::AddTriangle(DrawBuffer& drawBuffer, Vertex* vertices)
+void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices)
 {
     assert(Array::IsArray(vertices));
     
     DrawBuffer::AddTriangle(drawBuffer, vertices, Array::Length(vertices));
 }
 
-void DrawBuffer::AddTriangle(DrawBuffer& drawBuffer, Vertex* vertices, int count)
+void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices, int count)
 {
     for (int i = 0; i < count; i += 3)
     {

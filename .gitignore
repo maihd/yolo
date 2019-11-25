@@ -5,6 +5,8 @@
 *.o
 *.out
 *.exe
+*.suo
+*.sdf
 
 bin
 obj

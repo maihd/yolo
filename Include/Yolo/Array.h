@@ -8,9 +8,6 @@
 
 namespace Array
 {
-    template <typename T>
-    using Variable = T&;
-
     struct ArrayMeta
     {
         uint64_t memtag;
@@ -41,11 +38,11 @@ namespace Array
     }
 
     template <typename T>
-    inline void Free(Variable<T*> array)
+    inline void Free(T** array)
     {
-        if (array && IsArray(array))
+        if (array && IsArray(*array))
         {
-            free((ArrayMeta*)array - 1);
+            free((ArrayMeta*)(*array) - 1);
             array = 0;
         }
     }
@@ -58,7 +55,7 @@ namespace Array
             return true;
         }
 
-        const ArrayMeta* meta = (const ArrayMeta*)((const uint8_t*)array - sizeof(ArrayMeta));
+        const ArrayMeta* meta = (const ArrayMeta*)array - 1;
         return meta->memtag == MEMORY_TAG;
     }
 
@@ -87,21 +84,22 @@ namespace Array
     }
 
     template <typename T>
-    inline bool Resize(Variable<T*> array, int capacity)
+    inline bool Resize(T** array, int capacity)
     {
-        assert(IsArray(array));
+        assert(array != NULL);
+        assert(IsArray(*array));
 
-        if (capacity < Capacity(array))
+        if (capacity < Capacity(*array))
         {
             return true;
         }
 
-        int length = Length(array);
+        int length = Length(*array);
 
-        int oldCapacity = Capacity(array);
+        int oldCapacity = Capacity(*array);
         int newCapacity = capacity < 8 ? 8 : NextPOT(capacity);
 
-        ArrayMeta* oldMeta = array ? (ArrayMeta*)array - 1 : 0;
+        ArrayMeta* oldMeta = *array ? (ArrayMeta*)(*array) - 1 : 0;
         ArrayMeta* newMeta = (ArrayMeta*)realloc(oldMeta, newCapacity * sizeof(T));
         if (newMeta)
         {
@@ -109,7 +107,7 @@ namespace Array
             newMeta->length     = length;
             newMeta->capacity   = newCapacity;
 
-            array = (T*)(newMeta + 1);
+            *array = (T*)(newMeta + 1);
 
             return true;
         }
@@ -120,11 +118,12 @@ namespace Array
     }
 
     template <typename T>
-    inline bool Ensure(Variable<T*> array, int capacity)
+    inline bool Ensure(T** array, int capacity)
     {
-        assert(IsArray(array));
+        assert(array != NULL);
+        assert(IsArray(*array));
 
-        return (Capacity(array) < capacity) ? Resize(array, capacity) : true;
+        return (Capacity(*array) < capacity) ? Resize(array, capacity) : true;
     }
 
     template <typename T>
@@ -136,16 +135,17 @@ namespace Array
     }
 
     template <typename T>
-    inline int Push(Variable<T*> array, T element)
+    inline int Push(T** array, T element)
     {
-        assert(IsArray(array));
+        assert(array != NULL);
+        assert(IsArray(*array));
         
-        if (Ensure(array, Length(array) + 1))
+        if (Ensure(array, Length(*array) + 1))
         {
-            ArrayMeta* meta = (ArrayMeta*)array - 1;
+            ArrayMeta* meta = (ArrayMeta*)(*array) - 1;
 
             int index = meta->length++;
-            array[index] = element;
+            (*array)[index] = element;
 
             return index;
         }
@@ -154,14 +154,15 @@ namespace Array
     }
 
     template <typename T>
-    inline T Pop(Variable<T*> array)
+    inline T Pop(T** array)
     {
-        assert(IsArray(array));
-        assert(Length(array) > 0);
+        assert(array != NULL);
+        assert(IsArray(*array));
+        assert(Length(*array) > 0);
 
-        ArrayMeta* meta = (ArrayMeta*)array - 1;
+        ArrayMeta* meta = (ArrayMeta*)(*array) - 1;
         meta->length--;
 
-        return array[meta->length];
+        return (*array)[meta->length];
     }
 }
