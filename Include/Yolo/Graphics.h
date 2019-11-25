@@ -1,23 +1,5 @@
 #pragma once
 
-#include <Yolo/Types.h>
-
-struct Shader
-{
-    Handle  handle;
-    int*    uniformLocations;
-
-    Shader LoadShader();
-    Shader CompileShader();
-};
-
-struct Texture
-{
-    Handle  handle;
-    int     width;
-    int     height;
-};
-
 namespace Graphics
 {
     bool Init(void);
@@ -30,4 +12,7 @@ namespace Graphics
 
     bool IsVSync(void);
     void SetVSync(bool enable);
+
+    bool IsWireframe(void);
+    void SetWireframe(bool enable);
 }

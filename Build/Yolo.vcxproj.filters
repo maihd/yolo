@@ -48,10 +48,16 @@
     <ClInclude Include="..\Include\Yolo\Random.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Shader.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Shapes.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\String.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Texture.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Types.h">
@@ -83,7 +89,13 @@
     <ClCompile Include="..\Sources\Runtime.cc">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\Shader.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\String.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Texture.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Window.cc">

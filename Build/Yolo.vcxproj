@@ -170,8 +170,10 @@
     <ClInclude Include="..\Include\Yolo\MathOps.h" />
     <ClInclude Include="..\Include\Yolo\MathTypes.h" />
     <ClInclude Include="..\Include\Yolo\Random.h" />
+    <ClInclude Include="..\Include\Yolo\Shader.h" />
     <ClInclude Include="..\Include\Yolo\Shapes.h" />
     <ClInclude Include="..\Include\Yolo\String.h" />
+    <ClInclude Include="..\Include\Yolo\Texture.h" />
     <ClInclude Include="..\Include\Yolo\Types.h" />
     <ClInclude Include="..\Include\Yolo\Window.h" />
     <ClInclude Include="..\Sources\DrawBuffer.h" />
@@ -183,7 +185,9 @@
     <ClCompile Include="..\Sources\Hash.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
     <ClCompile Include="..\Sources\Runtime.cc" />
+    <ClCompile Include="..\Sources\Shader.cc" />
     <ClCompile Include="..\Sources\String.cc" />
+    <ClCompile Include="..\Sources\Texture.cc" />
     <ClCompile Include="..\Sources\Window.cc" />
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />
   </ItemGroup>

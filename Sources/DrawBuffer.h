@@ -13,6 +13,12 @@ struct Vertex
 
 struct DrawBuffer
 {
+    bool    shouldUpdate;
+
+    Handle  vertexBuffer;
+    Handle  indexBuffer;
+    Handle  vertexArray;
+
     Vertex* vertices;
     uint16* indices;
 
@@ -23,6 +29,8 @@ struct DrawBuffer
     static void       AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices);
     static void       AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices, int count);
 
-    static GLuint     CreateVertexBuffer(DrawBuffer drawBuffer);
-    static GLuint     CreateIndexBuffer(DrawBuffer drawBuffer);
+    static void       AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, vec4 color, int segments = 30);
+    static void       AddRectangle(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color);
+
+    static void       UpdateBuffers(DrawBuffer* drawBuffer);
 };

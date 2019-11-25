@@ -41,10 +41,12 @@ namespace Array
     template <typename T>
     inline void Free(T** array)
     {
-        if (array && IsArray(*array))
+        assert(array);
+
+        if (*array && IsArray(*array))
         {
             free((ArrayMeta*)(*array) - 1);
-            array = 0;
+            *array = Empty<T>();
         }
     }
 
@@ -87,7 +89,7 @@ namespace Array
     template <typename T>
     inline bool Resize(T** array, int capacity)
     {
-        assert(array != NULL);
+        assert(array);
         assert(IsArray(*array));
 
         if (capacity < Capacity(*array))
@@ -101,7 +103,7 @@ namespace Array
         int newCapacity = capacity < MIN_CAPACITY ? MIN_CAPACITY : NextPOT(capacity);
 
         ArrayMeta* oldMeta = *array ? (ArrayMeta*)(*array) - 1 : 0;
-        ArrayMeta* newMeta = (ArrayMeta*)realloc(oldMeta, newCapacity * sizeof(T));
+        ArrayMeta* newMeta = (ArrayMeta*)realloc(oldMeta, sizeof(ArrayMeta) + newCapacity * sizeof(T));
         if (newMeta)
         {
             newMeta->memtag     = MEMORY_TAG;

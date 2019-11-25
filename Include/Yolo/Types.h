@@ -12,11 +12,7 @@ using uint32  = unsigned int;
 using uint64  = unsigned long long;
 
 using string  = const char*;
-
-struct Handle
-{
-    unsigned int id;
-};
+using Handle  = unsigned int;
 
 namespace Const
 {
@@ -40,6 +36,6 @@ namespace Const
     constexpr uint32    UINT32_MAX   = 0xffffffffu;
     constexpr uint64    UINT64_MAX   = 0xffffffffffffffffull;
 
-    constexpr Handle    EMPTY_HANDLE = { 0 };
+    constexpr Handle    EMPTY_HANDLE = 0;
     constexpr string    EMPTY_STRING = "";
 }
