@@ -30,6 +30,9 @@
     <ClInclude Include="..\Include\Yolo\Graphics.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Hash.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\HashTable.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -69,6 +72,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Graphics.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Hash.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Random.cc">

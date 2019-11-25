@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <Yolo/Types.h>
-#include <Yolo/String.h>
+#include <Yolo/Hash.h>
 
 namespace Array
 {
@@ -16,7 +15,7 @@ namespace Array
         int    capacity;
     };
 
-    constexpr uint64 MEMORY_TAG = String::ConstHash("ARRAY_MEMORY_TAG");
+    constexpr uint64 MEMORY_TAG = CalcHash64("ARRAY_MEMORY_TAG");
 
     inline int NextPOT(int x)
     {

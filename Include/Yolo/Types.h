@@ -43,4 +43,3 @@ namespace Const
     constexpr Handle    EMPTY_HANDLE = { 0 };
     constexpr string    EMPTY_STRING = "";
 }
-

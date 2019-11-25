@@ -14,10 +14,10 @@ namespace Random
         string time = __TIME__;
 
         uint32 timeNumber0 = 0;
-        timeNumber0 |= (uint32)time[0] << (uint32)(7 * 8);
-        timeNumber0 |= (uint32)time[1] << (uint32)(6 * 8);
-        timeNumber0 |= (uint32)time[2] << (uint32)(5 * 8);
-        timeNumber0 |= (uint32)time[3] << (uint32)(4 * 8);
+        timeNumber0 |= (uint32)time[0] << (uint32)(3 * 8);
+        timeNumber0 |= (uint32)time[1] << (uint32)(2 * 8);
+        timeNumber0 |= (uint32)time[2] << (uint32)(1 * 8);
+        timeNumber0 |= (uint32)time[3] << (uint32)(0 * 8);
 
         uint32 timeNumber1 = 0;
         timeNumber1 |= (uint32)time[4] << (uint32)(3 * 8);

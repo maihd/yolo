@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="..\Include\Yolo\Array.h" />
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
+    <ClInclude Include="..\Include\Yolo\Hash.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
     <ClInclude Include="..\Include\Yolo\Math.h" />
     <ClInclude Include="..\Include\Yolo\MathOps.h" />
@@ -187,6 +188,7 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\DrawBuffer.cc" />
     <ClCompile Include="..\Sources\Graphics.cc" />
+    <ClCompile Include="..\Sources\Hash.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
     <ClCompile Include="..\Sources\Runtime.cc" />
     <ClCompile Include="..\Sources\String.cc" />
