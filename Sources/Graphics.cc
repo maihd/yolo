@@ -25,6 +25,68 @@ namespace Graphics
 
     DrawBuffer drawBuffer;
 
+    static string vshaderSource =
+        "#version 330 core\n"
+        "layout (location = 0) in vec3 pos;"
+        "layout (location = 1) in vec2 uv;"
+        "layout (location = 2) in vec4 color;"
+        "out vec2 fragUV;"
+        "out vec4 fragColor;"
+        "uniform mat4 model;"
+        "uniform mat4 projection;"
+        "void main() {"
+        "fragUV = uv;"
+        "fragColor = color;"
+        "gl_Position = projection * model * vec4(pos, 1);"
+        "}";
+
+    static string fshaderSource =
+        "#version 330\n"
+
+        "in vec2 fragUV;"
+        "in vec4 fragColor;"
+
+        "uniform vec4 color;"
+
+        "out vec4 resultColor;"
+
+        "void main() {"
+        "resultColor = fragColor;"
+        "}";
+
+    static string spriteVertexSource =
+        "#version 330 core\n"
+
+        "layout (location = 0) in vec3 pos;"
+        "layout (location = 1) in vec2 texcoord;"
+        //"layout (location = 2) in vec4 color;"
+
+        "out vec2 uv;"
+        //"out vec4 fragColor;"
+
+        "uniform mat4 model;"
+        "uniform mat4 projection;"
+
+        "void main() {"
+        "uv = texcoord;"
+        //"fragColor = color;"
+        "gl_Position = projection * model * vec4(pos, 1);"
+        "}";
+
+    static string spritePixelSource =
+        "#version 330 core\n"
+
+        "in vec2 uv;"
+
+        "uniform sampler2D tex;"
+
+        "out vec4 resultColor;"
+
+        "void main() {"
+        //"resultColor = vec4(uv, 0, 1);"
+        "resultColor = texture(tex, uv);"
+        "}";
+
     void ApplyDefaultSettings(void);
     void CreateDefaultObjects(void);
 
@@ -225,71 +287,9 @@ namespace Graphics
         float width = (float)Window::GetWidth();
         float height = (float)Window::GetHeight();
 
-        projection = mat4::Ortho(0, width, 0, height, -100.0f, 100.0f);
-
-        string vshaderSource =
-            "#version 330 core\n"
-            "layout (location = 0) in vec3 pos;"
-            "layout (location = 1) in vec2 uv;"
-            "layout (location = 2) in vec4 color;"
-            "out vec2 fragUV;"
-            "out vec4 fragColor;"
-            "uniform mat4 model;"
-            "uniform mat4 projection;"
-            "void main() {"
-            "fragUV = uv;"
-            "fragColor = color;"
-            "gl_Position = projection * model * vec4(pos, 1);"
-            "}";
-
-        string fshaderSource =
-            "#version 330\n"
-            
-            "in vec2 fragUV;"
-            "in vec4 fragColor;"
-
-            "uniform vec4 color;"
-            
-            "out vec4 resultColor;"
-            
-            "void main() {"
-            "resultColor = fragColor;"
-            "}";
+        projection = mat4::Ortho(0, width, 0, height, 0.0f, 100.0f);
         shader = Shader::Compile(vshaderSource, fshaderSource);
 
-        string spriteVertexSource =
-            "#version 330 core\n"
-
-            "layout (location = 0) in vec3 pos;"
-            "layout (location = 1) in vec2 texcoord;"
-            //"layout (location = 2) in vec4 color;"
-
-            "out vec2 uv;"
-            //"out vec4 fragColor;"
-
-            "uniform mat4 model;"
-            "uniform mat4 projection;"
-
-            "void main() {"
-            "uv = texcoord;"
-            //"fragColor = color;"
-            "gl_Position = projection * model * vec4(pos, 1);"
-            "}";
-
-        string spritePixelSource =
-            "#version 330 core\n"
-
-            "in vec2 uv;"
-
-            "out vec4 resultColor;"
-
-            "uniform vec4 color;"
-            "uniform sampler2D texMain;"
-
-            "void main() {"
-            //"resultColor = vec4(uv, 0, 1);"
-            "resultColor = texture(texMain, uv);"
-            "}";
         spriteShader = Shader::Compile(spriteVertexSource, spritePixelSource);
 
         drawBuffer = DrawBuffer::New();
@@ -301,7 +301,7 @@ namespace Graphics
         float width = (float)Window::GetWidth();
         float height = (float)Window::GetHeight();
         
-        projection = mat4::Ortho(0, width, 0, height, -100.0f, 100.0f);
+        projection = mat4::Ortho(0, width, 0, height, 0.0f, 100.0f);
 
         // Set viewport
         glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
@@ -413,3 +413,4 @@ namespace Graphics
         glUseProgram(0);
     }
 }
+

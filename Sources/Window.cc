@@ -47,10 +47,11 @@ namespace Window
         TCHAR* unicodeTitle = title;
 #endif
 
+        DWORD winFlags = WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_VISIBLE;
         HWND window = CreateWindow(
             WINDOW_CLASS_NAME, 
             unicodeTitle, 
-            WS_OVERLAPPEDWINDOW | WS_VISIBLE, 
+            winFlags,
             0, 0, 
             width, height,
             NULL, NULL, GetModuleHandle(NULL), NULL

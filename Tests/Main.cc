@@ -15,7 +15,7 @@ int main(void)
     string string2 = String::From(string1);
     printf("string 2: %s\n", string2);
 
-    Window::Init("Yolo Window", 800, 600);
+    Window::Init("Yolo Window", 1280, 720);
     Graphics::Init();
 
     int width = Window::GetWidth();
@@ -37,7 +37,7 @@ int main(void)
         //Graphics::DrawCircle({ 400, 300 }, 10, { 0.5, 0.5, 0.5, 1 });
         //Graphics::DrawCircle({ 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
 
-        Graphics::DrawTexture(texture, { 400, 300 }, { (float)texture.width, (float)texture.height });
+        Graphics::DrawTexture(texture, { width * 0.5f, height * 0.5f }, { (float)texture.width, (float)texture.height });
 
         Graphics::Present();
 
