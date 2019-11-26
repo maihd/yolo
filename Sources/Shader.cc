@@ -13,11 +13,11 @@ Handle CreateGLShader(GLenum shaderType, string source)
     glShaderSource(shader, 1, &source, 0);
     glCompileShader(shader);
 
-    int status;
+    int status = 0;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
     if (!status)
     {
-        char infoLog[1024];
+        char infoLog[1024] = "";
         glGetShaderInfoLog(shader, sizeof(infoLog), 0, infoLog);
         glDeleteShader(shader);
         return 0;
@@ -51,12 +51,14 @@ Shader Shader::Compile(string vertexSource, string pixelsSource)
     glGetProgramiv(shader.handle, GL_LINK_STATUS, &programStatus);
     if (!programStatus)
     {
-        char infoLog[1024];
+        char infoLog[1024] = "";
         glGetProgramInfoLog(shader.handle, sizeof(infoLog), 0, infoLog);
         glDeleteProgram(shader.handle);
-        return { 0 };
+        shader.handle = 0;
     }
 
+    glDeleteShader(vertexShader);
+    glDeleteShader(pixelsShader);
     return shader;
 }
 

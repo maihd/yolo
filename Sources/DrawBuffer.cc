@@ -133,20 +133,20 @@ void DrawBuffer::AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, 
         float angle1 = step * (i + 1);
 
         const Vertex v0 = {
-            vec3::From(position.x + cosf(angle0) * radius, position.y + sinf(angle0) * radius),
-            vec2::From(0, 0),
+            { position.x + cosf(angle0) * radius, position.y + sinf(angle0) * radius },
+            { 0, 0 },
             color
         };
 
         const Vertex v1 = {
-            vec3::From(position.x + cosf(angle1) * radius, position.y + sinf(angle1) * radius),
-            vec2::From(0, 0),
+            { position.x + cosf(angle1) * radius, position.y + sinf(angle1) * radius },
+            { 0, 0 },
             color
         };
 
         const Vertex v2 = {
-            vec3::From(position.x, position.y),
-            vec2::From(0, 0),
+            { position.x, position.y },
+            { 0, 0 },
             color
         };
 
@@ -157,26 +157,26 @@ void DrawBuffer::AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, 
 void DrawBuffer::AddRectangle(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color)
 {
     const Vertex v0 = {
-        vec3::From(position.x, position.y),
-        vec2::From(0, 0),
+        { position.x, position.y },
+        { 0, 0 },
         color
     };
 
     const Vertex v1 = {
-        vec3::From(position.x, position.y + size.y),
-        vec2::From(0, 0),
+        { position.x, position.y + size.y },
+        { 0, 0 },
         color
     };
 
     const Vertex v2 = {
-        vec3::From(position.x + size.x, position.y + size.y),
-        vec2::From(0, 0),
+        { position.x + size.x, position.y + size.y },
+        { 0, 0 },
         color
     };
 
     const Vertex v3 = {
-        vec3::From(position.x + size.x, position.y),
-        vec2::From(0, 0),
+        { position.x + size.x, position.y },
+        { 0, 0 },
         color
     };
 

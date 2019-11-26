@@ -1,4 +1,4 @@
-// stb_voxel_render.h - v0.88 - Sean Barrett, 2015 - public domain
+// stb_voxel_render.h - v0.87 - Sean Barrett, 2015 - public domain
 //
 // This library helps render large-scale "voxel" worlds for games,
 // in this case, one with blocks that can have textures and that
@@ -192,7 +192,6 @@
 //
 // VERSION HISTORY
 //
-//   0.88   (2019-03-04)  fix warnings
 //   0.87   (2019-02-25)  fix warning
 //   0.86   (2019-02-07)  fix typos in comments
 //   0.85   (2017-03-03)  add block_selector (by guitarfreak)
@@ -3553,7 +3552,7 @@ void stbvox_set_buffer(stbvox_mesh_maker *mm, int mesh, int slot, void *buffer, 
    stbvox_bring_up_to_date(mm);
    mm->output_buffer[mesh][slot] = (char *) buffer;
    mm->output_cur   [mesh][slot] = (char *) buffer;
-   mm->output_len   [mesh][slot] = (int) len;
+   mm->output_len   [mesh][slot] = len;
    mm->output_end   [mesh][slot] = (char *) buffer + len;
    for (i=0; i < STBVOX_MAX_MESH_SLOTS; ++i) {
       if (mm->output_buffer[mesh][i]) {
@@ -3569,7 +3568,7 @@ void stbvox_set_default_mesh(stbvox_mesh_maker *mm, int mesh)
 
 int stbvox_get_quad_count(stbvox_mesh_maker *mm, int mesh)
 {
-   return (int) ((mm->output_cur[mesh][0] - mm->output_buffer[mesh][0]) / mm->output_size[mesh][0]);
+   return (mm->output_cur[mesh][0] - mm->output_buffer[mesh][0]) / mm->output_size[mesh][0];
 }
 
 stbvox_input_description *stbvox_get_input_description(stbvox_mesh_maker *mm)

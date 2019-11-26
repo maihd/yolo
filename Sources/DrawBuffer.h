@@ -4,12 +4,7 @@
 #include <Yolo/Array.h>
 #include <Yolo/MathTypes.h>
 
-struct Vertex
-{
-    vec3 position;
-    vec2 uv;
-    vec4 color;
-};
+#include "./Vertex.h"
 
 struct DrawBuffer
 {

@@ -1,4 +1,4 @@
-// Ogg Vorbis audio decoder - v1.17 - public domain
+// Ogg Vorbis audio decoder - v1.15 - public domain
 // http://nothings.org/stb_vorbis/
 //
 // Original version written by Sean Barrett in 2007.
@@ -30,11 +30,9 @@
 //    Tom Beaumont       Ingo Leitgeb        Nicolas Guillemot
 //    Phillip Bennefall  Rohit               Thiago Goulart
 //    manxorist@github   saga musix          github:infatum
-//    Timur Gagiev       Maxwell Koo
+//    Timur Gagiev
 //
 // Partial history:
-//    1.17    - 2019-07-08 - fix CVE-2019-13217..CVE-2019-13223 (by ForAllSecure)
-//    1.16    - 2019-03-04 - fix warnings
 //    1.15    - 2019-02-07 - explicit failure if Ogg Skeleton data is found
 //    1.14    - 2018-02-11 - delete bogus dealloca usage
 //    1.13    - 2018-01-29 - fix truncation of last frame (hopefully)
@@ -1203,10 +1201,8 @@ static int lookup1_values(int entries, int dim)
    int r = (int) floor(exp((float) log((float) entries) / dim));
    if ((int) floor(pow((float) r+1, dim)) <= entries)   // (int) cast for MinGW warning;
       ++r;                                              // floor() to avoid _ftol() when non-CRT
-   if (pow((float) r+1, dim) <= entries)
-      return -1;
-   if ((int) floor(pow((float) r, dim)) > entries)
-      return -1;
+   assert(pow((float) r+1, dim) > entries);
+   assert((int) floor(pow((float) r, dim)) <= entries); // (int),floor() as above
    return r;
 }
 
@@ -2016,7 +2012,7 @@ static __forceinline void draw_line(float *output, int x0, int y0, int x1, int y
    ady -= abs(base) * adx;
    if (x1 > n) x1 = n;
    if (x < x1) {
-      LINE_OP(output[x], inverse_db_table[y&255]);
+      LINE_OP(output[x], inverse_db_table[y]);
       for (++x; x < x1; ++x) {
          err += ady;
          if (err >= adx) {
@@ -2024,7 +2020,7 @@ static __forceinline void draw_line(float *output, int x0, int y0, int x1, int y
             y += sy;
          } else
             y += base;
-         LINE_OP(output[x], inverse_db_table[y&255]);
+         LINE_OP(output[x], inverse_db_table[y]);
       }
    }
 }
@@ -3051,6 +3047,7 @@ static float *get_window(vorb *f, int len)
    len <<= 1;
    if (len == f->blocksize_0) return f->window[0];
    if (len == f->blocksize_1) return f->window[1];
+   assert(0);
    return NULL;
 }
 
@@ -3456,7 +3453,6 @@ static int vorbis_finish_frame(stb_vorbis *f, int len, int left, int right)
    if (f->previous_length) {
       int i,j, n = f->previous_length;
       float *w = get_window(f, n);
-      if (w == NULL) return 0;
       for (i=0; i < f->channels; ++i) {
          for (j=0; j < n; ++j)
             f->channel_buffers[i][left+j] =
@@ -3698,7 +3694,6 @@ static int start_decoder(vorb *f)
          while (current_entry < c->entries) {
             int limit = c->entries - current_entry;
             int n = get_bits(f, ilog(limit));
-            if (current_length >= 32) return error(f, VORBIS_invalid_setup);
             if (current_entry + n > (int) c->entries) { return error(f, VORBIS_invalid_setup); }
             memset(lengths + current_entry, current_length, n);
             current_entry += n;
@@ -3802,9 +3797,7 @@ static int start_decoder(vorb *f)
          c->value_bits = get_bits(f, 4)+1;
          c->sequence_p = get_bits(f,1);
          if (c->lookup_type == 1) {
-            int values = lookup1_values(c->entries, c->dimensions);
-            if (values < 0) return error(f, VORBIS_invalid_setup);
-            c->lookup_values = (uint32) values;
+            c->lookup_values = lookup1_values(c->entries, c->dimensions);
          } else {
             c->lookup_values = c->entries * c->dimensions;
          }
@@ -3940,9 +3933,6 @@ static int start_decoder(vorb *f)
             p[j].id = j;
          }
          qsort(p, g->values, sizeof(p[0]), point_compare);
-         for (j=0; j < g->values-1; ++j)
-            if (p[j].x == p[j+1].x)
-               return error(f, VORBIS_invalid_setup);
          for (j=0; j < g->values; ++j)
             g->sorted_order[j] = (uint8) p[j].id;
          // precompute the neighbors
@@ -4029,7 +4019,6 @@ static int start_decoder(vorb *f)
          max_submaps = m->submaps;
       if (get_bits(f,1)) {
          m->coupling_steps = get_bits(f,8)+1;
-         if (m->coupling_steps > f->channels) return error(f, VORBIS_invalid_setup);
          for (k=0; k < m->coupling_steps; ++k) {
             m->chan[k].magnitude = get_bits(f, ilog(f->channels-1));
             m->chan[k].angle = get_bits(f, ilog(f->channels-1));
@@ -5001,13 +4990,7 @@ stb_vorbis * stb_vorbis_open_file(FILE *file, int close_on_free, int *error, con
 
 stb_vorbis * stb_vorbis_open_filename(const char *filename, int *error, const stb_vorbis_alloc *alloc)
 {
-   FILE *f;
-#if defined(_WIN32) && defined(__STDC_WANT_SECURE_LIB__)
-   if (0 != fopen_s(&f, filename, "rb"))
-      f = NULL;
-#else
-   f = fopen(filename, "rb");
-#endif
+   FILE *f = fopen(filename, "rb");
    if (f) 
       return stb_vorbis_open_file(f, TRUE, error, alloc);
    if (error) *error = VORBIS_file_open_failure;
@@ -5396,12 +5379,6 @@ int stb_vorbis_get_samples_float(stb_vorbis *f, int channels, float **buffer, in
 #endif // STB_VORBIS_NO_PULLDATA_API
 
 /* Version history
-    1.17    - 2019-07-08 - fix CVE-2019-13217, -13218, -13219, -13220, -13221, -13222, -13223
-                           found with Mayhem by ForAllSecure
-    1.16    - 2019-03-04 - fix warnings
-    1.15    - 2019-02-07 - explicit failure if Ogg Skeleton data is found
-    1.14    - 2018-02-11 - delete bogus dealloca usage
-    1.13    - 2018-01-29 - fix truncation of last frame (hopefully)
     1.12    - 2017-11-21 - limit residue begin/end to blocksize/2 to avoid large temp allocs in bad/corrupt files
     1.11    - 2017-07-23 - fix MinGW compilation 
     1.10    - 2017-03-03 - more robust seeking; fix negative ilog(); clear error in open_memory

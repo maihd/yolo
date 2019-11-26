@@ -75,6 +75,18 @@
     <ClInclude Include="..\Sources\Runtime.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\Sprite.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SpriteBatch.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SpriteMesh.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Vertex.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\DrawBuffer.cc">
@@ -93,6 +105,15 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Shader.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Sprite.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SpriteBatch.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SpriteMesh.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\String.cc">

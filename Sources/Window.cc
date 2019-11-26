@@ -3,6 +3,8 @@
 
 #include "./Runtime.h"
 
+#pragma comment(lib, "OpenGL32.lib")
+
 namespace Window
 {
     constexpr TCHAR* WINDOW_CLASS_NAME = TEXT("YOLO_WINDOW_CLASS");
@@ -174,6 +176,6 @@ namespace Window
 
     Handle GetHandle(void)
     {
-        return (Handle)Runtime::mainWindow;
+        return (Handle)(uint64)Runtime::mainWindow;
     }
 }

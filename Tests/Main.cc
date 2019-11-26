@@ -21,23 +21,23 @@ int main(void)
     int width = Window::GetWidth();
     int height = Window::GetHeight();
 
-    vec3 vec3 = { 1, 2, 3 };
-    float vals[] = { 1, 2 };
-    vec2 vec2 = vec2::From(vals);
-
     int* intArray = Array::Empty<int>();
     Array::Push(&intArray, 10);
     Array::Free(&intArray);
 
     float angle = 0.0f;
 
+    Texture texture = Texture::Load("../Assets/character.png");
+
     while (!Window::PollEvents())
     {
         //Graphics::ClearColor(0, 1, 1);
         Graphics::Clear();
 
-        Graphics::DrawCircle({ 400, 300 }, 10, { 0.5, 0.5, 0.5, 1 });
-        Graphics::DrawCircle({ 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
+        //Graphics::DrawCircle({ 400, 300 }, 10, { 0.5, 0.5, 0.5, 1 });
+        //Graphics::DrawCircle({ 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
+
+        Graphics::DrawTexture(texture, { 400, 300 }, { (float)texture.width, (float)texture.height });
 
         Graphics::Present();
 

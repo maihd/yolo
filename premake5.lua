@@ -1,5 +1,21 @@
 local ROOT_DIR = path.getabsolute(".")
 local BUILD_DIR = path.join(ROOT_DIR, "Build")
+local THIRDPARTY_DIR = path.join(ROOT_DIR, "ThirdParty")
+
+local function filedirs(dirs)
+    if type(dirs) == "string" then
+        files {
+            path.join(ROOT_DIR, dirs, "*.h"),
+            path.join(ROOT_DIR, dirs, "*.c"),
+            path.join(ROOT_DIR, dirs, "*.cc"),
+            path.join(ROOT_DIR, dirs, "*.cpp"),
+        }
+    elseif type(dirs) == "table" then
+        for _, dir in ipairs(dirs) do
+            filedirs(dir)
+        end
+    end
+end
 
 workspace "Yolo"
 do
@@ -10,7 +26,6 @@ do
 
     platforms { "x32", "x64" }
 
-    startproject "Yolo.Test"
 
     flags {
         "NoPCH",
@@ -24,14 +39,13 @@ do
     }
 
     cppdialect "C++11"
-    --staticruntime "On"
-    --omitframepointer "On"
+    staticruntime "On"
+    omitframepointer "On"
 
-    filter "configurations:Debug"
-    do
-        flags {
-        }
-    end
+    rtti "Off"
+    exceptionhandling "Off"
+
+    startproject "Yolo.Test"
 
     filter {}
 end
@@ -41,35 +55,52 @@ do
     kind "StaticLib"
 
     defines {
-        "GLEW_STATIC"
+        "GLEW_STATIC",
+        --"AL_LIBTYPE_STATIC",
     }
 
     links {
-        "OpenGL32"
+        --"SDL2",
+        --"OpenAL32",
     }
 
     includedirs {
         path.join(ROOT_DIR, "Include"),
         
-        path.join(ROOT_DIR, "ThirdParty/Sources/stb"),
-        path.join(ROOT_DIR, "ThirdParty/Sources/glew-2.1.0/include"),
+        path.join(THIRDPARTY_DIR, "Include"),
+        path.join(THIRDPARTY_DIR, "Sources/stb"),
+        path.join(THIRDPARTY_DIR, "Sources/glew-2.1.0/include"),
     }
 
     files {
-        path.join(ROOT_DIR, "Include/Yolo/*.h"),
-        path.join(ROOT_DIR, "Include/Yolo/**/*.h"),
-
-        path.join(ROOT_DIR, "Sources/*.h"),
-        path.join(ROOT_DIR, "Sources/**/*.h"),
-
-        path.join(ROOT_DIR, "Sources/*.c"),
-        path.join(ROOT_DIR, "Sources/**/*.c"),
-
-        path.join(ROOT_DIR, "Sources/*.cc"),
-        path.join(ROOT_DIR, "Sources/**/*.cc"),
-
-        path.join(ROOT_DIR, "ThirdParty/Sources/glew-2.1.0/src/glew.c"),
+        path.join(THIRDPARTY_DIR, "Sources/glew-2.1.0/src/glew.c"),
     }
+
+    filedirs {
+        "Include/Yolo",
+
+        "Sources",
+    }
+
+    filter { "platforms:x32" }
+    do
+        libdirs {
+            path.join(THIRDPARTY_DIR, "Libs/Win32"),
+        }
+
+        postbuildcommands {
+        }
+    end
+
+    filter { "platforms:x64" }
+    do
+        libdirs {
+            path.join(THIRDPARTY_DIR, "Libs/Win64"),
+        }
+
+        postbuildcommands {
+        }
+    end
 
     filter {}
 end

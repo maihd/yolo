@@ -6,6 +6,7 @@
 #include <Yolo/Shader.h>
 
 #include "./Runtime.h"
+#include "./SpriteMesh.h"
 #include "./DrawBuffer.h"
 
 namespace Graphics
@@ -15,10 +16,12 @@ namespace Graphics
     mat4 projection;
 
     Shader shader;
+    Shader spriteShader;
+    SpriteMesh spriteMesh;
 
-    GLuint vertexBuffer;
-    GLuint indexBuffer;
-    GLuint vertexArray;
+    Handle vertexBuffer;
+    Handle indexBuffer;
+    Handle vertexArray;
 
     DrawBuffer drawBuffer;
 
@@ -121,7 +124,7 @@ namespace Graphics
             WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
             WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
             WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
-
+            
             WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
             WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
 
@@ -145,6 +148,9 @@ namespace Graphics
             WGL_DEPTH_BITS_ARB, 24,
             WGL_STENCIL_BITS_ARB, 8,
 
+            WGL_SAMPLE_BUFFERS_ARB, 1,
+            WGL_SAMPLES_ARB, 4,
+
             //WGL_ARB_multisample && settings.multisamples > 1 ? WGL_SAMPLE_BUFFERS_ARB : 0, 1,
             //WGL_ARB_multisample && settings.multisamples > 1 ? WGL_SAMPLES_ARB : 0, settings.multisamples,
 
@@ -165,8 +171,8 @@ namespace Graphics
             WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
             WGL_CONTEXT_MAJOR_VERSION_ARB, 4, // Highest current supported version
             WGL_CONTEXT_MINOR_VERSION_ARB, 5, // Highest current supported version
-            WGL_CONTEXT_LAYER_PLANE_ARB, 0, // main plane
-            WGL_CONTEXT_FLAGS_ARB, 0, // prevent use deprecated features
+            //WGL_CONTEXT_LAYER_PLANE_ARB, 0, // main plane
+            //WGL_CONTEXT_FLAGS_ARB, 0, // prevent use deprecated features
             0
         };
 
@@ -198,11 +204,18 @@ namespace Graphics
 
     void ApplyDefaultSettings(void) 
     {
-        // Set viewport
-        //Graphics::Viewport(0, 0, Window::GetWidth(), Window::GetHeight());
+        //glEnable(GL_BLEND);
+        //glEnable(GL_TEXTURE);
+        //glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_STENCIL_TEST);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        //glEnable(GL_LINE_SMOOTH);
+        //glEnable(GL_POLYGON_SMOOTH);
+
+        //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+        //glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
         SetVSync(true);
     }
@@ -244,7 +257,43 @@ namespace Graphics
             "}";
         shader = Shader::Compile(vshaderSource, fshaderSource);
 
+        string spriteVertexSource =
+            "#version 330 core\n"
+
+            "layout (location = 0) in vec3 pos;"
+            "layout (location = 1) in vec2 texcoord;"
+            //"layout (location = 2) in vec4 color;"
+
+            "out vec2 uv;"
+            //"out vec4 fragColor;"
+
+            "uniform mat4 model;"
+            "uniform mat4 projection;"
+
+            "void main() {"
+            "uv = texcoord;"
+            //"fragColor = color;"
+            "gl_Position = projection * model * vec4(pos, 1);"
+            "}";
+
+        string spritePixelSource =
+            "#version 330 core\n"
+
+            "in vec2 uv;"
+
+            "out vec4 resultColor;"
+
+            "uniform vec4 color;"
+            "uniform sampler2D texMain;"
+
+            "void main() {"
+            //"resultColor = vec4(uv, 0, 1);"
+            "resultColor = texture(texMain, uv);"
+            "}";
+        spriteShader = Shader::Compile(spriteVertexSource, spritePixelSource);
+
         drawBuffer = DrawBuffer::New();
+        spriteMesh = SpriteMesh::New();
     }
 
     void Clear(void)
@@ -253,6 +302,9 @@ namespace Graphics
         float height = (float)Window::GetHeight();
         
         projection = mat4::Ortho(0, width, 0, height, -100.0f, 100.0f);
+
+        // Set viewport
+        glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
 
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -279,6 +331,12 @@ namespace Graphics
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.indexBuffer);
 
         glDrawElements(GL_TRIANGLES, Array::Length(drawBuffer.indices), GL_UNSIGNED_SHORT, 0);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        glUseProgram(0);
 
         Window::SwapBuffer();
     }
@@ -324,5 +382,34 @@ namespace Graphics
     void DrawRectangle(vec2 position, vec2 size, vec4 color)
     {
         DrawBuffer::AddRectangle(&drawBuffer, position, size, color);
+    }
+
+    void DrawTexture(Texture texture, vec2 position, vec2 size)
+    {
+        mat4 model = mul(mat4::Translation(position), mat4::Scalation(size));
+        
+        int projectionLocation = glGetUniformLocation(shader.handle, "projection");
+        int modelLocation = glGetUniformLocation(shader.handle, "model");
+
+        glUseProgram(spriteShader.handle);
+        glUniformMatrix4fv(projectionLocation, 1, false, (float*)&projection);
+        glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
+
+        glBindVertexArray(spriteMesh.vertexArray);
+        glBindBuffer(GL_ARRAY_BUFFER, spriteMesh.vertexArray);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture.handle);
+
+        //int textureLocation = glGetUniformLocation(spriteShader.handle, "image");
+        //glUniform1i(textureLocation, 0);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+        glUseProgram(0);
     }
 }
