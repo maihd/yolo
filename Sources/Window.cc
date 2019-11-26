@@ -38,12 +38,6 @@ namespace Window
             return false;
         }
 
-        int screenWidth  = GetSystemMetrics(SM_CXSCREEN);
-        int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
-        int centerX = (screenWidth - width) >> 1;
-        int centerY = (screenHeight - height) >> 1;
-
 #if UNICODE
         TCHAR unicodeTitle[1024];
         ::MultiByteToWideChar(CP_UTF8, 0, title, -1, unicodeTitle, sizeof(unicodeTitle));
@@ -55,8 +49,8 @@ namespace Window
             WINDOW_CLASS_NAME, 
             unicodeTitle, 
             WS_OVERLAPPEDWINDOW | WS_VISIBLE, 
-            centerX, centerY, 
-            width, height, 
+            0, 0, 
+            width, height,
             NULL, NULL, GetModuleHandle(NULL), NULL
         );
         if (!window)
@@ -69,6 +63,25 @@ namespace Window
         {
             return false;
         }
+
+        RECT windowRect;
+        RECT clientRect;
+        GetWindowRect(window, &windowRect);
+        GetClientRect(window, &clientRect);
+
+        int screenWidth     = GetSystemMetrics(SM_CXSCREEN);
+        int screenHeight    = GetSystemMetrics(SM_CYSCREEN);
+
+        int borderWidth     = (int)((windowRect.right - windowRect.left) - (clientRect.right - clientRect.left));
+        int borderHeight    = (int)((windowRect.bottom - windowRect.top) - (clientRect.bottom - clientRect.top));
+
+        int resultWidth     = width + borderWidth;
+        int resultHeight    = height + borderHeight;
+
+        int centerX         = (screenWidth - resultWidth) >> 1;
+        int centerY         = (screenHeight - resultHeight) >> 1;
+
+        SetWindowPos(window, HWND_TOP, centerX, centerY, resultWidth, resultHeight, SWP_NOZORDER);
 
         Runtime::mainWindowContext = hdc;
         Runtime::mainWindow = window;
