@@ -92,9 +92,6 @@ namespace Window
     void Quit(void)
     {
         DestroyWindow(Runtime::mainWindow);
-
-        Runtime::mainWindow = NULL;
-        Runtime::mainWindowContext = NULL;
     }
 
     bool PollEvents(void)
@@ -132,6 +129,9 @@ namespace Window
         case WM_DESTROY:
             if (hwnd == Runtime::mainWindow)
             {
+                Runtime::mainWindowContext = NULL;
+                Runtime::mainWindow = NULL;
+
                 PostQuitMessage(0);
             }
 
@@ -170,5 +170,10 @@ namespace Window
         {
             return 0;
         }
+    }
+
+    Handle GetHandle(void)
+    {
+        return (Handle)Runtime::mainWindow;
     }
 }

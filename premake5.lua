@@ -51,6 +51,7 @@ do
     includedirs {
         path.join(ROOT_DIR, "Include"),
         
+        path.join(ROOT_DIR, "ThirdParty/Sources/stb"),
         path.join(ROOT_DIR, "ThirdParty/Sources/glew-2.1.0/include"),
     }
 

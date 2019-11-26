@@ -2,9 +2,22 @@
 
 #include <Yolo/Types.h>
 
+enum struct PixelFormat
+{
+    Unknown = 0,
+
+    RGB,
+    RGBA,
+};
+
 struct Texture
 {
-    Handle  handle;
-    int     width;
-    int     height;
+    Handle      handle;
+    PixelFormat format;
+
+    int         width;
+    int         height;
+
+    static Texture Load(string path);
+    static void    Free(Texture* texture);
 };
