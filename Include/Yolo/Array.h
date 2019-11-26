@@ -168,4 +168,32 @@ namespace Array
 
         return (*array)[meta->length];
     }
+
+    template <typename T>
+    inline T* Fill(int capacity, T value)
+    {
+        T* array = Empty();
+        if (Ensure(&array, capacity))
+        {
+            for (int i = 0; i < capacity; i++)
+            {
+                Push(&array, value);
+            }
+        }
+
+        return array;
+    }
+
+    template <typename T>
+    inline void Clear(T** array)
+    {
+        assert(array);
+        assert(IsArray(*array));
+        
+        ArrayMeta* meta = *array ? (ArrayMeta*)(*array) - 1 : 0;
+        if (meta)
+        { 
+            meta->length = 0;
+        }
+    }
 }

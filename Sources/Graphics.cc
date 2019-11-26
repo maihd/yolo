@@ -201,6 +201,9 @@ namespace Graphics
         // Set viewport
         //Graphics::Viewport(0, 0, Window::GetWidth(), Window::GetHeight());
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         SetVSync(true);
     }
 
@@ -242,12 +245,6 @@ namespace Graphics
         shader = Shader::Compile(vshaderSource, fshaderSource);
 
         drawBuffer = DrawBuffer::New();
-        
-        DrawBuffer::AddCircle(&drawBuffer, { 300, 300 }, 30, { 0, 0, 1, 1 });
-
-        DrawBuffer::AddRectangle(&drawBuffer, { 100, 100 }, { 50, 50 }, { 1, 0, 0, 1 });
-
-        DrawBuffer::UpdateBuffers(&drawBuffer);
     }
 
     void Clear(void)
@@ -258,6 +255,8 @@ namespace Graphics
         projection = mat4::Ortho(0, width, 0, height, -100.0f, 100.0f);
 
         glClear(GL_COLOR_BUFFER_BIT);
+
+        DrawBuffer::Clear(&drawBuffer);
     }
 
     void ClearColor(float r, float g, float b, float a)
@@ -267,6 +266,8 @@ namespace Graphics
 
     void Present(void)
     {
+        DrawBuffer::UpdateBuffers(&drawBuffer);
+
         mat4 model = mat4::Translation(0, 0);
 
         glUseProgram(shader.handle);
@@ -313,5 +314,15 @@ namespace Graphics
     void SetWireframe(bool enable)
     {
         glPolygonMode(GL_FRONT_AND_BACK, enable ? GL_LINE : GL_FILL);
+    }
+
+    void DrawCircle(vec2 position, float radius, vec4 color, int segments)
+    {
+        DrawBuffer::AddCircle(&drawBuffer, position, radius, color, segments);
+    }
+
+    void DrawRectangle(vec2 position, vec2 size, vec4 color)
+    {
+        DrawBuffer::AddRectangle(&drawBuffer, position, size, color);
     }
 }

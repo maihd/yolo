@@ -69,6 +69,12 @@ void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices, int count
     }
 }
 
+void DrawBuffer::Clear(DrawBuffer* drawBuffer)
+{
+    Array::Clear(&drawBuffer->vertices);
+    Array::Clear(&drawBuffer->indices);
+}
+
 void DrawBuffer::UpdateBuffers(DrawBuffer* drawBuffer)
 {
     assert(drawBuffer);

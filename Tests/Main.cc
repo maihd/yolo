@@ -1,4 +1,5 @@
 #include <Yolo/Math.h>
+#include <Yolo/Time.h>
 #include <Yolo/Array.h>
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
@@ -30,7 +31,11 @@ int main(void)
         //Graphics::ClearColor(0, 1, 1);
         Graphics::Clear();
 
+        Graphics::DrawCircle({ 100, 100 }, 50, { 1, 1, 1, 1 });
+
         Graphics::Present();
+
+        Time::UpdateAndSleep(60);
     }
 
     Graphics::Quit();

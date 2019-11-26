@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Yolo/MathTypes.h>
+
 namespace Graphics
 {
     bool Init(void);
@@ -15,4 +17,7 @@ namespace Graphics
 
     bool IsWireframe(void);
     void SetWireframe(bool enable);
+
+    void DrawCircle(vec2 position, float radius, vec4 color, int segments = 30);
+    void DrawRectangle(vec2 position, vec2 size, vec4 color);
 }

@@ -32,5 +32,6 @@ struct DrawBuffer
     static void       AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, vec4 color, int segments = 30);
     static void       AddRectangle(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color);
 
+    static void       Clear(DrawBuffer* drawBuffer);
     static void       UpdateBuffers(DrawBuffer* drawBuffer);
 };
