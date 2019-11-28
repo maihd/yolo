@@ -27,7 +27,7 @@ int main(void)
 
     float angle = 0.0f;
 
-    Texture texture = Texture::Load("../Assets/character.png");
+    Texture texture = Texture::Load("../Assets/opengl_logo.png");
 
     while (!Window::PollEvents())
     {

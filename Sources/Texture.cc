@@ -10,7 +10,7 @@
 Texture Texture::Load(string path)
 {
     int width, height, channel;
-    void* pixels = stbi_load(path, &width, &height, &channel, 3);
+    void* pixels = stbi_load(path, &width, &height, &channel, 0);
     if (!pixels)
     {
         return {};

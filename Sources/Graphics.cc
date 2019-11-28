@@ -233,8 +233,8 @@ namespace Graphics
             WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
             WGL_CONTEXT_MAJOR_VERSION_ARB, 4, // Highest current supported version
             WGL_CONTEXT_MINOR_VERSION_ARB, 5, // Highest current supported version
-            //WGL_CONTEXT_LAYER_PLANE_ARB, 0, // main plane
-            //WGL_CONTEXT_FLAGS_ARB, 0, // prevent use deprecated features
+            WGL_CONTEXT_LAYER_PLANE_ARB, 0, // main plane
+            WGL_CONTEXT_FLAGS_ARB, 0, // prevent use deprecated features
             0
         };
 
@@ -266,12 +266,12 @@ namespace Graphics
 
     void ApplyDefaultSettings(void) 
     {
-        //glEnable(GL_BLEND);
-        //glEnable(GL_TEXTURE);
+        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE);
         //glEnable(GL_DEPTH_TEST);
         //glEnable(GL_STENCIL_TEST);
 
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         //glEnable(GL_LINE_SMOOTH);
         //glEnable(GL_POLYGON_SMOOTH);
