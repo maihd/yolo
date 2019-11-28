@@ -84,7 +84,7 @@ namespace Graphics
 
         "void main() {"
         //"resultColor = vec4(uv, 0, 1);"
-        "resultColor = texture(tex, uv);"
+        "resultColor = vec4(0, 0, 0, texture(tex, uv).a);"
         "}";
 
     void ApplyDefaultSettings(void);

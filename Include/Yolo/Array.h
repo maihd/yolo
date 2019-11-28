@@ -39,6 +39,41 @@ namespace Array
     }
 
     template <typename T>
+    inline T* From(const T* buffer, int length)
+    {
+        if (!buffer || length <= 0)
+        {
+            return Empty<T>();
+        }
+
+        T* result = Empty<T>();
+        if (Resize(&result, length))
+        {
+            memcpy(result, buffer, sizeof(T) * length);
+        }
+        return result;
+    }
+
+    template <typename T>
+    inline T* From(const T* array)
+    {
+        assert(IsArray(array));
+
+        int length = Length(array);
+        if (length == 0)
+        {
+            return Empty<T>();
+        }
+
+        T* result = Empty<T>();
+        if (Resize(&result, length))
+        {
+            memcpy(result, buffer, sizeof(T) * length);
+        }
+        return result;
+    }
+
+    template <typename T>
     inline void Free(T** array)
     {
         assert(array);

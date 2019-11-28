@@ -1,5 +1,6 @@
 #include <Yolo/Math.h>
 #include <Yolo/Time.h>
+#include <Yolo/Font.h>
 #include <Yolo/Array.h>
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
@@ -18,6 +19,8 @@ int main(void)
     Window::Init("Yolo Window", 1280, 720);
     Graphics::Init();
 
+    Font font = Font::Load("../Assets/OpenSans_Regular.ttf", 32.0f);
+
     int width = Window::GetWidth();
     int height = Window::GetHeight();
 
@@ -27,21 +30,23 @@ int main(void)
 
     float angle = 0.0f;
 
-    Texture texture = Texture::Load("../Assets/opengl_logo.png");
+    Texture texture = font.texture;//Texture::Load("../Assets/opengl_logo.png");
+    float posX = 0;
 
     while (!Window::PollEvents())
     {
-        //Graphics::ClearColor(0, 1, 1);
+        Graphics::ClearColor(1, 1, 1);
         Graphics::Clear();
 
         //Graphics::DrawCircle({ 400, 300 }, 10, { 0.5, 0.5, 0.5, 1 });
         //Graphics::DrawCircle({ 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
 
-        Graphics::DrawTexture(texture, { width * 0.5f, height * 0.5f }, { (float)texture.width, (float)texture.height });
+        Graphics::DrawTexture(texture, { posX + width * 0.5f, height * 0.5f }, { (float)texture.width, (float)texture.height });
 
         Graphics::Present();
 
         angle += Time::GetDeltaTime();
+        posX = cosf(angle) * 100;
         Time::UpdateAndSleep(60);
     }
 

@@ -27,6 +27,12 @@
     <ClInclude Include="..\Include\Yolo\Array.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\File.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Font.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Graphics.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -90,6 +96,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\DrawBuffer.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Font.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Graphics.cc">
