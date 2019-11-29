@@ -29,12 +29,12 @@ Font Font::Load(string path, float size)
         fread(buffer, fileSize, 1, file);
         fclose(file);
 
-        uint8* pixels = (uint8*)malloc(1024 * 1024);
+        uint8* pixels = (uint8*)malloc(512 * 512);
         stbtt_bakedchar* bakedChars = (stbtt_bakedchar*)malloc(sizeof(stbtt_bakedchar) * 256);
 
-        stbtt_BakeFontBitmap(buffer, 0, size, pixels, 1024, 1024, 0, 256, bakedChars);
+        stbtt_BakeFontBitmap(buffer, 0, size, pixels, 512, 512, 0, 256, bakedChars);
 
-        Texture texture = Texture::New(pixels, 1024, 1024, PixelFormat::Alpha, PixelFormat::Alpha);
+        Texture texture = Texture::New(pixels, 512, 512, PixelFormat::Red, PixelFormat::Red);
 
         FontChar* chars = Array::Empty<FontChar>();
 

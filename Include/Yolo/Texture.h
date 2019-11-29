@@ -8,6 +8,10 @@ enum struct PixelFormat
 
     RGB,
     RGBA,
+
+    Red,
+    Green,
+    Blue,
     Alpha,
 };
 

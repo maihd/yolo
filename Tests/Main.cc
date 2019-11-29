@@ -35,7 +35,7 @@ int main(void)
 
     while (!Window::PollEvents())
     {
-        Graphics::ClearColor(1, 1, 1);
+        //Graphics::ClearColor(1, 1, 1);
         Graphics::Clear();
 
         //Graphics::DrawCircle({ 400, 300 }, 10, { 0.5, 0.5, 0.5, 1 });

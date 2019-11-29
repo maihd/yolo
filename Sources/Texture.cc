@@ -9,7 +9,7 @@
 
 GLenum PixelFormatToGLenum(PixelFormat value)
 {
-    const GLenum enums[] = { GL_NONE, GL_RGB, GL_RGBA, GL_ALPHA };
+    const GLenum enums[] = { GL_NONE, GL_RGB, GL_RGBA, GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA };
 
     return enums[(int)value];
 }
