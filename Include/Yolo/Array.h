@@ -39,6 +39,14 @@ namespace Array
     }
 
     template <typename T>
+    inline T* New(int capacity = 0)
+    {
+        T* result = Empty<T>();
+        Ensure(&result, capacity);
+        return result;
+    }
+
+    template <typename T>
     inline T* From(const T* buffer, int length)
     {
         if (!buffer || length <= 0)

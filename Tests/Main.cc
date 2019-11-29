@@ -41,7 +41,7 @@ int main(void)
         //Graphics::DrawCircle({ 400, 300 }, 10, { 0.5, 0.5, 0.5, 1 });
         //Graphics::DrawCircle({ 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
 
-        Graphics::DrawTexture(texture, { posX + width * 0.5f, height * 0.5f }, { (float)texture.width, (float)texture.height });
+        Graphics::DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
 
         Graphics::Present();
 

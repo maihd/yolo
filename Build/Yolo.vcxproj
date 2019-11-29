@@ -196,6 +196,7 @@
     <ClInclude Include="..\Include\Yolo\Types.h" />
     <ClInclude Include="..\Include\Yolo\Window.h" />
     <ClInclude Include="..\Sources\DrawBuffer.h" />
+    <ClInclude Include="..\Sources\DrawTextBuffer.h" />
     <ClInclude Include="..\Sources\Runtime.h" />
     <ClInclude Include="..\Sources\Sprite.h" />
     <ClInclude Include="..\Sources\SpriteBatch.h" />
@@ -204,6 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\DrawBuffer.cc" />
+    <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
     <ClCompile Include="..\Sources\Font.cc" />
     <ClCompile Include="..\Sources\Graphics.cc" />
     <ClCompile Include="..\Sources\Hash.cc" />

@@ -78,6 +78,9 @@
     <ClInclude Include="..\Sources\DrawBuffer.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\DrawTextBuffer.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\Runtime.h">
       <Filter>Sources</Filter>
     </ClInclude>
@@ -96,6 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\DrawBuffer.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\DrawTextBuffer.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Font.cc">

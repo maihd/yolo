@@ -7,5 +7,11 @@ struct Vertex
 {
     vec3 position;
     vec2 uv;
+};
+
+struct VertexColor
+{
+    vec3 position;
+    vec2 uv;
     vec4 color;
 };

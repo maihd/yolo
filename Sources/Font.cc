@@ -12,6 +12,10 @@
 
 Font Font::Load(string path, float size)
 {
+    constexpr int TEXTURE_WIDTH = 1024;
+    constexpr int TEXTURE_HEIGHT = 1024;
+    constexpr int GLYPHS_COUNT = 256;
+
     FILE* file = fopen(path, "rb");
     while (file)
     {
@@ -29,32 +33,42 @@ Font Font::Load(string path, float size)
         fread(buffer, fileSize, 1, file);
         fclose(file);
 
-        uint8* pixels = (uint8*)malloc(512 * 512);
-        stbtt_bakedchar* bakedChars = (stbtt_bakedchar*)malloc(sizeof(stbtt_bakedchar) * 256);
+        uint8* pixels = (uint8*)malloc(TEXTURE_WIDTH * TEXTURE_HEIGHT);
+        stbtt_bakedchar* bakedChars = (stbtt_bakedchar*)malloc(sizeof(stbtt_bakedchar) * GLYPHS_COUNT);
 
-        stbtt_BakeFontBitmap(buffer, 0, size, pixels, 512, 512, 0, 256, bakedChars);
+        stbtt_BakeFontBitmap(buffer, 0, size, pixels, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, GLYPHS_COUNT, bakedChars);
 
-        Texture texture = Texture::New(pixels, 512, 512, PixelFormat::Red, PixelFormat::Red);
+        Texture texture = Texture::New(pixels, TEXTURE_WIDTH, TEXTURE_HEIGHT, PixelFormat::Red, PixelFormat::Red);
 
-        FontChar* chars = Array::Empty<FontChar>();
-
-        for (int i = 0; i < 256; i++)
+        FontGlyph* glyphs = Array::New<FontGlyph>(GLYPHS_COUNT);
+        for (int i = 0; i < GLYPHS_COUNT; i++)
         {
             const stbtt_bakedchar bakedChar = bakedChars[i];
 
-            FontChar fontChar = {
+            float tmpX = 0;
+            float tmpY = 0;
+            stbtt_aligned_quad q;
+            stbtt_GetBakedQuad(bakedChars, TEXTURE_WIDTH, TEXTURE_HEIGHT, i, &tmpX, &tmpY, &q, 1);//1=opengl & d3d10+,0=d3d9
+
+            FontGlyph fontChar = {
                 i, 
 
-                (float)(bakedChar.x1 - bakedChar.x0),
-                (float)(bakedChar.y1 - bakedChar.y0),
+                q.x0,
+                q.y0,
+                
+                q.x1,
+                q.y1,
 
-                bakedChar.xoff,
-                bakedChar.yoff,
+                q.s0,
+                q.t1,
+
+                q.s1,
+                q.t0,
 
                 bakedChar.xadvance,
             };
 
-            Array::Push(&chars, fontChar);
+            Array::Push(&glyphs, fontChar);
         }
 
         free(bakedChars);
@@ -63,7 +77,7 @@ Font Font::Load(string path, float size)
         
         return {
             size,
-            chars,
+            glyphs,
             texture
         };
     }
@@ -75,7 +89,7 @@ void Font::Free(Font* font)
 {
     assert(font);
 
-    Array::Free(&font->chars);
+    Array::Free(&font->glyphs);
     Texture::Free(&font->texture);  
 
     font->size = 0;

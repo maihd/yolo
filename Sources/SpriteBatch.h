@@ -4,7 +4,7 @@
 #include <Yolo/Array.h>
 #include <Yolo/MathTypes.h>
 
-struct Vertex
+struct VertexColor
 {
     vec3 position;
     vec2 uv;
@@ -19,15 +19,15 @@ struct SpriteBatch
     Handle  indexBuffer;
     Handle  vertexArray;
 
-    Vertex* vertices;
+    VertexColor* vertices;
     uint16* indices;
 
-    static SpriteBatch  New(Vertex* vertices = 0, uint16* indices = 0);
+    static SpriteBatch  New(VertexColor* vertices = 0, uint16* indices = 0);
     static void         Free(SpriteBatch* drawBuffer);
 
-    static void         AddTriangle(SpriteBatch* drawBuffer, Vertex v0, Vertex v1, Vertex v2);
-    static void         AddTriangle(SpriteBatch* drawBuffer, Vertex* vertices);
-    static void         AddTriangle(SpriteBatch* drawBuffer, Vertex* vertices, int count);
+    static void         AddTriangle(SpriteBatch* drawBuffer, VertexColor v0, VertexColor v1, VertexColor v2);
+    static void         AddTriangle(SpriteBatch* drawBuffer, VertexColor* vertices);
+    static void         AddTriangle(SpriteBatch* drawBuffer, VertexColor* vertices, int count);
 
     static void         AddCircle(SpriteBatch* drawBuffer, vec2 position, float radius, vec4 color, int segments = 30);
     static void         AddRectangle(SpriteBatch* drawBuffer, vec2 position, vec2 size, vec4 color);

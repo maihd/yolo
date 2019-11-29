@@ -3,7 +3,7 @@
 #include <Yolo/Math.h>
 #include <math.h>
 
-DrawBuffer DrawBuffer::New(Vertex* vertices, uint16* indices)
+DrawBuffer DrawBuffer::New(VertexColor* vertices, uint16* indices)
 {
     return { 
         false,
@@ -31,7 +31,7 @@ void DrawBuffer::Free(DrawBuffer* drawBuffer)
     Array::Free(&drawBuffer->indices);
 }
 
-void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex v0, Vertex v1, Vertex v2)
+void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, VertexColor v0, VertexColor v1, VertexColor v2)
 {
     assert(drawBuffer);
 
@@ -47,7 +47,7 @@ void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex v0, Vertex v1, Verte
     drawBuffer->shouldUpdate = true;
 }
 
-void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices)
+void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, VertexColor* vertices)
 {
     assert(drawBuffer);
     assert(Array::IsArray(vertices));
@@ -55,15 +55,15 @@ void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices)
     DrawBuffer::AddTriangle(drawBuffer, vertices, Array::Length(vertices));
 }
 
-void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices, int count)
+void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, VertexColor* vertices, int count)
 {
     assert(drawBuffer);
 
     for (int i = 0; i < count; i += 3)
     {
-        Vertex v0 = vertices[i + 0];
-        Vertex v1 = vertices[i + 1];
-        Vertex v2 = vertices[i + 2];
+        VertexColor v0 = vertices[i + 0];
+        VertexColor v1 = vertices[i + 1];
+        VertexColor v2 = vertices[i + 2];
 
         AddTriangle(drawBuffer, v0, v1, v2);
     }
@@ -71,6 +71,11 @@ void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, Vertex* vertices, int count
 
 void DrawBuffer::Clear(DrawBuffer* drawBuffer)
 {
+    if (drawBuffer->vertexArray)
+    {
+        drawBuffer->shouldUpdate = true;
+    }
+
     Array::Clear(&drawBuffer->vertices);
     Array::Clear(&drawBuffer->indices);
 }
@@ -100,17 +105,17 @@ void DrawBuffer::UpdateBuffers(DrawBuffer* drawBuffer)
             glBindBuffer(GL_ARRAY_BUFFER, drawBuffer->vertexBuffer);
 
             glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, position));
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexColor), (const void*)offsetof(VertexColor, position));
 
             glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, uv));
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexColor), (const void*)offsetof(VertexColor, uv));
 
             glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, color));
+            glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(VertexColor), (const void*)offsetof(VertexColor, color));
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, drawBuffer->vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, Array::Length(drawBuffer->vertices) * sizeof(Vertex), drawBuffer->vertices, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, Array::Length(drawBuffer->vertices) * sizeof(VertexColor), drawBuffer->vertices, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer->indexBuffer);
@@ -132,19 +137,19 @@ void DrawBuffer::AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, 
         float angle0 = step * i;
         float angle1 = step * (i + 1);
 
-        const Vertex v0 = {
+        const VertexColor v0 = {
             { position.x + cosf(angle0) * radius, position.y + sinf(angle0) * radius },
             { 0, 0 },
             color
         };
 
-        const Vertex v1 = {
+        const VertexColor v1 = {
             { position.x + cosf(angle1) * radius, position.y + sinf(angle1) * radius },
             { 0, 0 },
             color
         };
 
-        const Vertex v2 = {
+        const VertexColor v2 = {
             { position.x, position.y },
             { 0, 0 },
             color
@@ -156,25 +161,25 @@ void DrawBuffer::AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, 
 
 void DrawBuffer::AddRectangle(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color)
 {
-    const Vertex v0 = {
+    const VertexColor v0 = {
         { position.x, position.y },
         { 0, 0 },
         color
     };
 
-    const Vertex v1 = {
+    const VertexColor v1 = {
         { position.x, position.y + size.y },
         { 0, 0 },
         color
     };
 
-    const Vertex v2 = {
+    const VertexColor v2 = {
         { position.x + size.x, position.y + size.y },
         { 0, 0 },
         color
     };
 
-    const Vertex v3 = {
+    const VertexColor v3 = {
         { position.x + size.x, position.y },
         { 0, 0 },
         color

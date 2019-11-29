@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Yolo/Font.h>
 #include <Yolo/Texture.h>
 #include <Yolo/MathTypes.h>
 
@@ -23,4 +24,6 @@ namespace Graphics
     void DrawRectangle(vec2 position, vec2 size, vec4 color);
 
     void DrawTexture(Texture texture, vec2 position, vec2 size);
+
+    void DrawText(string text, Font font, vec2 position);
 }

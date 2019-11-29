@@ -8,6 +8,7 @@
 #include "./Runtime.h"
 #include "./SpriteMesh.h"
 #include "./DrawBuffer.h"
+#include "./DrawTextBuffer.h"
 
 namespace Graphics
 {
@@ -16,6 +17,7 @@ namespace Graphics
     mat4 projection;
 
     Shader shader;
+    Shader fontShader;
     Shader spriteShader;
     SpriteMesh spriteMesh;
 
@@ -24,6 +26,7 @@ namespace Graphics
     Handle vertexArray;
 
     DrawBuffer drawBuffer;
+    DrawTextBuffer drawTextBuffer;
 
     static string vshaderSource =
         "#version 330 core\n"
@@ -83,7 +86,36 @@ namespace Graphics
         "out vec4 resultColor;"
 
         "void main() {"
-        //"resultColor = vec4(uv, 0, 1);"
+        "resultColor = texture(tex, uv);"
+        "}";
+
+
+    static string fontVertexSource =
+        "#version 330 core\n"
+
+        "layout (location = 0) in vec3 pos;"
+        "layout (location = 1) in vec2 texcoord;"
+
+        "out vec2 uv;"
+
+        "uniform mat4 model;"
+        "uniform mat4 projection;"
+
+        "void main() {"
+        "uv = texcoord;"
+        "gl_Position = projection * model * vec4(pos, 1);"
+        "}";
+
+    static string fontPixelSource =
+        "#version 330 core\n"
+
+        "in vec2 uv;"
+
+        "uniform sampler2D tex;"
+
+        "out vec4 resultColor;"
+
+        "void main() {"
         "float alpha = texture(tex, uv).r;"
         "resultColor = vec4(1.0, 1.0, 1.0, alpha);"
         "}";
@@ -291,10 +323,12 @@ namespace Graphics
         projection = mat4::Ortho(0, width, 0, height, 0.0f, 100.0f);
         shader = Shader::Compile(vshaderSource, fshaderSource);
 
+        fontShader = Shader::Compile(fontVertexSource, fontPixelSource);
         spriteShader = Shader::Compile(spriteVertexSource, spritePixelSource);
 
-        drawBuffer = DrawBuffer::New();
         spriteMesh = SpriteMesh::New();
+        drawBuffer = DrawBuffer::New();
+        drawTextBuffer = DrawTextBuffer::New();
     }
 
     void Clear(void)
@@ -412,6 +446,43 @@ namespace Graphics
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
         glUseProgram(0);
+    }
+
+#undef DrawText
+    void DrawText(string text, Font font, vec2 position)
+    {
+        DrawTextBuffer::AddText(&drawTextBuffer, text, font);
+        DrawTextBuffer::UpdateBuffers(&drawTextBuffer);
+
+        mat4 model = mul(mat4::Translation(position), mat4::Scalation(1.0f, 1.0f));
+
+
+        glUseProgram(fontShader.handle);
+
+        int projectionLocation = glGetUniformLocation(shader.handle, "projection");
+        int modelLocation = glGetUniformLocation(shader.handle, "model");
+        glUniformMatrix4fv(projectionLocation, 1, false, (float*)&projection);
+        glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
+
+        glBindVertexArray(drawTextBuffer.vertexArray);
+        glBindBuffer(GL_ARRAY_BUFFER, drawTextBuffer.vertexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawTextBuffer.indexBuffer);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, font.texture.handle);
+
+        int indexCount = Array::Length(drawTextBuffer.indices);
+        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        glUseProgram(0);
+
+        DrawTextBuffer::Clear(&drawTextBuffer);
     }
 }
 
