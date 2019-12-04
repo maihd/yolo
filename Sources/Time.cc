@@ -104,10 +104,10 @@ namespace Time
         prevCounter = counter;
     }
 
-    bool UpdateAndSleep(float framerate)
+    bool UpdateAndSleep(float targetFramerate)
     {
         uint64 frequency = GetFrequency();
-        uint64 limitTicks = (uint64)(frequency / (double)(framerate < 1.0f ? 1.0f : framerate));
+        uint64 limitTicks = (uint64)(frequency / (double)(targetFramerate < 1.0f ? 1.0f : targetFramerate));
 
         uint64 counter = GetCounter();
         uint64 ticks = prevCounter > 0 ? counter - prevCounter : limitTicks;

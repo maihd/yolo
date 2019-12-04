@@ -40,30 +40,40 @@ Font Font::Load(string path, float size)
 
         Texture texture = Texture::New(pixels, TEXTURE_WIDTH, TEXTURE_HEIGHT, PixelFormat::Red, PixelFormat::Red);
 
+        float ipw = 1.0f / TEXTURE_WIDTH, iph = 1.0f / TEXTURE_HEIGHT;
+
         FontGlyph* glyphs = Array::New<FontGlyph>(GLYPHS_COUNT);
         for (int i = 0; i < GLYPHS_COUNT; i++)
         {
             const stbtt_bakedchar bakedChar = bakedChars[i];
 
-            float tmpX = 0;
-            float tmpY = 0;
-            stbtt_aligned_quad q;
-            stbtt_GetBakedQuad(bakedChars, TEXTURE_WIDTH, TEXTURE_HEIGHT, i, &tmpX, &tmpY, &q, 1);//1=opengl & d3d10+,0=d3d9
+            float xoff = bakedChar.xoff;
+            float yoff = bakedChar.yoff;
+
+            float x0 = xoff;
+            float y0 = yoff + bakedChar.y1 - bakedChar.y0;
+            float x1 = xoff + bakedChar.x1 - bakedChar.x0;
+            float y1 = yoff;
+
+            float s0 = bakedChar.x0 * ipw;
+            float t0 = bakedChar.y1 * iph;
+            float s1 = bakedChar.x1 * ipw;
+            float t1 = bakedChar.y0 * iph;
 
             FontGlyph fontChar = {
                 i, 
 
-                q.x0,
-                q.y0,
+                x0,
+                y0,
                 
-                q.x1,
-                q.y1,
+                x1,
+                y1,
 
-                q.s0,
-                q.t1,
+                s0,
+                t0,
 
-                q.s1,
-                q.t0,
+                s1,
+                t1,
 
                 bakedChar.xadvance,
             };

@@ -26,4 +26,5 @@ namespace Graphics
     void DrawTexture(Texture texture, vec2 position, vec2 size);
 
     void DrawText(string text, Font font, vec2 position);
+    void DrawFramerate(Font font, vec2 position);
 }

@@ -1,6 +1,7 @@
 #include <Yolo/Graphics.h>
 
 #include <Yolo/Math.h>
+#include <Yolo/Time.h>
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
 #include <Yolo/Shader.h>
@@ -454,8 +455,7 @@ namespace Graphics
         DrawTextBuffer::AddText(&drawTextBuffer, text, font);
         DrawTextBuffer::UpdateBuffers(&drawTextBuffer);
 
-        mat4 model = mul(mat4::Translation(position), mat4::Scalation(1.0f, 1.0f));
-
+        mat4 model = mul(mat4::Translation(position), mat4::Scalation(1.0f, -1.0f));
 
         glUseProgram(fontShader.handle);
 
@@ -483,6 +483,14 @@ namespace Graphics
         glUseProgram(0);
 
         DrawTextBuffer::Clear(&drawTextBuffer);
+    }
+
+    void DrawFramerate(Font font, vec2 position)
+    {
+        char buffer[1024];
+        float framerate = Time::GetFramerate();
+        string text = String::Format(buffer, sizeof(buffer), "FPS: %.2f", framerate);
+        DrawText(text, font, position);
     }
 }
 
