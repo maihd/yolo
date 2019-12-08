@@ -31,7 +31,7 @@ int main(void)
     Window::Init("Yolo Window", 1280, 720);
     Graphics::Init();
 
-    Font font = Font::Load("../Assets/OpenSans_Regular.ttf", 32.0f);
+    Font font = FontOps::Load("../Assets/OpenSans_Regular.ttf", 32.0f);
 
     int width = Window::GetWidth();
     int height = Window::GetHeight();

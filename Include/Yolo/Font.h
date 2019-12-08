@@ -22,7 +22,10 @@ struct Font
     FontGlyph*  glyphs;
     
     Texture     texture;
-
-    static Font Load(String path, float size);
-    static void Free(Font* font);
 };
+
+namespace FontOps
+{
+    Font Load(String path, float size);
+    void Free(Font* font);
+}
