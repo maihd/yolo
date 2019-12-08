@@ -325,10 +325,10 @@ namespace Graphics
         float height = (float)Window::GetHeight();
 
         projection = mat4::Ortho(0, width, 0, height, 0.0f, 100.0f);
-        shader = Shader::Compile(vshaderSource, fshaderSource);
+        shader = ShaderOps::Compile(vshaderSource, fshaderSource);
 
-        fontShader = Shader::Compile(fontVertexSource, fontPixelSource);
-        spriteShader = Shader::Compile(spriteVertexSource, spritePixelSource);
+        fontShader = ShaderOps::Compile(fontVertexSource, fontPixelSource);
+        spriteShader = ShaderOps::Compile(spriteVertexSource, spritePixelSource);
 
         spriteMesh = SpriteMesh::New();
         drawBuffer = DrawBuffer::New();
