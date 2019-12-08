@@ -4,7 +4,7 @@
 
 namespace Window
 {
-    bool    Init(string title, int width, int height);
+    bool    Init(String title, int width, int height);
     void    Quit(void);
 
     bool    PollEvents(void);

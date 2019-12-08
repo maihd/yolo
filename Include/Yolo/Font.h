@@ -23,6 +23,6 @@ struct Font
     
     Texture     texture;
 
-    static Font Load(string path, float size);
+    static Font Load(String path, float size);
     static void Free(Font* font);
 };

@@ -11,7 +11,7 @@ namespace Random
 
     constexpr uint32 AsCompileTimeU32(uint32 seed = 0)
     {
-        string time = __TIME__;
+        String time = __TIME__;
 
         uint32 timeNumber0 = 0;
         timeNumber0 |= (uint32)time[0] << (uint32)(3 * 8);
@@ -30,7 +30,7 @@ namespace Random
 
     constexpr uint64 AsCompileTimeU64(uint64 seed = 0)
     {
-        string time = __TIME__;
+        String time = __TIME__;
 
         uint64 timeNumber = 0;
         timeNumber |= (uint64)time[0] << (uint64)(7 * 8);

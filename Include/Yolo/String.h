@@ -3,43 +3,43 @@
 #include <Yolo/Types.h>
 #include <Yolo/Hash.h>
 
-namespace String
+namespace StringOps
 {
-    string From(string source);
-    string From(void* buffer, string source);
-    string From(void* buffer, int bufferSize, string source);
+    String From(String source);
+    String From(void* buffer, String source);
+    String From(void* buffer, int bufferSize, String source);
 
-    string Format(int bufferSize, string format, ...);
-    string FormatArgv(int bufferSize, string format, va_list argv);
+    String Format(int bufferSize, String format, ...);
+    String FormatArgv(int bufferSize, String format, va_list argv);
 
-    string Format(void* buffer, int bufferSize, string format, ...);
-    string FormatArgv(void* buffer, int bufferSize, string format, va_list argv);
+    String Format(void* buffer, int bufferSize, String format, ...);
+    String FormatArgv(void* buffer, int bufferSize, String format, va_list argv);
 
-    void   Free(string target);
-    bool   HasMeta(string target);
-    bool   IsWeakRef(string target);
-    bool   IsManaged(string target);
+    void   Free(String target);
+    bool   HasMeta(String target);
+    bool   IsWeakRef(String target);
+    bool   IsManaged(String target);
 
-    int    Length(string target);
-    bool   IsEmpty(string target);
+    int    Length(String target);
+    bool   IsEmpty(String target);
 
-    int    Compare(string str0, string str1);
+    int    Compare(String str0, String str1);
 
-    char   CharAt(string target, int index);
-    int    CharCodeAt(string target, int index);
+    char   CharAt(String target, int index);
+    int    CharCodeAt(String target, int index);
 
-    int    IndexOf(string target, int charCode);
-    int    IndexOf(string target, string substring);
+    int    IndexOf(String target, int charCode);
+    int    IndexOf(String target, String substring);
 
-    int    LastIndexOf(string target, int charCode);
-    int    LastIndexOf(string target, string substring);
+    int    LastIndexOf(String target, int charCode);
+    int    LastIndexOf(String target, String substring);
 
-    string SubString(string source, int start, int end = -1);
+    String SubString(String source, int start, int end = -1);
 }
 
 template <>
-inline uint64 CalcHash64(string x, uint64 seed)
+inline uint64 CalcHash64(String x, uint64 seed)
 {
-    return CalcHash64(&x, String::Length(x), seed);
+    return CalcHash64(&x, StringOps::Length(x), seed);
 }
 

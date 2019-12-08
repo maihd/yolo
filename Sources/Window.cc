@@ -33,7 +33,7 @@ namespace Window
         return true;
     }
 
-    bool Init(string title, int width, int height)
+    bool Init(String title, int width, int height)
     {
         if (!RegisterWindowClass())
         {

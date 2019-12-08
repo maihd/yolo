@@ -6,7 +6,7 @@ struct Shader
 {
     Handle  handle;
 
-    static Shader Load(string vertexFile, string pixelsFile);
-    static Shader Compile(string vertexSource, string pixelsSource);
+    static Shader Load(String vertexFile, String pixelsFile);
+    static Shader Compile(String vertexSource, String pixelsSource);
 };
 

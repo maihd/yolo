@@ -14,7 +14,7 @@ using uint16  = unsigned short;
 using uint32  = unsigned int;
 using uint64  = unsigned long long;
 
-using string  = const char*;
+using String  = const char*;
 using Handle  = unsigned int;
 using NullPtr = decltype(nullptr);
 
@@ -85,7 +85,7 @@ namespace Const
     constexpr uint64    UINT64_MAX   = 0xffffffffffffffffull;
 
     constexpr Handle    EMPTY_HANDLE = 0;
-    constexpr string    EMPTY_STRING = "";
+    constexpr String    EMPTY_STRING = "";
 }
 
 template <typename R, typename ...Args>

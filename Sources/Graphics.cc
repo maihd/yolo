@@ -31,7 +31,7 @@ namespace Graphics
     DrawBuffer drawBuffer;
     DrawTextBuffer drawTextBuffer;
 
-    static string vshaderSource =
+    static String vshaderSource =
         "#version 330 core\n"
         "layout (location = 0) in vec3 pos;"
         "layout (location = 1) in vec2 uv;"
@@ -46,7 +46,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    static string fshaderSource =
+    static String fshaderSource =
         "#version 330\n"
 
         "in vec2 fragUV;"
@@ -60,7 +60,7 @@ namespace Graphics
         "resultColor = vec4(1.0);"
         "}";
 
-    static string spriteVertexSource =
+    static String spriteVertexSource =
         "#version 330 core\n"
 
         "layout (location = 0) in vec3 pos;"
@@ -79,7 +79,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    static string spritePixelSource =
+    static String spritePixelSource =
         "#version 330 core\n"
 
         "in vec2 uv;"
@@ -93,7 +93,7 @@ namespace Graphics
         "}";
 
 
-    static string fontVertexSource =
+    static String fontVertexSource =
         "#version 330 core\n"
 
         "layout (location = 0) in vec3 pos;"
@@ -109,7 +109,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    static string fontPixelSource =
+    static String fontPixelSource =
         "#version 330 core\n"
 
         "in vec2 uv;"
@@ -486,7 +486,7 @@ namespace Graphics
     }
 
 #undef DrawText
-    void DrawText(string text, Font font, vec2 position)
+    void DrawText(String text, Font font, vec2 position)
     {
         DrawTextBuffer::AddText(&drawTextBuffer, text, font);
         DrawTextBuffer::UpdateBuffers(&drawTextBuffer);
@@ -525,7 +525,7 @@ namespace Graphics
     {
         char buffer[1024];
         float framerate = Time::GetFramerate();
-        string text = String::Format(buffer, sizeof(buffer), "FPS: %.2f", framerate);
+        String text = StringOps::Format(buffer, sizeof(buffer), "FPS: %.2f", framerate);
         DrawText(text, font, position);
     }
 }

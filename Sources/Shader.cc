@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-Handle CreateGLShader(GLenum shaderType, string source)
+Handle CreateGLShader(GLenum shaderType, String source)
 {
     Handle shader = glCreateShader(shaderType);
     if (!shader)
@@ -26,12 +26,12 @@ Handle CreateGLShader(GLenum shaderType, string source)
     return shader;
 }
 
-Shader Shader::Load(string vertexFile, string pixelsFile)
+Shader Shader::Load(String vertexFile, String pixelsFile)
 {
     return { 0 };    
 }
 
-Shader Shader::Compile(string vertexSource, string pixelsSource)
+Shader Shader::Compile(String vertexSource, String pixelsSource)
 {
     Handle vertexShader = CreateGLShader(GL_VERTEX_SHADER, vertexSource);
     Handle pixelsShader = CreateGLShader(GL_FRAGMENT_SHADER, pixelsSource);

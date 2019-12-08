@@ -5,10 +5,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <String.h>
 #include <stdint.h>
 
-namespace String
+namespace StringOps
 {
     struct StringMeta
     {
@@ -42,12 +42,12 @@ namespace String
         return meta;
     }
 
-    static StringMeta* GetStringMeta(string target)
+    static StringMeta* GetStringMeta(String target)
     {
         return target && target != Const::EMPTY_STRING ? (StringMeta*)(target - sizeof(StringMeta)) : NULL;
     }
 
-    string From(string source)
+    String From(String source)
     {
         if (IsWeakRef(source))
         {
@@ -75,7 +75,7 @@ namespace String
         }
     }
 
-    string From(void* buffer, string source)
+    String From(void* buffer, String source)
     {
         int length = Length(source);
         StringMeta* meta = CreateStringMeta(buffer, length + 1);
@@ -84,7 +84,7 @@ namespace String
         return (char*)meta + sizeof(StringMeta);
     }
 
-    string From(void* buffer, int bufferSize, string source)
+    String From(void* buffer, int bufferSize, String source)
     {
         StringMeta* meta = CreateStringMeta(buffer, bufferSize);
         meta->length = Length(source);
@@ -92,7 +92,7 @@ namespace String
         return (char*)meta + sizeof(StringMeta);
     }
 
-    void Free(string target)
+    void Free(String target)
     {
         if (IsManaged(target))
         {
@@ -104,13 +104,13 @@ namespace String
         }
     }
 
-    bool HasMeta(string target)
+    bool HasMeta(String target)
     {
         StringMeta* meta = GetStringMeta(target);
         return meta && meta->memtag == MEMORY_TAG;
     }
 
-    bool IsWeakRef(string target)
+    bool IsWeakRef(String target)
     {
         if (target == Const::EMPTY_STRING)
         {
@@ -126,7 +126,7 @@ namespace String
         return true;
     }
 
-    bool IsManaged(string target)
+    bool IsManaged(String target)
     {
         StringMeta* meta = GetStringMeta(target);
         if (meta)
@@ -137,7 +137,7 @@ namespace String
         return false;
     }
     
-    int Length(string target)
+    int Length(String target)
     {
         if (!target || target == Const::EMPTY_STRING)
         {
@@ -155,64 +155,64 @@ namespace String
         }
     }
 
-    bool IsEmpty(string target)
+    bool IsEmpty(String target)
     {
-        return String::Length(target) == 0;
+        return StringOps::Length(target) == 0;
     }
 
-    int Compare(string str0, string str1)
+    int Compare(String str0, String str1)
     {
         return strcmp(str0, str1);
     }
 
-    string Format(int bufferSize, string format, ...)
+    String Format(int bufferSize, String format, ...)
     {
         va_list argv;
         va_start(argv, format);
-        string result = FormatArgv(bufferSize, format, argv);
+        String result = FormatArgv(bufferSize, format, argv);
         va_end(argv);
         return result;
     }
 
-    string FormatArgv(int bufferSize, string format, va_list argv)
+    String FormatArgv(int bufferSize, String format, va_list argv)
     {
         StringMeta* meta = CreateStringMeta(bufferSize);
         meta->length = (int)vsprintf((char*)meta + sizeof(StringMeta), format, argv);
         return (char*)meta + sizeof(StringMeta);
     }
 
-    string Format(void* buffer, int bufferSize, string format, ...)
+    String Format(void* buffer, int bufferSize, String format, ...)
     {
         va_list argv;
         va_start(argv, format);
-        string result = FormatArgv(buffer, bufferSize, format, argv);
+        String result = FormatArgv(buffer, bufferSize, format, argv);
         va_end(argv);
         return result;
     }
 
-    string FormatArgv(void* buffer, int bufferSize, string format, va_list argv)
+    String FormatArgv(void* buffer, int bufferSize, String format, va_list argv)
     {
         StringMeta* meta = CreateStringMeta(buffer, bufferSize);
         meta->length = (int)vsprintf((char*)meta + sizeof(StringMeta), format, argv);
         return (char*)meta + sizeof(StringMeta);
     }
 
-    char CharAt(string target, int index)
+    char CharAt(String target, int index)
     {
         return target[index];
     }
 
-    int CharCodeAt(string target, int index)
+    int CharCodeAt(String target, int index)
     {
         return target[index];
     }
 
-    int IndexOf(string target, int charCode)
+    int IndexOf(String target, int charCode)
     {
-        int length = String::Length(target);
+        int length = StringOps::Length(target);
         for (int i = 0; i < length; i++)
         {
-            if (String::CharCodeAt(target, i) == charCode)
+            if (StringOps::CharCodeAt(target, i) == charCode)
             {
                 return i;
             }
@@ -221,10 +221,10 @@ namespace String
         return -1;
     }
 
-    int IndexOf(string target, string substring)
+    int IndexOf(String target, String substring)
     {
-        int substringLength = String::Length(substring);
-        for (int i = 0, n = String::Length(target) - substringLength; i < n; i++)
+        int substringLength = StringOps::Length(substring);
+        for (int i = 0, n = StringOps::Length(target) - substringLength; i < n; i++)
         {
             if (strncmp(target + i, substring, (size_t)substringLength) == 0)
             {
@@ -235,12 +235,12 @@ namespace String
         return -1;
     }
 
-    int LastIndexOf(string target, int charCode)
+    int LastIndexOf(String target, int charCode)
     {
-        int length = String::Length(target);
+        int length = StringOps::Length(target);
         for (int i = length - 1; i > -1; i--)
         {
-            if (String::CharCodeAt(target, i) == charCode)
+            if (StringOps::CharCodeAt(target, i) == charCode)
             {
                 return i;
             }
@@ -249,10 +249,10 @@ namespace String
         return -1;
     }
 
-    int LastIndexOf(string target, string substring)
+    int LastIndexOf(String target, String substring)
     {
-        int substringLength = String::Length(substring);
-        for (int i = String::Length(target) - substringLength - 1; i > -1; i--)
+        int substringLength = StringOps::Length(substring);
+        for (int i = StringOps::Length(target) - substringLength - 1; i > -1; i--)
         {
             if (strncmp(target + i, substring, (size_t)substringLength) == 0)
             {
@@ -263,7 +263,7 @@ namespace String
         return -1;
     }
 
-    string SubString(string source, int start, int end)
+    String SubString(String source, int start, int end)
     {
         if (start < 0)
         {

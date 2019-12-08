@@ -90,9 +90,9 @@ void DrawTextBuffer::UpdateBuffers(DrawTextBuffer* drawBuffer)
     }
 }
 
-void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, string text, Font font)
+void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, String text, Font font)
 {
-    int length = String::Length(text);
+    int length = StringOps::Length(text);
     if (length > 0)
     {
         float advanceX = 0;

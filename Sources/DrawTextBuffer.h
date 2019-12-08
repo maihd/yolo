@@ -20,7 +20,7 @@ struct DrawTextBuffer
     static DrawTextBuffer   New(Vertex* vertices = 0, uint16* indices = 0);
     static void             Free(DrawTextBuffer* drawBuffer);
 
-    static void             AddText(DrawTextBuffer* drawTextBuffer, string text, Font font);
+    static void             AddText(DrawTextBuffer* drawTextBuffer, String text, Font font);
 
     static void             Clear(DrawTextBuffer* drawBuffer);
     static void             UpdateBuffers(DrawTextBuffer* drawBuffer);

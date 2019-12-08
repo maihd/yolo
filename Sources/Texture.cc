@@ -41,7 +41,7 @@ namespace TextureOps
         };
     }
 
-    Texture Load(string path)
+    Texture Load(String path)
     {
         int width, height, channel;
         void* pixels = stbi_load(path, &width, &height, &channel, 0);

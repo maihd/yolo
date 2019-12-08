@@ -10,7 +10,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 
-Font Font::Load(string path, float size)
+Font Font::Load(String path, float size)
 {
     constexpr int TEXTURE_WIDTH = 1024;
     constexpr int TEXTURE_HEIGHT = 1024;

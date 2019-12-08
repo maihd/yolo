@@ -13,10 +13,10 @@
 
 int main(void)
 {
-    string string1 = String::From("Hello world");
+    String string1 = StringOps::From("Hello world");
     printf("string 1: %s\n", string1);
 
-    string string2 = String::From(string1);
+    String string2 = StringOps::From(string1);
     printf("string 2: %s\n", string2);
 
     Window::Init("Yolo Window", 1280, 720);
@@ -67,7 +67,7 @@ int main(void)
     Graphics::Quit();
     Window::Quit();
 
-    String::Free(string1);
-    String::Free(string2);
+    StringOps::Free(string1);
+    StringOps::Free(string2);
     return 0;
 }
