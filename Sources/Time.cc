@@ -10,7 +10,7 @@ namespace Time
     float totalTime = 0.0f;
     float timeScale = 1.0f;
 
-    uint64 prevCounter = -1;
+    uint64 prevCounter = 0;
 
     uint64 GetCounter(void)
     {
@@ -21,7 +21,7 @@ namespace Time
     uint64 GetFrequency(void)
     {
         LARGE_INTEGER value;
-        return QueryPerformanceCounter(&value) ? (uint64)value.QuadPart : 0;
+        return QueryPerformanceFrequency(&value) ? (uint64)value.QuadPart : 0;
     }
 
 
@@ -131,7 +131,6 @@ namespace Time
         totalFrames++;
 
         prevCounter = counter;
-
         return isSleep;
     }
 }

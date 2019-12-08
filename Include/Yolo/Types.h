@@ -2,6 +2,9 @@
 
 #include <stdarg.h>
 
+using byte    = unsigned char;
+using uint    = unsigned int;
+
 using int8    = signed char;
 using int16   = signed short;
 using int32   = signed int;

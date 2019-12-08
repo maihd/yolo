@@ -15,6 +15,8 @@ namespace Graphics
 {
     HGLRC glContext;
     
+    float lineWidth;
+
     mat4 projection;
 
     Shader shader;
@@ -314,6 +316,7 @@ namespace Graphics
         //glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
         SetVSync(true);
+        SetLineWidth(1.0f);
     }
 
     void CreateDefaultObjects(void)
@@ -341,10 +344,7 @@ namespace Graphics
 
         // Set viewport
         glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
-
         glClear(GL_COLOR_BUFFER_BIT);
-
-        DrawBuffer::Clear(&drawBuffer);
     }
 
     void ClearColor(float r, float g, float b, float a)
@@ -353,6 +353,11 @@ namespace Graphics
     }
 
     void Present(void)
+    {
+        Window::SwapBuffer();
+    }
+
+    void PresentDrawBuffer(GLenum drawMode)
     {
         DrawBuffer::UpdateBuffers(&drawBuffer);
 
@@ -366,15 +371,14 @@ namespace Graphics
         glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.vertexBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.indexBuffer);
 
-        glDrawElements(GL_TRIANGLES, Array::Length(drawBuffer.indices), GL_UNSIGNED_SHORT, 0);
+        GLsizei indexCount = Array::Length(drawBuffer.indices);
+        glDrawElements(drawMode, indexCount, GL_UNSIGNED_SHORT, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
         glUseProgram(0);
-
-        Window::SwapBuffer();
     }
 
     bool IsVSync(void)
@@ -410,14 +414,46 @@ namespace Graphics
         glPolygonMode(GL_FRONT_AND_BACK, enable ? GL_LINE : GL_FILL);
     }
 
-    void DrawCircle(vec2 position, float radius, vec4 color, int segments)
+    float GetLineWidth(void)
     {
-        DrawBuffer::AddCircle(&drawBuffer, position, radius, color, segments);
+        return lineWidth;
     }
 
-    void DrawRectangle(vec2 position, vec2 size, vec4 color)
+    void SetLineWidth(float width)
     {
-        DrawBuffer::AddRectangle(&drawBuffer, position, size, color);
+        glLineWidth(width);
+        lineWidth = width;
+    }
+
+    void DrawCircle(DrawMode mode, vec2 position, float radius, vec4 color, int segments)
+    {
+        DrawBuffer::Clear(&drawBuffer);
+
+        if (mode == DrawMode::Line)
+        {
+            DrawBuffer::AddCircleLines(&drawBuffer, position, radius, color, segments);
+            PresentDrawBuffer(GL_LINE_STRIP);
+        }
+        else
+        {
+            DrawBuffer::AddCircle(&drawBuffer, position, radius, color, segments);
+            PresentDrawBuffer(GL_TRIANGLES);
+        }
+    }
+
+    void DrawRectangle(DrawMode mode, vec2 position, vec2 size, vec4 color)
+    {
+        DrawBuffer::Clear(&drawBuffer);
+        if (mode == DrawMode::Line)
+        {
+            DrawBuffer::AddRectangleLines(&drawBuffer, position, size, color);
+            PresentDrawBuffer(GL_LINE_STRIP);
+        }
+        else
+        {
+            DrawBuffer::AddRectangle(&drawBuffer, position, size, color);
+            PresentDrawBuffer(GL_TRIANGLES);
+        }
     }
 
     void DrawTexture(Texture texture, vec2 position, vec2 size)
