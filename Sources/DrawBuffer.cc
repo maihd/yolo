@@ -1,7 +1,9 @@
 #include "./DrawBuffer.h"
 
 #include <Yolo/Math.h>
-#include <math.h>
+#include <Yolo/Macros.h>
+
+#include "./OpenGL.h"
 
 DrawBuffer DrawBuffer::New(VertexShape* vertices, uint16* indices)
 {
@@ -88,39 +90,23 @@ void DrawBuffer::UpdateBuffers(DrawBuffer* drawBuffer)
     {
         drawBuffer->shouldUpdate = false;
 
-        if (drawBuffer->vertexBuffer == Const::EMPTY_HANDLE)
+        int indexCount = Array::Length(drawBuffer->indices);
+        int vertexCount = Array::Length(drawBuffer->vertices);
+
+        drawBuffer->indexBuffer = OpenGL::CreateIndexBuffer(drawBuffer->indices, indexCount * sizeof(uint16), GL_DYNAMIC_DRAW, drawBuffer->indexBuffer);
+        drawBuffer->vertexBuffer = OpenGL::CreateVertexBuffer(drawBuffer->vertices, vertexCount * sizeof(VertexColor), GL_DYNAMIC_DRAW, drawBuffer->vertexBuffer);
+
+        if (!drawBuffer->vertexArray)
         {
-            glGenBuffers(1, &drawBuffer->vertexBuffer);
+            drawBuffer->vertexArray = OpenGL::CreateVertexArray(drawBuffer->vertexBuffer, drawBuffer->indexBuffer);
+
+            OpenGL::DefineAttribute(drawBuffer->vertexArray, 0, DataType::Vector3, sizeof(VertexShape), offsetof(VertexShape, position));
+            //OpenGL::DefineAttribute(drawBuffer->vertexArray, 1, DataType::Vector2, sizeof(VertexShape), offsetof(VertexShape, uv));
+            //OpenGL::DefineAttribute(drawBuffer->vertexArray, 2, DataType::Vector4, sizeof(VertexShape), offsetof(VertexShape, color));
+
+            OpenGL::AttachIndexBuffer(drawBuffer->vertexArray, drawBuffer->indexBuffer);
+            OpenGL::AttachVertexBuffer(drawBuffer->vertexArray, drawBuffer->vertexBuffer);
         }
-
-        if (drawBuffer->indexBuffer == Const::EMPTY_HANDLE)
-        {
-            glGenBuffers(1, &drawBuffer->indexBuffer);
-        }
-
-        if (drawBuffer->vertexArray == Const::EMPTY_HANDLE)
-        {
-            glGenVertexArrays(1, &drawBuffer->vertexArray);
-            glBindVertexArray(drawBuffer->vertexArray);
-            glBindBuffer(GL_ARRAY_BUFFER, drawBuffer->vertexBuffer);
-
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexShape), (const void*)offsetof(VertexShape, position));
-
-            //glEnableVertexAttribArray(1);
-            //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexColor), (const void*)offsetof(VertexColor, uv));
-
-            glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(VertexShape), (const void*)offsetof(VertexShape, color));
-        }
-
-        glBindBuffer(GL_ARRAY_BUFFER, drawBuffer->vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, Array::Length(drawBuffer->vertices) * sizeof(VertexColor), drawBuffer->vertices, GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer->indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Array::Length(drawBuffer->indices) * sizeof(uint16), drawBuffer->indices, GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }
 
@@ -139,17 +125,14 @@ void DrawBuffer::AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, 
 
         const VertexShape v0 = {
             { position.x + cosf(angle0) * radius, position.y + sinf(angle0) * radius },
-            color
         };
 
         const VertexShape v1 = {
             { position.x + cosf(angle1) * radius, position.y + sinf(angle1) * radius },
-            color
         };
 
         const VertexShape v2 = {
             { position.x, position.y },
-            color
         };
 
         AddTriangle(drawBuffer, v0, v1, v2);
@@ -172,7 +155,6 @@ void DrawBuffer::AddCircleLines(DrawBuffer* drawBuffer, vec2 position, float rad
 
         const VertexShape v = {
             { position.x + cosf(angle) * radius, position.y + sinf(angle) * radius },
-            color
         };
 
         const uint16 index = (uint16)Array::Length(drawBuffer->vertices);
@@ -185,22 +167,18 @@ void DrawBuffer::AddRectangle(DrawBuffer* drawBuffer, vec2 position, vec2 size, 
 {
     const VertexShape v0 = {
         { position.x, position.y },
-        color
     };
 
     const VertexShape v1 = {
         { position.x, position.y + size.y },
-        color
     };
 
     const VertexShape v2 = {
         { position.x + size.x, position.y + size.y },
-        color
     };
 
     const VertexShape v3 = {
         { position.x + size.x, position.y },
-        color
     };
 
     const uint16 startIndex = (uint16)Array::Length(drawBuffer->vertices);
@@ -223,22 +201,18 @@ void DrawBuffer::AddRectangleLines(DrawBuffer* drawBuffer, vec2 position, vec2 s
 {
     const VertexShape v0 = {
         { position.x, position.y },
-        color
     };
 
     const VertexShape v1 = {
         { position.x, position.y + size.y },
-        color
     };
 
     const VertexShape v2 = {
         { position.x + size.x, position.y + size.y },
-        color
     };
 
     const VertexShape v3 = {
         { position.x + size.x, position.y },
-        color
     };
 
     const uint16 startIndex = (uint16)Array::Length(drawBuffer->vertices);

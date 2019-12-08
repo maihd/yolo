@@ -42,6 +42,9 @@
     <ClInclude Include="..\Include\Yolo\HashTable.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Macros.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Math.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -60,6 +63,9 @@
     <ClInclude Include="..\Include\Yolo\Shapes.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Sprite.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\String.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -72,19 +78,25 @@
     <ClInclude Include="..\Include\Yolo\Types.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Vertex.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Window.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\DrawBuffer.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\DrawSpriteBuffer.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\DrawTextBuffer.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\Runtime.h">
+    <ClInclude Include="..\Sources\OpenGL.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\Sprite.h">
+    <ClInclude Include="..\Sources\Runtime.h">
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SpriteBatch.h">
@@ -93,12 +105,12 @@
     <ClInclude Include="..\Sources\SpriteMesh.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\Vertex.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\DrawBuffer.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\DrawSpriteBuffer.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\DrawTextBuffer.cc">
@@ -111,6 +123,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Hash.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\OpenGL.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Random.cc">

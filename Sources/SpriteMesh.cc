@@ -1,10 +1,10 @@
 #include "./SpriteMesh.h"
 
-#include "./Vertex.h"
 #include "./Runtime.h"
 
 #include <assert.h>
 #include <stdlib.h>
+#include <Yolo/Vertex.h>
 
 SpriteMesh SpriteMesh::New(void)
 {

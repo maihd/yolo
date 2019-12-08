@@ -4,7 +4,7 @@
 #include <Yolo/Array.h>
 #include <Yolo/MathTypes.h>
 
-#include "./Vertex.h"
+#include <Yolo/Vertex.h>
 
 struct DrawBuffer
 {

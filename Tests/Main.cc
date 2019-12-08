@@ -34,16 +34,18 @@ int main(void)
     Texture texture = font.texture;//Texture::Load("../Assets/opengl_logo.png");
     float posX = 0;
 
+    Graphics::SetVSync(true);
+
     while (!Window::PollEvents())
     {
         //Graphics::ClearColor(1, 1, 1);
         Graphics::Clear();
 
         Graphics::SetLineWidth(4.0f);
-        Graphics::DrawRectangle(DrawMode::Line, { 400, 300 }, { 50, 50 }, { 0.5, 0.5, 0.5, 1 });
-        //Graphics::DrawCircle(DrawMode::Line, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
+        Graphics::DrawRectangle(DrawMode::Fill, { 400, 300 }, { 50, 50 }, { 0.5, 0.5, 0.5, 1 });
+        Graphics::DrawCircle(DrawMode::Fill, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
 
-        Graphics::DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
+        //Graphics::DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
         Graphics::DrawFramerate(font, { 0.0f, (float)height - font.size });
 
         Graphics::Present();
