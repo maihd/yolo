@@ -110,7 +110,7 @@ namespace HashTableOps
     inline T GetValue(HashTable<T> hashTable, uint64 key, T defaultValue)
     {
         int index = IndexOf(hashTable, key);
-        return (index > -1) ? values[index] : defaultValue;
+        return (index > -1) ? hashTable.values[index] : defaultValue;
     }
 
     // Get value of entry with key. If entry exists return true, false otherwise.
@@ -122,7 +122,7 @@ namespace HashTableOps
         int index = IndexOf(hashTable, key);
         if (index > -1)
         {
-            *outValue = values[index];
+            *outValue = hashTable.values[index];
             return true;
         }
         else

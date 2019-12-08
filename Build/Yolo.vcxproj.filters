@@ -155,6 +155,9 @@
     <ClCompile Include="..\Sources\String.cc">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\StringIntern.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\Texture.cc">
       <Filter>Sources</Filter>
     </ClCompile>

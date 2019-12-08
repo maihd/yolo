@@ -223,6 +223,7 @@
     <ClCompile Include="..\Sources\SpriteBatch.cc" />
     <ClCompile Include="..\Sources\SpriteMesh.cc" />
     <ClCompile Include="..\Sources\String.cc" />
+    <ClCompile Include="..\Sources\StringIntern.cc" />
     <ClCompile Include="..\Sources\Texture.cc" />
     <ClCompile Include="..\Sources\Time.cc" />
     <ClCompile Include="..\Sources\VertexArray.cc" />

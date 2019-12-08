@@ -1,12 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <Yolo/String.h>
-#include <Yolo/Random.h>
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <String.h>
+#include <string.h>
 #include <stdint.h>
+
+#include <Yolo/String.h>
+#include <Yolo/Random.h>
+#include <Yolo/HashTable.h>
 
 namespace StringOps
 {

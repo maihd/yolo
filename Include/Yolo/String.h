@@ -35,6 +35,16 @@ namespace StringOps
     int    LastIndexOf(String target, String substring);
 
     String SubString(String source, int start, int end = -1);
+
+    String Intern(String source);
+    String Intern(uint64 hash, String source);
+
+    template <int length>
+    inline String InternStatic(const char(&source)[length])
+    {
+        uint64 hash = CalcHash64<length>(source);
+        return Intern(hash, source);
+    }
 }
 
 template <>

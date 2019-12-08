@@ -13,11 +13,20 @@
 
 int main(void)
 {
-    String string1 = StringOps::From("Hello world");
+    String string1 = StringOps::InternStatic("Hello world");
     printf("string 1: %s\n", string1);
 
-    String string2 = StringOps::From(string1);
+    String string2 = StringOps::Intern(string1);
     printf("string 2: %s\n", string2);
+
+    if (string1 == string2)
+    {
+        printf("string1 and string2 is equal!\n");
+    }
+    else
+    {
+        printf("string1 and string2 is not equal!\n");
+    }
 
     Window::Init("Yolo Window", 1280, 720);
     Graphics::Init();
