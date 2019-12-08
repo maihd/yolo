@@ -36,6 +36,13 @@ int main(void)
     Texture texture = font.texture;//Texture::Load("../Assets/opengl_logo.png");
     float posX = 0;
 
+    HashTable<int> hashTable = HashTableOps::New<int>();
+    HashTableOps::SetValue(&hashTable, CalcHash64("ten"), 10);
+
+    int value = HashTableOps::GetValue(hashTable, CalcHash64("ten"));
+
+    HashTableOps::Free(&hashTable);
+
     Graphics::SetVSync(true);
 
     while (!Window::PollEvents())
