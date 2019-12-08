@@ -85,7 +85,7 @@ namespace Const
     constexpr uint64    UINT64_MAX   = 0xffffffffffffffffull;
 
     constexpr Handle    EMPTY_HANDLE = 0;
-    constexpr string    EMPTY_STRING = "";
+    constexpr string    EMPTY_STRING = 0;
 }
 
 template <typename R, typename ...Args>

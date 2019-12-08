@@ -2,8 +2,10 @@
 
 #include <Yolo/Font.h>
 #include <Yolo/Sprite.h>
-#include <Yolo/Vertex.h>
 #include <Yolo/Texture.h>
+
+#include <Yolo/Vertex.h>
+#include <Yolo/VertexArray.h>
 
 struct DrawSpriteBuffer
 {
@@ -16,9 +18,7 @@ struct DrawSpriteBuffer
 
     bool        shouldUpdate;
 
-    Handle      vertexBuffer;
-    Handle      indexBuffer;
-    Handle      vertexArray;
+    VertexArray vertexArray;
     
     Vertex*     vertices;
     uint16*     indices;

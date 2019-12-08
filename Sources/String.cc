@@ -136,11 +136,10 @@ namespace String
 
         return false;
     }
-
     
     int Length(string target)
     {
-        if (!target || target == Const::EMPTY_STRING)
+        if (!target || target == Const::EMPTY_STRING) // target == Const::EMPTY_STRING is redundant
         {
             return 0;
         }
@@ -154,6 +153,11 @@ namespace String
         {
             return (int)strlen(target);
         }
+    }
+
+    bool IsEmpty(string target)
+    {
+        return target == Const::EMPTY_STRING; // return String::Length(target) == 0;
     }
 
     int Compare(string str0, string str1)
@@ -191,5 +195,100 @@ namespace String
         StringMeta* meta = CreateStringMeta(buffer, bufferSize);
         meta->length = (int)vsprintf((char*)meta + sizeof(StringMeta), format, argv);
         return (char*)meta + sizeof(StringMeta);
+    }
+
+    char CharAt(string target, int index)
+    {
+        return target[index];
+    }
+
+    int CharCodeAt(string target, int index)
+    {
+        return target[index];
+    }
+
+    int IndexOf(string target, int charCode)
+    {
+        int length = String::Length(target);
+        for (int i = 0; i < length; i++)
+        {
+            if (String::CharCodeAt(target, i) == charCode)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    int IndexOf(string target, string substring)
+    {
+        int substringLength = String::Length(substring);
+        for (int i = 0, n = String::Length(target) - substringLength; i < n; i++)
+        {
+            if (strncmp(target + i, substring, (size_t)substringLength) == 0)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    int LastIndexOf(string target, int charCode)
+    {
+        int length = String::Length(target);
+        for (int i = length - 1; i > -1; i--)
+        {
+            if (String::CharCodeAt(target, i) == charCode)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    int LastIndexOf(string target, string substring)
+    {
+        int substringLength = String::Length(substring);
+        for (int i = String::Length(target) - substringLength - 1; i > -1; i--)
+        {
+            if (strncmp(target + i, substring, (size_t)substringLength) == 0)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    string SubString(string source, int start, int end)
+    {
+        if (start < 0)
+        {
+            return Const::EMPTY_STRING;
+        }
+
+        if (end < 0)
+        {
+            return source + start;
+        }
+        else
+        {
+            int substringLength = end - start;
+            if (substringLength <= 0)
+            {
+                return Const::EMPTY_STRING;
+            }
+
+            StringMeta* meta = CreateStringMeta(substringLength + 1);
+            char* content = (char*)(meta + 1);
+
+            strncpy(content, source, substringLength);
+            content[substringLength] = 0;
+
+            return content;
+        }
     }
 }

@@ -21,8 +21,20 @@ namespace String
     bool   IsManaged(string target);
 
     int    Length(string target);
+    bool   IsEmpty(string target);
 
     int    Compare(string str0, string str1);
+
+    char   CharAt(string target, int index);
+    int    CharCodeAt(string target, int index);
+
+    int    IndexOf(string target, int charCode);
+    int    IndexOf(string target, string substring);
+
+    int    LastIndexOf(string target, int charCode);
+    int    LastIndexOf(string target, string substring);
+
+    string SubString(string source, int start, int end = -1);
 }
 
 template <>
