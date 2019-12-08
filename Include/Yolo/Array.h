@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include <Yolo/Hash.h>
+#include <Yolo/Utils.h>
 #include <Yolo/Random.h>
 
 namespace Array
@@ -19,29 +20,15 @@ namespace Array
     constexpr uint64 MEMORY_TAG   = CalcHash64("ARRAY_MEMORY_TAG", 0x474b11a82d80da68ULL);
     constexpr int    MIN_CAPACITY = 16;
 
-    inline int NextPOT(int x)
-    {
-        int result = x - 1;
-
-        result = result | (result >> 1);
-        result = result | (result >> 2);
-        result = result | (result >> 4);
-        result = result | (result >> 8);
-        result = result | (result >> 16);
-
-        return result + 1;
-    }
-
     template <typename T>
-    inline T* Empty(void)
+    inline T* New(int capacity)
     {
-        return 0;
-    }
+        if (capacity <= 0)
+        {
+            return 0;
+        }
 
-    template <typename T>
-    inline T* New(int capacity = 0)
-    {
-        T* result = Empty<T>();
+        T* result = 0;
         Ensure(&result, capacity);
         return result;
     }
@@ -51,7 +38,7 @@ namespace Array
     {
         if (!buffer || length <= 0)
         {
-            return Empty<T>();
+            return 0;
         }
 
         T* result = Empty<T>();
@@ -89,7 +76,7 @@ namespace Array
         if (*array && IsArray(*array))
         {
             free((ArrayMeta*)(*array) - 1);
-            *array = Empty<T>();
+            *array = 0;
         }
     }
 
@@ -143,7 +130,7 @@ namespace Array
         assert(array);
         assert(IsArray(*array));
 
-        if (capacity < Capacity(*array))
+        if (capacity <= Capacity(*array))
         {
             return true;
         }

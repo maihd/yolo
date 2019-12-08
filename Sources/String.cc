@@ -139,7 +139,7 @@ namespace String
     
     int Length(string target)
     {
-        if (!target || target == Const::EMPTY_STRING) // target == Const::EMPTY_STRING is redundant
+        if (!target || target == Const::EMPTY_STRING)
         {
             return 0;
         }
@@ -157,7 +157,7 @@ namespace String
 
     bool IsEmpty(string target)
     {
-        return target == Const::EMPTY_STRING; // return String::Length(target) == 0;
+        return String::Length(target) == 0;
     }
 
     int Compare(string str0, string str1)

@@ -1,10 +1,12 @@
 #include <Yolo/Math.h>
 #include <Yolo/Time.h>
 #include <Yolo/Font.h>
-#include <Yolo/Array.h>
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
 #include <Yolo/Graphics.h>
+
+#include <Yolo/Array.h>
+#include <Yolo/HashTable.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -25,7 +27,7 @@ int main(void)
     int width = Window::GetWidth();
     int height = Window::GetHeight();
 
-    int* intArray = Array::Empty<int>();
+    int* intArray = 0;
     Array::Push(&intArray, 10);
     Array::Free(&intArray);
 
