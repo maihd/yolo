@@ -22,9 +22,12 @@ struct Texture
 
     int         width;
     int         height;
+};
 
-    static Texture New(const void* pixels, int width, int height, PixelFormat pixelsFormat = PixelFormat::RGBA, PixelFormat textureFormat = PixelFormat::RGBA);
+namespace TextureOps
+{
+    Texture New(const void* pixels, int width, int height, PixelFormat pixelsFormat = PixelFormat::RGBA, PixelFormat textureFormat = PixelFormat::RGBA);
 
-    static Texture Load(string path);
-    static void    Free(Texture* texture);
+    Texture Load(string path);
+    void    Free(Texture* texture);
 };

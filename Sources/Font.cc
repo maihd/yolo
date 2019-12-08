@@ -38,7 +38,7 @@ Font Font::Load(string path, float size)
 
         stbtt_BakeFontBitmap(buffer, 0, size, pixels, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, GLYPHS_COUNT, bakedChars);
 
-        Texture texture = Texture::New(pixels, TEXTURE_WIDTH, TEXTURE_HEIGHT, PixelFormat::Red, PixelFormat::Red);
+        Texture texture = TextureOps::New(pixels, TEXTURE_WIDTH, TEXTURE_HEIGHT, PixelFormat::Red, PixelFormat::Red);
 
         float ipw = 1.0f / TEXTURE_WIDTH, iph = 1.0f / TEXTURE_HEIGHT;
 
@@ -100,7 +100,7 @@ void Font::Free(Font* font)
     assert(font);
 
     Array::Free(&font->glyphs);
-    Texture::Free(&font->texture);  
+    TextureOps::Free(&font->texture);  
 
     font->size = 0;
 }
