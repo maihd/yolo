@@ -75,14 +75,17 @@ void DrawTextBuffer::UpdateBuffers(DrawTextBuffer* drawBuffer)
 
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, uv));
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, drawBuffer->vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, Array::Length(drawBuffer->vertices) * sizeof(Vertex), drawBuffer->vertices, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, Array::SizeOf(drawBuffer->vertices), drawBuffer->vertices, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer->indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Array::Length(drawBuffer->indices) * sizeof(uint16), drawBuffer->indices, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Array::SizeOf(drawBuffer->indices), drawBuffer->indices, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }

@@ -7,27 +7,24 @@
 
 DrawBuffer DrawBuffer::New(VertexShape* vertices, uint16* indices)
 {
-    return { 
+    VertexArray vertexArray = VertexArray::New(); 
+    VertexArray::DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexShape), offsetof(VertexShape, position));
+
+    DrawBuffer drawBuffer = { 
         false,
-        Const::EMPTY_HANDLE, 
-        Const::EMPTY_HANDLE, 
-        Const::EMPTY_HANDLE, 
+        vertexArray,
         vertices, 
         indices 
     };
+
+    return drawBuffer;
 }
 
 void DrawBuffer::Free(DrawBuffer* drawBuffer)
 {
     assert(drawBuffer);
 
-    glDeleteBuffers(1, &drawBuffer->vertexBuffer);
-    glDeleteBuffers(1, &drawBuffer->indexBuffer);
-    glDeleteVertexArrays(1, &drawBuffer->vertexArray);
-
-    drawBuffer->vertexBuffer = Const::EMPTY_HANDLE;
-    drawBuffer->indexBuffer = Const::EMPTY_HANDLE;
-    drawBuffer->vertexArray = Const::EMPTY_HANDLE;
+    VertexArray::Free(&drawBuffer->vertexArray);
 
     Array::Free(&drawBuffer->vertices);
     Array::Free(&drawBuffer->indices);
@@ -73,10 +70,7 @@ void DrawBuffer::AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, int 
 
 void DrawBuffer::Clear(DrawBuffer* drawBuffer)
 {
-    if (drawBuffer->vertexArray)
-    {
-        drawBuffer->shouldUpdate = true;
-    }
+    drawBuffer->shouldUpdate = true;
 
     Array::Clear(&drawBuffer->vertices);
     Array::Clear(&drawBuffer->indices);
@@ -90,23 +84,8 @@ void DrawBuffer::UpdateBuffers(DrawBuffer* drawBuffer)
     {
         drawBuffer->shouldUpdate = false;
 
-        int indexCount = Array::Length(drawBuffer->indices);
-        int vertexCount = Array::Length(drawBuffer->vertices);
-
-        drawBuffer->indexBuffer = OpenGL::CreateIndexBuffer(drawBuffer->indices, indexCount * sizeof(uint16), GL_DYNAMIC_DRAW, drawBuffer->indexBuffer);
-        drawBuffer->vertexBuffer = OpenGL::CreateVertexBuffer(drawBuffer->vertices, vertexCount * sizeof(VertexColor), GL_DYNAMIC_DRAW, drawBuffer->vertexBuffer);
-
-        if (!drawBuffer->vertexArray)
-        {
-            drawBuffer->vertexArray = OpenGL::CreateVertexArray(drawBuffer->vertexBuffer, drawBuffer->indexBuffer);
-
-            OpenGL::DefineAttribute(drawBuffer->vertexArray, 0, DataType::Vector3, sizeof(VertexShape), offsetof(VertexShape, position));
-            //OpenGL::DefineAttribute(drawBuffer->vertexArray, 1, DataType::Vector2, sizeof(VertexShape), offsetof(VertexShape, uv));
-            //OpenGL::DefineAttribute(drawBuffer->vertexArray, 2, DataType::Vector4, sizeof(VertexShape), offsetof(VertexShape, color));
-
-            OpenGL::AttachIndexBuffer(drawBuffer->vertexArray, drawBuffer->indexBuffer);
-            OpenGL::AttachVertexBuffer(drawBuffer->vertexArray, drawBuffer->vertexBuffer);
-        }
+        VertexArray::SetIndexData(drawBuffer->vertexArray, drawBuffer->indices, Array::SizeOf(drawBuffer->indices), BufferUsage::StreamDraw);
+        VertexArray::SetVertexData(drawBuffer->vertexArray, drawBuffer->vertices, Array::SizeOf(drawBuffer->vertices), BufferUsage::StreamDraw);
     }
 }
 

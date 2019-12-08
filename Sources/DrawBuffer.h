@@ -5,17 +5,15 @@
 #include <Yolo/MathTypes.h>
 
 #include <Yolo/Vertex.h>
+#include <Yolo/VertexArray.h>
 
 struct DrawBuffer
 {
-    bool    shouldUpdate;
+    bool            shouldUpdate;
+    VertexArray     vertexArray;
 
-    Handle  vertexBuffer;
-    Handle  indexBuffer;
-    Handle  vertexArray;
-
-    VertexShape* vertices;
-    uint16* indices;
+    VertexShape*    vertices;
+    uint16*         indices;
 
     static DrawBuffer New(VertexShape* vertices = 0, uint16* indices = 0);
     static void       Free(DrawBuffer* drawBuffer);

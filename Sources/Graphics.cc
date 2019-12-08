@@ -57,7 +57,7 @@ namespace Graphics
         "out vec4 resultColor;"
 
         "void main() {"
-        "resultColor = fragColor;"
+        "resultColor = vec4(1.0);"
         "}";
 
     static string spriteVertexSource =
@@ -367,9 +367,9 @@ namespace Graphics
         glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
         glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (float*)&model);
 
-        glBindVertexArray(drawBuffer.vertexArray);
-        glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.vertexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.indexBuffer);
+        glBindVertexArray(drawBuffer.vertexArray.handle);
+        glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.vertexArray.vertexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.vertexArray.indexBuffer);
 
         GLsizei indexCount = Array::Length(drawBuffer.indices);
         glDrawElements(drawMode, indexCount, GL_UNSIGNED_SHORT, 0);

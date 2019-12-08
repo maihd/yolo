@@ -43,7 +43,7 @@ int main(void)
 
         Graphics::SetLineWidth(4.0f);
         Graphics::DrawRectangle(DrawMode::Fill, { 400, 300 }, { 50, 50 }, { 0.5, 0.5, 0.5, 1 });
-        Graphics::DrawCircle(DrawMode::Fill, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
+        Graphics::DrawCircle(DrawMode::Line, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
 
         //Graphics::DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
         Graphics::DrawFramerate(font, { 0.0f, (float)height - font.size });

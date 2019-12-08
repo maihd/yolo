@@ -122,6 +122,14 @@ namespace Array
     }
 
     template <typename T>
+    inline int SizeOf(const T* array) 
+    {
+        assert(IsArray(array));
+
+        return Length(array) * sizeof(T);
+    }
+
+    template <typename T>
     inline bool IsEmpty(const T* array)
     {
         assert(IsArray(array));

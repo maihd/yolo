@@ -78,7 +78,13 @@
     <ClInclude Include="..\Include\Yolo\Types.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Utils.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Vertex.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Yolo\VertexArray.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Window.h">
@@ -153,6 +159,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Time.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\VertexArray.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Window.cc">
