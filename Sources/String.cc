@@ -10,145 +10,55 @@
 #include <Yolo/HashTable.h>
 
 namespace StringOps
-{
-    struct StringMeta
+{   
+    static HashTable<String> internedStrings = HashTableOps::New<String>(64);
+
+    String SaveString(String source)
     {
-        int       size;
-        int       length;
-        int       memref;
-        uint64    memtag;
-    };
-
-    constexpr uint64 MEMORY_TAG = CalcHash64("STRING_MEMORY_TAG", Random::AsCompileTimeU64(0xbf6929f592082ce9ULL));
-
-    static StringMeta* CreateStringMeta(void* buffer, int bufferSize)
-    {
-        StringMeta* meta = (StringMeta*)buffer;
-
-        meta->memref = -1;
-        meta->memtag = MEMORY_TAG;
-        meta->size   = bufferSize - sizeof(StringMeta);
-
-        return meta;
+        return _strdup(source);
     }
 
-    static StringMeta* CreateStringMeta(int bufferSize)
+    String Intern(String source)
     {
-        StringMeta* meta = (StringMeta*)malloc(bufferSize + sizeof(StringMeta));
+        uint64 hash = CalcHash64(source);
 
-        meta->memref = 1;
-        meta->memtag = MEMORY_TAG;
-        meta->size   = bufferSize;
-
-        return meta;
+        return Intern(hash, source);
     }
 
-    static StringMeta* GetStringMeta(String target)
+    String Intern(uint64 hash, String source)
     {
-        return target && target != Const::EMPTY_STRING ? (StringMeta*)(target - sizeof(StringMeta)) : NULL;
-    }
-
-    String From(String source)
-    {
-        if (IsWeakRef(source))
+        String result;
+        if (HashTableOps::TryGetValue(internedStrings, hash, &result))
         {
-            return source;
-        }
-
-        if (IsManaged(source))
-        {
-            StringMeta* meta = GetStringMeta(source);
-            meta->memref++;
-            return source;
-        }
-    
-        int length = Length(source);
-        if (length == 0)
-        {
-            return Const::EMPTY_STRING;
+            return result;
         }
         else
         {
-            StringMeta* meta = CreateStringMeta(length + 1);
-            meta->length = length;
-            strcpy((char*)meta + sizeof(StringMeta), source);
-            return (char*)meta + sizeof(StringMeta);
+            String duplicatedString = SaveString(source);
+            HashTableOps::SetValue(&internedStrings, hash, duplicatedString);
+            return duplicatedString;
         }
     }
 
-    String From(void* buffer, String source)
+    String InternNoAllocation(uint64 hash, String source)
     {
-        int length = Length(source);
-        StringMeta* meta = CreateStringMeta(buffer, length + 1);
-        meta->length = length;
-        strcpy((char*)meta + sizeof(StringMeta), source);
-        return (char*)meta + sizeof(StringMeta);
-    }
-
-    String From(void* buffer, int bufferSize, String source)
-    {
-        StringMeta* meta = CreateStringMeta(buffer, bufferSize);
-        meta->length = Length(source);
-        strcpy((char*)meta + sizeof(StringMeta), source);
-        return (char*)meta + sizeof(StringMeta);
-    }
-
-    void Free(String target)
-    {
-        if (IsManaged(target))
+        String result;
+        if (HashTableOps::TryGetValue(internedStrings, hash, &result))
         {
-            StringMeta* meta = GetStringMeta(target);
-            if (--meta->memref == 0)
-            {
-                free(meta);
-            }
+            return result;
         }
-    }
-
-    bool HasMeta(String target)
-    {
-        StringMeta* meta = GetStringMeta(target);
-        return meta && meta->memtag == MEMORY_TAG;
-    }
-
-    bool IsWeakRef(String target)
-    {
-        if (target == Const::EMPTY_STRING)
+        else
         {
-            return true;
+            HashTableOps::SetValue(&internedStrings, hash, source);
+            return source;
         }
-        
-        StringMeta* meta = GetStringMeta(target);
-        if (meta)
-        {
-            return meta->memtag == MEMORY_TAG && meta->memref < 0;
-        }
-
-        return true;
     }
 
-    bool IsManaged(String target)
-    {
-        StringMeta* meta = GetStringMeta(target);
-        if (meta)
-        {
-            return meta->memtag == MEMORY_TAG && meta->memref > 0;
-        }
-
-        return false;
-    }
-    
     int Length(String target)
     {
         if (!target || target == Const::EMPTY_STRING)
         {
             return 0;
-        }
-
-        StringMeta* meta = (StringMeta*)(target - sizeof(StringMeta));
-        if (meta->memtag == MEMORY_TAG)
-        {
-            return meta->length;
         }
         else
         {
@@ -177,9 +87,8 @@ namespace StringOps
 
     String FormatArgv(int bufferSize, String format, va_list argv)
     {
-        StringMeta* meta = CreateStringMeta(bufferSize);
-        meta->length = (int)vsprintf((char*)meta + sizeof(StringMeta), format, argv);
-        return (char*)meta + sizeof(StringMeta);
+        void* buffer = malloc(bufferSize);
+        return FormatArgv(buffer, bufferSize, format, argv);
     }
 
     String Format(void* buffer, int bufferSize, String format, ...)
@@ -193,9 +102,8 @@ namespace StringOps
 
     String FormatArgv(void* buffer, int bufferSize, String format, va_list argv)
     {
-        StringMeta* meta = CreateStringMeta(buffer, bufferSize);
-        meta->length = (int)vsprintf((char*)meta + sizeof(StringMeta), format, argv);
-        return (char*)meta + sizeof(StringMeta);
+        vsprintf((char*)buffer, format, argv);
+        return (char*)buffer;
     }
 
     char CharAt(String target, int index)
@@ -283,8 +191,7 @@ namespace StringOps
                 return Const::EMPTY_STRING;
             }
 
-            StringMeta* meta = CreateStringMeta(substringLength + 1);
-            char* content = (char*)(meta + 1);
+            char* content = (char*)malloc(substringLength + 1);
 
             strncpy(content, source, substringLength);
             content[substringLength] = 0;

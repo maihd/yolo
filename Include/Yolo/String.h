@@ -5,20 +5,11 @@
 
 namespace StringOps
 {
-    String From(String source);
-    String From(void* buffer, String source);
-    String From(void* buffer, int bufferSize, String source);
-
     String Format(int bufferSize, String format, ...);
     String FormatArgv(int bufferSize, String format, va_list argv);
 
     String Format(void* buffer, int bufferSize, String format, ...);
     String FormatArgv(void* buffer, int bufferSize, String format, va_list argv);
-
-    void   Free(String target);
-    bool   HasMeta(String target);
-    bool   IsWeakRef(String target);
-    bool   IsManaged(String target);
 
     int    Length(String target);
     bool   IsEmpty(String target);
@@ -38,12 +29,13 @@ namespace StringOps
 
     String Intern(String source);
     String Intern(uint64 hash, String source);
+    String InternNoAllocation(uint64 hash, String source);
 
     template <int length>
-    inline String InternStatic(const char(&source)[length])
+    inline String Static(const char(&source)[length])
     {
         uint64 hash = CalcHash64<length>(source);
-        return Intern(hash, source);
+        return InternNoAllocation(hash, source);
     }
 }
 

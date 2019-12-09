@@ -13,7 +13,7 @@
 
 int main(void)
 {
-    String string1 = StringOps::InternStatic("Hello world");
+    String string1 = StringOps::Static("Hello world");
     printf("string 1: %s\n", string1);
 
     String string2 = StringOps::Intern(string1);
@@ -75,8 +75,5 @@ int main(void)
 
     Graphics::Quit();
     Window::Quit();
-
-    StringOps::Free(string1);
-    StringOps::Free(string2);
     return 0;
 }
