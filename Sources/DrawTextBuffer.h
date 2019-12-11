@@ -1,9 +1,6 @@
 #pragma once
 
-#include <Yolo/Font.h>
-#include <Yolo/Array.h>
-#include <Yolo/MathTypes.h>
-
+#include <Yolo/Types.h>
 #include <Yolo/Vertex.h>
 
 struct DrawTextBuffer

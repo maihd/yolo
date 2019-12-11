@@ -1,7 +1,9 @@
 #include "./DrawBuffer.h"
 
 #include <Yolo/Math.h>
+#include <Yolo/Array.h>
 #include <Yolo/Macros.h>
+#include <Yolo/VertexArray.h>
 
 #include "./OpenGL.h"
 

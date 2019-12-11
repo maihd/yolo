@@ -1,11 +1,10 @@
 #include "./DrawTextBuffer.h"
 
-#include <Yolo/Math.h>
-#include <Yolo/String.h>
-
-#include <math.h>
 #include <GL/glew.h>
-#include <stb_truetype.h>
+
+#include <Yolo/Math.h>
+#include <Yolo/Array.h>
+#include <Yolo/String.h>
 
 DrawTextBuffer DrawTextBuffer::New()
 {
