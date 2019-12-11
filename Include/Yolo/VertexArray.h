@@ -38,12 +38,15 @@ struct VertexArray
     Handle handle;
     Handle indexBuffer;
     Handle vertexBuffer;
-
-    static VertexArray New(void);
-    static void        Free(VertexArray* vertexArray);
-
-    static void        SetIndexData(VertexArray vertexArray, const void* data, int size, BufferUsage usage);
-    static void        SetVertexData(VertexArray vertexArray, const void* data, int size, BufferUsage usage);
-
-    static void        DefineAttribute(VertexArray vertexArray, int location, DataType type, int stride, int offset);
 };
+
+namespace VertexArrayOps
+{
+    VertexArray New(void);
+    void        Free(VertexArray* vertexArray);
+
+    void        SetIndexData(VertexArray vertexArray, const void* data, int size, BufferUsage usage);
+    void        SetVertexData(VertexArray vertexArray, const void* data, int size, BufferUsage usage);
+
+    void        DefineAttribute(VertexArray vertexArray, int location, DataType type, int stride, int offset);
+}

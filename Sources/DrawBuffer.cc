@@ -9,8 +9,8 @@ namespace DrawBufferOps
 {
     DrawBuffer New(VertexShape* vertices, uint16* indices)
     {
-        VertexArray vertexArray = VertexArray::New();
-        VertexArray::DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexShape), offsetof(VertexShape, position));
+        VertexArray vertexArray = VertexArrayOps::New();
+        VertexArrayOps::DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexShape), offsetof(VertexShape, position));
 
         DrawBuffer drawBuffer = {
             false,
@@ -26,7 +26,7 @@ namespace DrawBufferOps
     {
         assert(drawBuffer);
 
-        VertexArray::Free(&drawBuffer->vertexArray);
+        VertexArrayOps::Free(&drawBuffer->vertexArray);
 
         Array::Free(&drawBuffer->vertices);
         Array::Free(&drawBuffer->indices);
@@ -86,8 +86,8 @@ namespace DrawBufferOps
         {
             drawBuffer->shouldUpdate = false;
 
-            VertexArray::SetIndexData(drawBuffer->vertexArray, drawBuffer->indices, Array::SizeOf(drawBuffer->indices), BufferUsage::StreamDraw);
-            VertexArray::SetVertexData(drawBuffer->vertexArray, drawBuffer->vertices, Array::SizeOf(drawBuffer->vertices), BufferUsage::StreamDraw);
+            VertexArrayOps::SetIndexData(drawBuffer->vertexArray, drawBuffer->indices, Array::SizeOf(drawBuffer->indices), BufferUsage::StreamDraw);
+            VertexArrayOps::SetVertexData(drawBuffer->vertexArray, drawBuffer->vertices, Array::SizeOf(drawBuffer->vertices), BufferUsage::StreamDraw);
         }
     }
 
