@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Yolo/Types.h>
-#include <Yolo/Hash.h>
 
 namespace StringOps
 {

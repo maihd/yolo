@@ -1,4 +1,4 @@
-#include <Yolo/Hash.h>
+#include <Yolo/Types.h>
 
 uint64 CalcHash64(const void* buffer, int length, uint64 seed)
 {

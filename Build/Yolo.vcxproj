@@ -182,7 +182,6 @@
     <ClInclude Include="..\Include\Yolo\File.h" />
     <ClInclude Include="..\Include\Yolo\Font.h" />
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
-    <ClInclude Include="..\Include\Yolo\Hash.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
     <ClInclude Include="..\Include\Yolo\Macros.h" />
     <ClInclude Include="..\Include\Yolo\Math.h" />
@@ -213,7 +212,7 @@
     <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
     <ClCompile Include="..\Sources\Font.cc" />
     <ClCompile Include="..\Sources\Graphics.cc" />
-    <ClCompile Include="..\Sources\Hash.cc" />
+    <ClCompile Include="..\Sources\Types.cc" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
     <ClCompile Include="..\Sources\Runtime.cc" />

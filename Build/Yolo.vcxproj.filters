@@ -36,9 +36,6 @@
     <ClInclude Include="..\Include\Yolo\Graphics.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Hash.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Yolo\HashTable.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -125,9 +122,6 @@
     <ClCompile Include="..\Sources\Graphics.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Hash.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\OpenGL.cc">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -166,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c">
       <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Types.cc">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
