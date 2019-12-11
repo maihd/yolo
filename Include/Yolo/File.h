@@ -14,7 +14,10 @@ enum struct FileMode
 struct File
 {
     Handle handle;
-    
+};
+
+namespace FileOps
+{
     File Open(String path, FileMode mode);
     void Close(File file);
 
@@ -29,4 +32,4 @@ struct File
 
     int Write(File file, const void* buffer, int length);
     uint64 Write(File file, const void* buffer, uint64 length);
-};
+}

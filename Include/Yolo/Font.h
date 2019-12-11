@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Yolo/Types.h>
+#include <Yolo/Array.h>
 #include <Yolo/Texture.h>
 
 struct FontGlyph
@@ -18,10 +19,10 @@ struct FontGlyph
 
 struct Font
 {
-    float       size;
-    FontGlyph*  glyphs;
+    float               size;
+    Array<FontGlyph>    glyphs;
     
-    Texture     texture;
+    Texture             texture;
 };
 
 namespace FontOps

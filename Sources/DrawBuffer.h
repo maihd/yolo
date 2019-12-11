@@ -9,20 +9,20 @@
 
 struct DrawBuffer
 {
-    bool            shouldUpdate;
-    VertexArray     vertexArray;
+    bool                    shouldUpdate;
+    VertexArray             vertexArray;
 
-    VertexShape*    vertices;
-    uint16*         indices;
+    Array<VertexShape>      vertices;
+    Array<uint16>           indices;
 };
 
 namespace DrawBufferOps
 {
-    DrawBuffer New(VertexShape* vertices = 0, uint16* indices = 0);
+    DrawBuffer New(void);
     void       Free(DrawBuffer* drawBuffer);
 
     void       AddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v1, VertexShape v2);
-    void       AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices);
+    void       AddTriangle(DrawBuffer* drawBuffer, Array<VertexShape> vertices);
     void       AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, int count);
 
     void       AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, vec4 color, int segments = 30);

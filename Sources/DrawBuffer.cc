@@ -7,7 +7,7 @@
 
 namespace DrawBufferOps
 {
-    DrawBuffer New(VertexShape* vertices, uint16* indices)
+    DrawBuffer New()
     {
         VertexArray vertexArray = VertexArrayOps::New();
         VertexArrayOps::DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexShape), offsetof(VertexShape, position));
@@ -15,8 +15,8 @@ namespace DrawBufferOps
         DrawBuffer drawBuffer = {
             false,
             vertexArray,
-            vertices,
-            indices
+            ArrayOps::New<VertexShape>(),
+            ArrayOps::New<uint16>()
         };
 
         return drawBuffer;
@@ -28,32 +28,31 @@ namespace DrawBufferOps
 
         VertexArrayOps::Free(&drawBuffer->vertexArray);
 
-        Array::Free(&drawBuffer->vertices);
-        Array::Free(&drawBuffer->indices);
+        ArrayOps::Free(&drawBuffer->vertices);
+        ArrayOps::Free(&drawBuffer->indices);
     }
 
     void AddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v1, VertexShape v2)
     {
         assert(drawBuffer);
 
-        uint16 startIndex = (uint16)Array::Length(drawBuffer->vertices);
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
+        uint16 startIndex = (uint16)drawBuffer->vertices.length;
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
 
-        Array::Push(&drawBuffer->vertices, v0);
-        Array::Push(&drawBuffer->vertices, v1);
-        Array::Push(&drawBuffer->vertices, v2);
+        ArrayOps::Push(&drawBuffer->vertices, v0);
+        ArrayOps::Push(&drawBuffer->vertices, v1);
+        ArrayOps::Push(&drawBuffer->vertices, v2);
 
         drawBuffer->shouldUpdate = true;
     }
 
-    void AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices)
+    void AddTriangle(DrawBuffer* drawBuffer, Array<VertexShape> vertices)
     {
         assert(drawBuffer);
-        assert(Array::IsArray(vertices));
 
-        AddTriangle(drawBuffer, vertices, Array::Length(vertices));
+        AddTriangle(drawBuffer, vertices.elements, vertices.length);
     }
 
     void AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, int count)
@@ -74,8 +73,8 @@ namespace DrawBufferOps
     {
         drawBuffer->shouldUpdate = true;
 
-        Array::Clear(&drawBuffer->vertices);
-        Array::Clear(&drawBuffer->indices);
+        ArrayOps::Clear(&drawBuffer->vertices);
+        ArrayOps::Clear(&drawBuffer->indices);
     }
 
     void UpdateBuffers(DrawBuffer* drawBuffer)
@@ -86,8 +85,8 @@ namespace DrawBufferOps
         {
             drawBuffer->shouldUpdate = false;
 
-            VertexArrayOps::SetIndexData(drawBuffer->vertexArray, drawBuffer->indices, Array::SizeOf(drawBuffer->indices), BufferUsage::StreamDraw);
-            VertexArrayOps::SetVertexData(drawBuffer->vertexArray, drawBuffer->vertices, Array::SizeOf(drawBuffer->vertices), BufferUsage::StreamDraw);
+            VertexArrayOps::SetIndexData(drawBuffer->vertexArray, drawBuffer->indices.elements, ArrayOps::SizeOf(drawBuffer->indices), BufferUsage::StreamDraw);
+            VertexArrayOps::SetVertexData(drawBuffer->vertexArray, drawBuffer->vertices.elements, ArrayOps::SizeOf(drawBuffer->vertices), BufferUsage::StreamDraw);
         }
     }
 
@@ -138,9 +137,9 @@ namespace DrawBufferOps
                 { position.x + cosf(angle) * radius, position.y + sinf(angle) * radius },
             };
 
-            const uint16 index = (uint16)Array::Length(drawBuffer->vertices);
-            Array::Push(&drawBuffer->indices, index);
-            Array::Push(&drawBuffer->vertices, v);
+            const uint16 index = (uint16)drawBuffer->vertices.length;
+            ArrayOps::Push(&drawBuffer->indices, index);
+            ArrayOps::Push(&drawBuffer->vertices, v);
         }
     }
 
@@ -162,18 +161,18 @@ namespace DrawBufferOps
             { position.x + size.x, position.y },
         };
 
-        const uint16 startIndex = (uint16)Array::Length(drawBuffer->vertices);
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 3u));
+        const uint16 startIndex = (uint16)drawBuffer->vertices.length;
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 3u));
 
-        Array::Push(&drawBuffer->vertices, v0);
-        Array::Push(&drawBuffer->vertices, v1);
-        Array::Push(&drawBuffer->vertices, v2);
-        Array::Push(&drawBuffer->vertices, v3);
+        ArrayOps::Push(&drawBuffer->vertices, v0);
+        ArrayOps::Push(&drawBuffer->vertices, v1);
+        ArrayOps::Push(&drawBuffer->vertices, v2);
+        ArrayOps::Push(&drawBuffer->vertices, v3);
 
         drawBuffer->shouldUpdate = true;
     }
@@ -196,17 +195,17 @@ namespace DrawBufferOps
             { position.x + size.x, position.y },
         };
 
-        const uint16 startIndex = (uint16)Array::Length(drawBuffer->vertices);
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 3u));
-        Array::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
+        const uint16 startIndex = (uint16)drawBuffer->vertices.length;
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 3u));
+        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
 
-        Array::Push(&drawBuffer->vertices, v0);
-        Array::Push(&drawBuffer->vertices, v1);
-        Array::Push(&drawBuffer->vertices, v2);
-        Array::Push(&drawBuffer->vertices, v3);
+        ArrayOps::Push(&drawBuffer->vertices, v0);
+        ArrayOps::Push(&drawBuffer->vertices, v1);
+        ArrayOps::Push(&drawBuffer->vertices, v2);
+        ArrayOps::Push(&drawBuffer->vertices, v3);
 
         drawBuffer->shouldUpdate = true;
     }
