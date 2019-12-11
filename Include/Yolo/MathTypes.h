@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+constexpr const float PI = 3.141592653589f;
+
 struct vec2;
 struct vec3;
 struct vec4;

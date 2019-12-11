@@ -95,7 +95,7 @@ void DrawBuffer::AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, 
 
     segments = segments < 0 ? 30 : segments;
 
-    float step = Const::PI * 2.0f / segments;
+    float step = PI * 2.0f / segments;
 
     for (int i = 0; i < segments; i++)
     {
@@ -126,7 +126,7 @@ void DrawBuffer::AddCircleLines(DrawBuffer* drawBuffer, vec2 position, float rad
 
     segments = segments < 0 ? 30 : segments;
 
-    float step = Const::PI * 2.0f / segments;
+    float step = PI * 2.0f / segments;
 
     for (int i = 0; i <= segments; i++)
     {

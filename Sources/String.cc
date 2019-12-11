@@ -56,7 +56,7 @@ namespace StringOps
 
     int Length(String target)
     {
-        if (!target || target == Const::EMPTY_STRING)
+        if (!target || target == "")
         {
             return 0;
         }
@@ -176,7 +176,7 @@ namespace StringOps
     {
         if (start < 0)
         {
-            return Const::EMPTY_STRING;
+            return "";
         }
 
         if (end < 0)
@@ -188,7 +188,7 @@ namespace StringOps
             int substringLength = end - start;
             if (substringLength <= 0)
             {
-                return Const::EMPTY_STRING;
+                return "";
             }
 
             char* content = (char*)malloc(substringLength + 1);

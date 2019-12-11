@@ -11,9 +11,9 @@ DrawTextBuffer DrawTextBuffer::New(Vertex* vertices, uint16* indices)
 {
     return { 
         false,
-        Const::EMPTY_HANDLE, 
-        Const::EMPTY_HANDLE, 
-        Const::EMPTY_HANDLE, 
+        0, 
+        0, 
+        0, 
         vertices, 
         indices 
     };
@@ -27,9 +27,9 @@ void DrawTextBuffer::Free(DrawTextBuffer* drawBuffer)
     glDeleteBuffers(1, &drawBuffer->indexBuffer);
     glDeleteVertexArrays(1, &drawBuffer->vertexArray);
 
-    drawBuffer->vertexBuffer = Const::EMPTY_HANDLE;
-    drawBuffer->indexBuffer = Const::EMPTY_HANDLE;
-    drawBuffer->vertexArray = Const::EMPTY_HANDLE;
+    drawBuffer->vertexBuffer = 0;
+    drawBuffer->indexBuffer = 0;
+    drawBuffer->vertexArray = 0;
 
     Array::Free(&drawBuffer->vertices);
     Array::Free(&drawBuffer->indices);
@@ -54,17 +54,17 @@ void DrawTextBuffer::UpdateBuffers(DrawTextBuffer* drawBuffer)
     {
         drawBuffer->shouldUpdate = false;
 
-        if (drawBuffer->vertexBuffer == Const::EMPTY_HANDLE)
+        if (!drawBuffer->vertexBuffer)
         {
             glGenBuffers(1, &drawBuffer->vertexBuffer);
         }
 
-        if (drawBuffer->indexBuffer == Const::EMPTY_HANDLE)
+        if (!drawBuffer->indexBuffer)
         {
             glGenBuffers(1, &drawBuffer->indexBuffer);
         }
 
-        if (drawBuffer->vertexArray == Const::EMPTY_HANDLE)
+        if (!drawBuffer->vertexArray)
         {
             glGenVertexArrays(1, &drawBuffer->vertexArray);
             glBindVertexArray(drawBuffer->vertexArray);
