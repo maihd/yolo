@@ -188,6 +188,7 @@
     <ClInclude Include="..\Include\Yolo\Math.h" />
     <ClInclude Include="..\Include\Yolo\MathOps.h" />
     <ClInclude Include="..\Include\Yolo\MathTypes.h" />
+    <ClInclude Include="..\Include\Yolo\OrderedTable.h" />
     <ClInclude Include="..\Include\Yolo\Random.h" />
     <ClInclude Include="..\Include\Yolo\Shader.h" />
     <ClInclude Include="..\Include\Yolo\Shapes.h" />
@@ -223,7 +224,6 @@
     <ClCompile Include="..\Sources\SpriteBatch.cc" />
     <ClCompile Include="..\Sources\SpriteMesh.cc" />
     <ClCompile Include="..\Sources\String.cc" />
-    <ClCompile Include="..\Sources\StringIntern.cc" />
     <ClCompile Include="..\Sources\Texture.cc" />
     <ClCompile Include="..\Sources\Time.cc" />
     <ClCompile Include="..\Sources\VertexArray.cc" />
