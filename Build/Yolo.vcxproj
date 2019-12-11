@@ -186,8 +186,6 @@
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
     <ClInclude Include="..\Include\Yolo\Macros.h" />
     <ClInclude Include="..\Include\Yolo\Math.h" />
-    <ClInclude Include="..\Include\Yolo\MathOps.h" />
-    <ClInclude Include="..\Include\Yolo\MathTypes.h" />
     <ClInclude Include="..\Include\Yolo\OrderedTable.h" />
     <ClInclude Include="..\Include\Yolo\Random.h" />
     <ClInclude Include="..\Include\Yolo\Shader.h" />

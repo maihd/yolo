@@ -1,14 +1,6 @@
 #pragma once
 
-#include <Yolo/Font.h>
-#include <Yolo/Texture.h>
-#include <Yolo/MathTypes.h>
-
-enum struct DrawMode
-{
-    Fill = 0,
-    Line = 1,
-};
+#include <Yolo/Types.h>
 
 namespace Graphics
 {

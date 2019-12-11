@@ -3,15 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <Yolo/Utils.h>
-
-template <typename T>
-struct Array
-{
-    int length;
-    int capacity;
-    T*  elements;
-};
+#include <Yolo/Types.h>
 
 namespace ArrayOps
 {

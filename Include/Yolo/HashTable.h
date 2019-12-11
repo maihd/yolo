@@ -3,23 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <Yolo/Hash.h>
-#include <Yolo/Utils.h>
-#include <Yolo/Random.h>
-
-template <typename T>
-struct HashTable
-{
-    int         count;
-    int         capacity;
-
-    int*        hashs;
-    int         hashCount;
-
-    int*        nexts;
-    uint64*     keys;
-    T*          values;
-};
+#include <Yolo/Types.h>
 
 namespace HashTableOps
 {

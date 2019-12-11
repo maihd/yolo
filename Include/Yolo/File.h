@@ -2,20 +2,6 @@
 
 #include <Yolo/Types.h>
 
-enum struct FileMode
-{
-    None,
-    Read    = 1 << 0,
-    Write   = 1 << 1,
-    Binary  = 1 << 2,
-    Create  = 1 << 3,
-};
-
-struct File
-{
-    Handle handle;
-};
-
 namespace FileOps
 {
     File Open(String path, FileMode mode);

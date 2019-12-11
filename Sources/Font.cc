@@ -1,14 +1,14 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <Yolo/Font.h>
-
-#include <Yolo/Array.h>
-
 #include <stdio.h>
 #include <assert.h>
 
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
+
+#include <Yolo/Font.h>
+#include <Yolo/Array.h>
+#include <Yolo/Texture.h>
 
 namespace FontOps
 {
