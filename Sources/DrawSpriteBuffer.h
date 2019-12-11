@@ -27,7 +27,7 @@ struct DrawSpriteBuffer
     static DrawSpriteBuffer New(void);
     static void             Free(DrawSpriteBuffer* drawSpriteBuffer);
 
-    static void             AddText(DrawSpriteBuffer* drawSpriteBuffer, string text, Font font, vec2 position, float rotation, vec2 scale, vec4 color);
+    static void             AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, vec2 position, float rotation, vec2 scale, vec4 color);
     static void             AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, vec2 position, float rotation, vec2 scale, vec4 color);
     static void             AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, vec2 position, float rotation, vec2 scale, vec4 color);
 

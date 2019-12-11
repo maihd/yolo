@@ -331,7 +331,7 @@ namespace Graphics
         spriteShader = ShaderOps::Compile(spriteVertexSource, spritePixelSource);
 
         spriteMesh = SpriteMesh::New();
-        drawBuffer = DrawBuffer::New();
+        drawBuffer = DrawBufferOps::New();
         drawTextBuffer = DrawTextBuffer::New();
     }
 
@@ -359,7 +359,7 @@ namespace Graphics
 
     void PresentDrawBuffer(GLenum drawMode)
     {
-        DrawBuffer::UpdateBuffers(&drawBuffer);
+        DrawBufferOps::UpdateBuffers(&drawBuffer);
 
         mat4 model = mat4::Translation(0, 0);
 
@@ -427,31 +427,31 @@ namespace Graphics
 
     void DrawCircle(DrawMode mode, vec2 position, float radius, vec4 color, int segments)
     {
-        DrawBuffer::Clear(&drawBuffer);
+        DrawBufferOps::Clear(&drawBuffer);
 
         if (mode == DrawMode::Line)
         {
-            DrawBuffer::AddCircleLines(&drawBuffer, position, radius, color, segments);
+            DrawBufferOps::AddCircleLines(&drawBuffer, position, radius, color, segments);
             PresentDrawBuffer(GL_LINE_STRIP);
         }
         else
         {
-            DrawBuffer::AddCircle(&drawBuffer, position, radius, color, segments);
+            DrawBufferOps::AddCircle(&drawBuffer, position, radius, color, segments);
             PresentDrawBuffer(GL_TRIANGLES);
         }
     }
 
     void DrawRectangle(DrawMode mode, vec2 position, vec2 size, vec4 color)
     {
-        DrawBuffer::Clear(&drawBuffer);
+        DrawBufferOps::Clear(&drawBuffer);
         if (mode == DrawMode::Line)
         {
-            DrawBuffer::AddRectangleLines(&drawBuffer, position, size, color);
+            DrawBufferOps::AddRectangleLines(&drawBuffer, position, size, color);
             PresentDrawBuffer(GL_LINE_STRIP);
         }
         else
         {
-            DrawBuffer::AddRectangle(&drawBuffer, position, size, color);
+            DrawBufferOps::AddRectangle(&drawBuffer, position, size, color);
             PresentDrawBuffer(GL_TRIANGLES);
         }
     }

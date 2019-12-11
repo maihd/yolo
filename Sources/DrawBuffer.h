@@ -14,20 +14,23 @@ struct DrawBuffer
 
     VertexShape*    vertices;
     uint16*         indices;
-
-    static DrawBuffer New(VertexShape* vertices = 0, uint16* indices = 0);
-    static void       Free(DrawBuffer* drawBuffer);
-
-    static void       AddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v1, VertexShape v2);
-    static void       AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices);
-    static void       AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, int count);
-
-    static void       AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, vec4 color, int segments = 30);
-    static void       AddCircleLines(DrawBuffer* drawBuffer, vec2 position, float radius, vec4 color, int segments = 30);
-
-    static void       AddRectangle(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color);
-    static void       AddRectangleLines(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color);
-
-    static void       Clear(DrawBuffer* drawBuffer);
-    static void       UpdateBuffers(DrawBuffer* drawBuffer);
 };
+
+namespace DrawBufferOps
+{
+    DrawBuffer New(VertexShape* vertices = 0, uint16* indices = 0);
+    void       Free(DrawBuffer* drawBuffer);
+
+    void       AddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v1, VertexShape v2);
+    void       AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices);
+    void       AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, int count);
+
+    void       AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, vec4 color, int segments = 30);
+    void       AddCircleLines(DrawBuffer* drawBuffer, vec2 position, float radius, vec4 color, int segments = 30);
+
+    void       AddRectangle(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color);
+    void       AddRectangleLines(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color);
+
+    void       Clear(DrawBuffer* drawBuffer);
+    void       UpdateBuffers(DrawBuffer* drawBuffer);
+}
