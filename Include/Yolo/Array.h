@@ -7,20 +7,7 @@
 
 namespace ArrayOps
 {
-    constexpr int    MIN_CAPACITY = 16;
-
-    inline int NextPOT(int x)
-    {
-        int result = x - 1;
-
-        result = result | (result >> 1);
-        result = result | (result >> 2);
-        result = result | (result >> 4);
-        result = result | (result >> 8);
-        result = result | (result >> 16);
-
-        return result + 1;
-    }
+    constexpr int MIN_CAPACITY = 16;
 
     template <typename T>
     inline Array<T> New(int capacity = 0)
