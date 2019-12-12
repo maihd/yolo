@@ -33,7 +33,7 @@ namespace DrawSpriteBufferOps
     
     void                AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, vec2 position, float rotation, vec2 scale, vec4 color);
     void                AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, vec2 position, float rotation, vec2 scale, vec4 color);
-    void                AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, vec2 position, float rotation, vec2 scale, vec4 color);
+    void                AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, vec2 position, float rotation, vec2 scale, vec4 color, vec2 pivot = vec2{ 0.5f, 0.5f });
 
     void                UpdateBuffers(DrawSpriteBuffer* drawSpriteBuffer);
     void                Draw(DrawSpriteBuffer* drawSpriteBuffer, Shader shader, mat4 projection);

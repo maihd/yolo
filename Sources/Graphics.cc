@@ -461,7 +461,7 @@ namespace Graphics
         }
     }
 
-    void DrawTexture(Texture texture, vec2 position, float rotation, vec2 scale, vec4 color)
+    void DrawTexture(Texture texture, vec2 position, float rotation, vec2 scale, vec4 color, vec2 pivot)
     {
 #if 0
         mat4 model = mul(mat4::Translation(position), mat4::Scalation(size));
@@ -490,7 +490,7 @@ namespace Graphics
         glBindVertexArray(0);
         glUseProgram(0);
 #endif
-        DrawSpriteBufferOps::AddTexture(&drawSpriteBuffer, texture, position, rotation, scale, color);
+        DrawSpriteBufferOps::AddTexture(&drawSpriteBuffer, texture, position, rotation, scale, color, pivot);
     }
 
 #undef DrawText

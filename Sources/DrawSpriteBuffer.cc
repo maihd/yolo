@@ -115,9 +115,9 @@ namespace DrawSpriteBufferOps
     void AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, vec2 position, float rotation, vec2 scale, vec4 color);
 
     void AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, vec2 position, float rotation, vec2 scale, vec4 color);
-    void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, vec2 position, float rotation, vec2 scale, vec4 color)
+    void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, vec2 position, float rotation, vec2 scale, vec4 color, vec2 pivot)
     {
-        mat4 transform = Math::Transform(position, rotation, scale);
+        mat4 transform = Math::Transform2D(position, rotation, scale, pivot * vec2{ (float)texture.width, (float)texture.height });
 
         vec3 pos0 = mul(transform, vec3{ 0, 0 });
         vec3 pos1 = mul(transform, vec3{ 0, (float)texture.height });

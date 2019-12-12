@@ -1645,4 +1645,13 @@ namespace Math
     {
         return mul(mul(Math::Translation(position), Math::Rotation(rotation)), Math::Scalation(scale));
     }
+
+    inline mat4 Transform2D(vec2 position, float rotation, vec2 scale, vec2 pivot)
+    {
+        mat4 translation = Translation(position - pivot);
+        mat4 rotationMat4 = mul(mul(Translation(pivot.x, pivot.y), RotationZ(rotation)), Translation(-pivot.x, -pivot.y));
+        mat4 scalation = Scalation(scale);
+
+        return mul(mul(translation, rotationMat4), scalation);
+    }
 }
