@@ -10,6 +10,9 @@ namespace Time
     float totalTime = 0.0f;
     float timeScale = 1.0f;
 
+    float updateFramerateTimer    = 0.0f;
+    float updateFramerateInterval = 1.0f;
+
     uint64 prevCounter = 0;
 
     uint64 GetCounter(void)
@@ -97,7 +100,13 @@ namespace Time
 
         deltaTime = (float)((double)ticks / (double)GetFrequency());
         totalTime = totalTime + deltaTime;
-        framerate = 1.0f / deltaTime;
+
+        updateFramerateTimer += deltaTime;
+        if (updateFramerateTimer >= updateFramerateInterval)
+        {
+            updateFramerateTimer -= updateFramerateInterval;
+            framerate = 1.0f / deltaTime;
+        }
 
         totalFrames++;
 
@@ -127,9 +136,15 @@ namespace Time
 
         deltaTime = (float)((double)ticks / (double)frequency);
         totalTime = totalTime + deltaTime;
-        framerate = 1.0f / deltaTime;
-        totalFrames++;
 
+        updateFramerateTimer += deltaTime;
+        if (updateFramerateTimer >= updateFramerateInterval)
+        {
+            updateFramerateTimer -= updateFramerateInterval;
+            framerate = 1.0f / deltaTime;
+        }
+
+        totalFrames++;
         prevCounter = counter;
         return isSleep;
     }

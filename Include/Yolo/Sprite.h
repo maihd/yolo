@@ -1,14 +1,6 @@
 #pragma once
 
-#include <Yolo/Texture.h>
+#include <Yolo/Types.h>
 
-struct Sprite
-{
-    Texture texture;
 
-    int     x;
-    int     y;
-    int     width;
-    int     height;
-};
 

@@ -1,6 +1,8 @@
 #include <Yolo/Math.h>
 #include <Yolo/Time.h>
 #include <Yolo/Font.h>
+#include <Yolo/Texture.h>
+
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
 #include <Yolo/Graphics.h>
@@ -42,7 +44,7 @@ int main(void)
 
     float angle = 0.0f;
 
-    Texture texture = font.texture;//Texture::Load("../Assets/opengl_logo.png");
+    Texture texture = TextureOps::Load("../Assets/opengl_logo.png");
     float posX = 0;
 
     HashTable<int> hashTable = HashTableOps::New<int>();
@@ -64,6 +66,8 @@ int main(void)
         //Graphics::DrawCircle(DrawMode::Line, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
 
         //Graphics::DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
+        Graphics::DrawTexture(texture, { width * 0.5f, height * 0.5f }, Time::GetTotalTime());
+        Graphics::DrawTexture(texture, { width * 0.25f, height * 0.25f }, Time::GetTotalTime() * 0.5f, vec2{ 1, 1 }, vec4{ 0.5f, 0.5f, 0.5f, 1.0f });
         Graphics::DrawFramerate(font, { 0.0f, (float)height - font.size });
 
         Graphics::Present();

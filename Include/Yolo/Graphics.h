@@ -24,7 +24,7 @@ namespace Graphics
     void    DrawCircle(DrawMode mode, vec2 position, float radius, vec4 color, int segments = 30);
     void    DrawRectangle(DrawMode mode, vec2 position, vec2 size, vec4 color);
 
-    void    DrawTexture(Texture texture, vec2 position, vec2 size);
+    void    DrawTexture(Texture texture, vec2 position, float rotation = 0.0f, vec2 scale = vec2{ 1, 1 }, vec4 color = vec4{ 1, 1, 1, 1 });
 
     void    DrawText(String text, Font font, vec2 position);
     void    DrawFramerate(Font font, vec2 position);

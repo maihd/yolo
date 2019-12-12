@@ -10,6 +10,7 @@
 #include "./SpriteMesh.h"
 #include "./DrawBuffer.h"
 #include "./DrawTextBuffer.h"
+#include "./DrawSpriteBuffer.h"
 
 namespace Graphics
 {
@@ -24,12 +25,9 @@ namespace Graphics
     Shader spriteShader;
     SpriteMesh spriteMesh;
 
-    Handle vertexBuffer;
-    Handle indexBuffer;
-    Handle vertexArray;
-
     DrawBuffer drawBuffer;
     DrawTextBuffer drawTextBuffer;
+    DrawSpriteBuffer drawSpriteBuffer;
 
     static String vshaderSource =
         "#version 330 core\n"
@@ -65,17 +63,17 @@ namespace Graphics
 
         "layout (location = 0) in vec3 pos;"
         "layout (location = 1) in vec2 texcoord;"
-        //"layout (location = 2) in vec4 color;"
+        "layout (location = 2) in vec4 color;"
 
         "out vec2 uv;"
-        //"out vec4 fragColor;"
+        "out vec4 fragColor;"
 
         "uniform mat4 model;"
         "uniform mat4 projection;"
 
         "void main() {"
         "uv = texcoord;"
-        //"fragColor = color;"
+        "fragColor = color;"
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
@@ -83,13 +81,14 @@ namespace Graphics
         "#version 330 core\n"
 
         "in vec2 uv;"
+        "in vec4 fragColor;"
 
         "uniform sampler2D tex;"
 
         "out vec4 resultColor;"
 
         "void main() {"
-        "resultColor = texture(tex, uv);"
+        "resultColor = texture(tex, uv) * fragColor;"
         "}";
 
 
@@ -324,7 +323,7 @@ namespace Graphics
         float width = (float)Window::GetWidth();
         float height = (float)Window::GetHeight();
 
-        projection = mat4::Ortho(0, width, 0, height, 0.0f, 100.0f);
+        projection = Math::Ortho(0, width, 0, height, 0.0f, 100.0f);
         shader = ShaderOps::Compile(vshaderSource, fshaderSource);
 
         fontShader = ShaderOps::Compile(fontVertexSource, fontPixelSource);
@@ -333,6 +332,7 @@ namespace Graphics
         spriteMesh = SpriteMesh::New();
         drawBuffer = DrawBufferOps::New();
         drawTextBuffer = DrawTextBuffer::New();
+        drawSpriteBuffer = DrawSpriteBufferOps::New();
     }
 
     void Clear(void)
@@ -340,11 +340,14 @@ namespace Graphics
         float width = (float)Window::GetWidth();
         float height = (float)Window::GetHeight();
         
-        projection = mat4::Ortho(0, width, 0, height, 0.0f, 100.0f);
+        projection = Math::Ortho(0, width, 0, height, 0.0f, 100.0f);
 
         // Set viewport
         glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
         glClear(GL_COLOR_BUFFER_BIT);
+
+        // Clear buffers
+        DrawSpriteBufferOps::Clear(&drawSpriteBuffer);
     }
 
     void ClearColor(float r, float g, float b, float a)
@@ -354,6 +357,8 @@ namespace Graphics
 
     void Present(void)
     {
+        DrawSpriteBufferOps::Draw(&drawSpriteBuffer, spriteShader, projection);
+
         Window::SwapBuffer();
     }
 
@@ -361,7 +366,7 @@ namespace Graphics
     {
         DrawBufferOps::UpdateBuffers(&drawBuffer);
 
-        mat4 model = mat4::Translation(0, 0);
+        mat4 model = Math::Translation(0, 0);
 
         glUseProgram(shader.handle);
         glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
@@ -456,8 +461,9 @@ namespace Graphics
         }
     }
 
-    void DrawTexture(Texture texture, vec2 position, vec2 size)
+    void DrawTexture(Texture texture, vec2 position, float rotation, vec2 scale, vec4 color)
     {
+#if 0
         mat4 model = mul(mat4::Translation(position), mat4::Scalation(size));
         
         int projectionLocation = glGetUniformLocation(shader.handle, "projection");
@@ -483,6 +489,8 @@ namespace Graphics
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
         glUseProgram(0);
+#endif
+        DrawSpriteBufferOps::AddTexture(&drawSpriteBuffer, texture, position, rotation, scale, color);
     }
 
 #undef DrawText
@@ -491,7 +499,7 @@ namespace Graphics
         DrawTextBuffer::AddText(&drawTextBuffer, text, font);
         DrawTextBuffer::UpdateBuffers(&drawTextBuffer);
 
-        mat4 model = mul(mat4::Translation(position), mat4::Scalation(1.0f, -1.0f));
+        mat4 model = mul(Math::Translation(position), Math::Scalation(1.0f, -1.0f));
 
         glUseProgram(fontShader.handle);
 

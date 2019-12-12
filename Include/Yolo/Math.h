@@ -1,903 +1,7 @@
 #pragma once
 
+#include <math.h>
 #include <Yolo/Types.h>
-
-//
-// @region: Operators
-//
-
-inline vec2 operator-(vec2 v)
-{
-    return vec2{ -v.x, -v.y };
-}
-
-inline vec2 operator+(vec2 v)
-{
-    return v;
-}
-
-inline vec2& operator--(vec2& v)
-{
-    --v.x;
-    --v.y;
-    return v;
-}
-
-inline vec2& operator++(vec2& v)
-{
-    ++v.x;
-    ++v.y;
-    return v;
-}
-
-inline vec2 operator--(vec2& v, int)
-{
-    const vec2 result = v;
-
-    v.x--;
-    v.y--;
-
-    return result;
-}
-
-inline vec2 operator++(vec2& v, int)
-{
-    const vec2 result = v;
-
-    v.x++;
-    v.y++;
-
-    return result;
-}
-
-inline vec2 operator+(vec2 a, vec2 b)
-{
-#if MATH_ENABLE_NEON   
-    return vec2(vadd_f32(a, b));
-#else
-    return vec2{ a.x + b.x, a.y + b.y };
-#endif
-}
-
-inline vec2 operator-(vec2 a, vec2 b)
-{
-#if MATH_ENABLE_NEON   
-    return vec2(vsub_f32(a, b));
-#else
-    return vec2{ a.x - b.x, a.y - b.y };
-#endif
-}
-
-inline vec2 operator*(vec2 a, vec2 b)
-{
-#if MATH_ENABLE_NEON   
-    return vec2(vmul_f32(a, b));
-#else
-    return vec2{ a.x * b.x, a.y * b.y };
-#endif
-}
-
-inline vec2 operator/(vec2 a, vec2 b)
-{
-#if MATH_ENABLE_NEON && 0 // experimental
-    vec2 res;
-    __asm volatile(
-    "vcvt.f32.u32  q0, q0     \n\t"
-        "vrecpe.f32    q0, q0     \n\t"
-        "vmul.f32      q0, q0, q1 \n\t"
-        "vcvt.u32.f32  q0, q0     \n\t"
-        :
-    : "r"(dst), "r"()
-        :
-        );
-#else
-    return vec2{ a.x / b.x, a.y / b.y };
-#endif
-}
-
-inline vec2 operator+(vec2 a, float b)
-{
-    return vec2{ a.x + b, a.y + b };
-}
-
-inline vec2 operator-(vec2 a, float b)
-{
-    return vec2{ a.x - b, a.x - b };
-}
-
-inline vec2 operator*(vec2 a, float b)
-{
-    return vec2{ a.x * b, a.y * b };
-}
-
-inline vec2 operator/(vec2 a, float b)
-{
-    return vec2{ a.x / b, a.y / b };
-}
-
-inline vec2 operator+(float a, vec2 b)
-{
-    return vec2{ a + b.x, a + b.y };
-}
-
-inline vec2 operator-(float a, vec2 b)
-{
-    return vec2{ a - b.x, a - b.y };
-}
-
-inline vec2 operator*(float a, vec2 b)
-{
-    return vec2{ a * b.x, a * b.y };
-}
-
-inline vec2 operator/(float a, vec2 b)
-{
-    return vec2{ a / b.x, a / b.y };
-}
-
-inline vec2& operator+=(vec2& a, vec2 b)
-{
-    return (a = a + b);
-}
-
-inline vec2& operator+=(vec2& a, float b)
-{
-    return (a = a + b);
-}
-
-inline vec2& operator-=(vec2& a, vec2 b)
-{
-    return (a = a - b);
-}
-
-inline vec2& operator-=(vec2& a, float b)
-{
-    return (a = a - b);
-}
-
-inline vec2& operator*=(vec2& a, vec2 b)
-{
-    return (a = a * b);
-}
-
-inline vec2& operator*=(vec2& a, float b)
-{
-    return (a = a * b);
-}
-
-inline vec2& operator/=(vec2& a, vec2 b)
-{
-    return (a = a / b);
-}
-
-inline vec2& operator/=(vec2& a, float b)
-{
-    return (a = a + b);
-}
-
-inline bool operator==(vec2 a, vec2 b)
-{
-    return a.x == b.x && a.y == b.y;
-}
-
-inline bool operator!=(vec2 a, vec2 b)
-{
-    return a.x != b.x || a.y != b.y;
-}
-
-inline vec3 operator-(vec3 v)
-{
-    return vec3{ -v.x, -v.y, -v.z };
-}
-
-inline vec3 operator+(vec3 v)
-{
-    return v;
-}
-
-inline vec3& operator--(vec3& v)
-{
-    --v.x;
-    --v.y;
-    --v.z;
-    return v;
-}
-
-inline vec3& operator++(vec3& v)
-{
-    ++v.x;
-    ++v.y;
-    ++v.z;
-    return v;
-}
-
-inline vec3 operator--(vec3& v, int)
-{
-    const vec3 result = v;
-
-    v.x--;
-    v.y--;
-    v.z--;
-
-    return result;
-}
-
-inline vec3 operator++(vec3& v, int)
-{
-    const vec3 result = v;
-
-    v.x++;
-    v.y++;
-    v.z++;
-
-    return result;
-}
-
-inline vec3 operator+(vec3 a, vec3 b)
-{
-    return vec3{ a.x + b.x, a.y + b.y, a.z + b.z };
-}
-
-inline vec3 operator-(vec3 a, vec3 b)
-{
-    return vec3{ a.x - b.x, a.y - b.y, a.z - b.z };
-}
-
-inline vec3 operator*(vec3 a, vec3 b)
-{
-    return vec3{ a.x * b.x, a.y * b.y, a.z * b.z };
-}
-
-inline vec3 operator/(vec3 a, vec3 b)
-{
-    return vec3{ a.x / b.x, a.y / b.y, a.z / b.z };
-}
-
-inline vec3 operator+(vec3 a, float b)
-{
-    return vec3{ a.x + b, a.y + b, a.z + b };
-}
-
-inline vec3 operator-(vec3 a, float b)
-{
-    return vec3{ a.x - b, a.y - b, a.z - b };
-}
-
-inline vec3 operator*(vec3 a, float b)
-{
-    return vec3{ a.x * b, a.y * b, a.z * b };
-}
-
-inline vec3 operator/(vec3 a, float b)
-{
-    return vec3{ a.x / b, a.y / b, a.z / b };
-}
-
-inline vec3 operator+(float a, vec3 b)
-{
-    return vec3{ a + b.x, a + b.y, a + b.z };
-}
-
-inline vec3 operator-(float a, vec3 b)
-{
-    return vec3{ a - b.x, a - b.y, a - b.z };
-}
-
-inline vec3 operator*(float a, vec3 b)
-{
-    return vec3{ a * b.x, a * b.y, a * b.z };
-}
-
-inline vec3 operator/(float a, vec3 b)
-{
-    return vec3{ a / b.x, a / b.y, a / b.z };
-}
-
-inline vec3& operator+=(vec3& a, vec3 b)
-{
-    return (a = a + b);
-}
-
-inline vec3& operator+=(vec3& a, float b)
-{
-    return (a = a + b);
-}
-
-inline vec3& operator-=(vec3& a, vec3 b)
-{
-    return (a = a - b);
-}
-
-inline vec3& operator-=(vec3& a, float b)
-{
-    return (a = a - b);
-}
-
-inline vec3& operator*=(vec3& a, vec3 b)
-{
-    return (a = a * b);
-}
-
-inline vec3& operator*=(vec3& a, float b)
-{
-    return (a = a * b);
-}
-
-inline vec3& operator/=(vec3& a, vec3 b)
-{
-    return (a = a / b);
-}
-
-inline vec3& operator/=(vec3& a, float b)
-{
-    return (a = a + b);
-}
-
-inline bool operator==(vec3 a, vec3 b)
-{
-    return a.x == b.x && a.y == b.y && a.z == b.z;
-}
-
-inline bool operator!=(vec3 a, vec3 b)
-{
-    return a.x != b.x || a.y != b.y || a.z != b.z;
-}
-
-inline vec4 operator-(vec4 v)
-{
-    return vec4{ -v.x, -v.y, -v.z, -v.w };
-}
-
-inline vec4 operator+(vec4 v)
-{
-    return v;
-}
-
-inline vec4& operator--(vec4& v)
-{
-    --v.x;
-    --v.y;
-    --v.z;
-    --v.w;
-    return v;
-}
-
-inline vec4& operator++(vec4& v)
-{
-    ++v.x;
-    ++v.y;
-    ++v.z;
-    ++v.w;
-    return v;
-}
-
-inline vec4 operator--(vec4& v, int)
-{
-    const vec4 result = v;
-
-    v.x--;
-    v.y--;
-    v.z--;
-    v.w--;
-
-    return result;
-}
-
-inline vec4 operator++(vec4& v, int)
-{
-    const vec4 result = v;
-
-    v.x++;
-    v.y++;
-    v.z++;
-    v.w++;
-
-    return result;
-}
-
-inline vec4 operator+(vec4 a, vec4 b)
-{
-    return vec4{ a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w };
-}
-
-inline vec4 operator-(vec4 a, vec4 b)
-{
-    return vec4{ a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w };
-}
-
-inline vec4 operator*(vec4 a, vec4 b)
-{
-    return vec4{ a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
-}
-
-inline vec4 operator/(vec4 a, vec4 b)
-{
-    return vec4{ a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w };
-}
-
-inline vec4 operator+(vec4 a, float b)
-{
-    return vec4{ a.x + b, a.y + b, a.z + b, a.w + b };
-}
-
-inline vec4 operator-(vec4 a, float b)
-{
-    return vec4{ a.x - b, a.y - b, a.z - b, a.w - b };
-}
-
-inline vec4 operator*(vec4 a, float b)
-{
-    return vec4{ a.x * b, a.y * b, a.z * b, a.w * b };
-}
-
-inline vec4 operator/(vec4 a, float b)
-{
-    return vec4{ a.x / b, a.y / b, a.z / b, a.w / b };
-}
-
-inline vec4 operator+(float a, vec4 b)
-{
-    return vec4{ a + b.x, a + b.y, a + b.z, a + b.w };
-}
-
-inline vec4 operator-(float a, vec4 b)
-{
-    return vec4{ a - b.x, a - b.y, a - b.z, a - b.w };
-}
-
-inline vec4 operator*(float a, vec4 b)
-{
-    return vec4{ a * b.x, a * b.y, a * b.z, a * b.w };
-}
-
-inline vec4 operator/(float a, vec4 b)
-{
-    return vec4{ a / b.x, a / b.y, a / b.z, a / b.w };
-}
-
-inline vec4& operator+=(vec4& a, vec4 b)
-{
-    return (a = a + b);
-}
-
-inline vec4& operator+=(vec4& a, float b)
-{
-    return (a = a + b);
-}
-
-inline vec4& operator-=(vec4& a, vec4 b)
-{
-    return (a = a - b);
-}
-
-inline vec4& operator-=(vec4& a, float b)
-{
-    return (a = a - b);
-}
-
-inline vec4& operator*=(vec4& a, vec4 b)
-{
-    return (a = a * b);
-}
-
-inline vec4& operator*=(vec4& a, float b)
-{
-    return (a = a * b);
-}
-
-inline vec4& operator/=(vec4& a, vec4 b)
-{
-    return (a = a / b);
-}
-
-inline vec4& operator/=(vec4& a, float b)
-{
-    return (a = a + b);
-}
-
-inline bool operator==(vec4 a, vec4 b)
-{
-    return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
-}
-
-inline bool operator!=(vec4 a, vec4 b)
-{
-    return a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w;
-}
-inline quat operator-(quat v)
-{
-    return quat{ -v.x, -v.y, -v.z, -v.w };
-}
-
-inline quat operator+(quat v)
-{
-    return v;
-}
-
-inline quat& operator--(quat& v)
-{
-    --v.x;
-    --v.y;
-    --v.z;
-    --v.w;
-    return v;
-}
-
-inline quat& operator++(quat& v)
-{
-    ++v.x;
-    ++v.y;
-    ++v.z;
-    ++v.w;
-    return v;
-}
-
-inline quat operator--(quat& v, int)
-{
-    const quat result = v;
-
-    v.x--;
-    v.y--;
-    v.z--;
-    v.w--;
-
-    return result;
-}
-
-inline quat operator++(quat& v, int)
-{
-    const quat result = v;
-
-    v.x++;
-    v.y++;
-    v.z++;
-    v.w++;
-
-    return result;
-}
-
-inline quat operator+(quat a, quat b)
-{
-    return quat{ a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w };
-}
-
-inline quat operator-(quat a, quat b)
-{
-    return quat{ a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w };
-}
-
-inline quat operator*(quat a, quat b)
-{
-    return quat{ a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
-}
-
-inline quat operator/(quat a, quat b)
-{
-    return quat{ a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w };
-}
-
-inline quat operator+(quat a, float b)
-{
-    return quat{ a.x + b, a.y + b, a.z + b, a.w + b };
-}
-
-inline quat operator-(quat a, float b)
-{
-    return quat{ a.x - b, a.y - b, a.z - b, a.w - b };
-}
-
-inline quat operator*(quat a, float b)
-{
-    return quat{ a.x * b, a.y * b, a.z * b, a.w * b };
-}
-
-inline quat operator/(quat a, float b)
-{
-    return quat{ a.x / b, a.y / b, a.z / b, a.w / b };
-}
-
-inline quat operator+(float a, quat b)
-{
-    return quat{ a + b.x, a + b.y, a + b.z, a + b.w };
-}
-
-inline quat operator-(float a, quat b)
-{
-    return quat{ a - b.x, a - b.y, a - b.z, a - b.w };
-}
-
-inline quat operator*(float a, quat b)
-{
-    return quat{ a * b.x, a * b.y, a * b.z, a * b.w };
-}
-
-inline quat operator/(float a, quat b)
-{
-    return quat{ a / b.x, a / b.y, a / b.z, a / b.w };
-}
-
-inline quat& operator+=(quat& a, quat b)
-{
-    return (a = a + b);
-}
-
-inline quat& operator+=(quat& a, float b)
-{
-    return (a = a + b);
-}
-
-inline quat& operator-=(quat& a, quat b)
-{
-    return (a = a - b);
-}
-
-inline quat& operator-=(quat& a, float b)
-{
-    return (a = a - b);
-}
-
-inline quat& operator*=(quat& a, quat b)
-{
-    return (a = a * b);
-}
-
-inline quat& operator*=(quat& a, float b)
-{
-    return (a = a * b);
-}
-
-inline quat& operator/=(quat& a, quat b)
-{
-    return (a = a / b);
-}
-
-inline quat& operator/=(quat& a, float b)
-{
-    return (a = a + b);
-}
-
-inline bool operator==(quat a, quat b)
-{
-    return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
-}
-
-inline bool operator!=(quat a, quat b)
-{
-    return a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w;
-}
-
-inline bool operator==(mat4 a, mat4 b)
-{
-    return a.data[0][0] == b.data[0][0] && a.data[0][1] == b.data[0][1] && a.data[0][2] == b.data[0][2] && a.data[0][3] == b.data[0][3]
-        && a.data[1][0] == b.data[1][0] && a.data[1][1] == b.data[1][1] && a.data[1][2] == b.data[1][2] && a.data[1][3] == b.data[0][3]
-        && a.data[2][0] == b.data[2][0] && a.data[2][1] == b.data[2][1] && a.data[2][2] == b.data[2][2] && a.data[2][3] == b.data[0][3]
-        && a.data[3][0] == b.data[3][0] && a.data[3][1] == b.data[3][1] && a.data[3][2] == b.data[3][2] && a.data[3][3] == b.data[0][3];
-}
-
-inline bool operator!=(mat4 a, mat4 b)
-{
-    return a.data[0][0] == b.data[0][0] || a.data[0][1] == b.data[0][1] || a.data[0][2] == b.data[0][2] || a.data[0][3] == b.data[0][3]
-        || a.data[1][0] == b.data[1][0] || a.data[1][1] == b.data[1][1] || a.data[1][2] == b.data[1][2] || a.data[1][3] == b.data[0][3]
-        || a.data[2][0] == b.data[2][0] || a.data[2][1] == b.data[2][1] || a.data[2][2] == b.data[2][2] || a.data[2][3] == b.data[0][3]
-        || a.data[3][0] == b.data[3][0] || a.data[3][1] == b.data[3][1] || a.data[3][2] == b.data[3][2] || a.data[3][3] == b.data[0][3];
-}
-
-inline mat4 operator-(mat4 m)
-{
-    return mat4{
-        -m.data[0][0], -m.data[0][1], -m.data[0][2], -m.data[0][3],
-        -m.data[1][0], -m.data[1][1], -m.data[1][2], -m.data[1][3],
-        -m.data[2][0], -m.data[2][1], -m.data[2][2], -m.data[2][3],
-        -m.data[3][0], -m.data[3][1], -m.data[3][2], -m.data[3][3],
-    };
-}
-
-inline mat4 operator+(mat4 m)
-{
-    return m;
-}
-
-inline mat4& operator--(mat4& m)
-{
-    --m.data[0][0]; --m.data[0][1]; --m.data[0][2]; --m.data[0][3];
-    --m.data[1][0]; --m.data[1][1]; --m.data[1][2]; --m.data[1][3];
-    --m.data[2][0]; --m.data[2][1]; --m.data[2][2]; --m.data[2][3];
-    --m.data[3][0]; --m.data[3][1]; --m.data[3][2]; --m.data[3][3];
-    return m;
-}
-
-inline mat4& operator++(mat4& m)
-{
-    ++m.data[0][0]; ++m.data[0][1]; ++m.data[0][2]; ++m.data[0][3];
-    ++m.data[1][0]; ++m.data[1][1]; ++m.data[1][2]; ++m.data[1][3];
-    ++m.data[2][0]; ++m.data[2][1]; ++m.data[2][2]; ++m.data[2][3];
-    ++m.data[3][0]; ++m.data[3][1]; ++m.data[3][2]; ++m.data[3][3];
-    return m;
-}
-
-inline mat4 operator--(mat4& m, int)
-{
-    const mat4 old = m;
-
-    m.data[0][0]--; m.data[0][1]--; m.data[0][2]--; m.data[0][3]--;
-    m.data[1][0]--; m.data[1][1]--; m.data[1][2]--; m.data[1][3]--;
-    m.data[2][0]--; m.data[2][1]--; m.data[2][2]--; m.data[2][3]--;
-    m.data[3][0]--; m.data[3][1]--; m.data[3][2]--; m.data[3][3]--;
-
-    return old;
-}
-
-inline mat4 operator++(mat4& m, int)
-{
-    const mat4 old = m;
-
-    m.data[0][0]++; m.data[0][1]++; m.data[0][2]++; m.data[0][3]++;
-    m.data[1][0]++; m.data[1][1]++; m.data[1][2]++; m.data[1][3]++;
-    m.data[2][0]++; m.data[2][1]++; m.data[2][2]++; m.data[2][3]++;
-    m.data[3][0]++; m.data[3][1]++; m.data[3][2]++; m.data[3][3]++;
-
-    return old;
-}
-
-inline mat4 operator+(mat4 a, mat4 b)
-{
-    return mat4{
-        a.data[0][0] + b.data[0][0], a.data[0][1] + b.data[0][1], a.data[0][2] + b.data[0][2], a.data[0][3] + b.data[0][3],
-        a.data[1][0] + b.data[1][0], a.data[1][1] + b.data[1][1], a.data[1][2] + b.data[1][2], a.data[1][3] + b.data[0][3],
-        a.data[2][0] + b.data[2][0], a.data[2][1] + b.data[2][1], a.data[2][2] + b.data[2][2], a.data[2][3] + b.data[0][3],
-        a.data[3][0] + b.data[3][0], a.data[3][1] + b.data[3][1], a.data[3][2] + b.data[3][2], a.data[3][3] + b.data[0][3],
-    };
-}
-
-inline mat4 operator+(mat4 a, float b)
-{
-    return mat4{
-        a.data[0][0] + b, a.data[0][1] + b, a.data[0][2] + b, a.data[0][3] + b,
-        a.data[1][0] + b, a.data[1][1] + b, a.data[1][2] + b, a.data[1][3] + b,
-        a.data[2][0] + b, a.data[2][1] + b, a.data[2][2] + b, a.data[2][3] + b,
-        a.data[3][0] + b, a.data[3][1] + b, a.data[3][2] + b, a.data[3][3] + b,
-    };
-}
-
-inline mat4 operator+(float a, mat4 b)
-{
-    return mat4{
-        a + b.data[0][0], a + b.data[0][1], a + b.data[0][2], a + b.data[0][3],
-        a + b.data[1][0], a + b.data[1][1], a + b.data[1][2], a + b.data[0][3],
-        a + b.data[2][0], a + b.data[2][1], a + b.data[2][2], a + b.data[0][3],
-        a + b.data[3][0], a + b.data[3][1], a + b.data[3][2], a + b.data[0][3],
-    };
-}
-
-inline mat4 operator-(mat4 a, mat4 b)
-{
-    return mat4{
-        a.data[0][0] - b.data[0][0], a.data[0][1] - b.data[0][1], a.data[0][2] - b.data[0][2], a.data[0][3] - b.data[0][3],
-        a.data[1][0] - b.data[1][0], a.data[1][1] - b.data[1][1], a.data[1][2] - b.data[1][2], a.data[1][3] - b.data[0][3],
-        a.data[2][0] - b.data[2][0], a.data[2][1] - b.data[2][1], a.data[2][2] - b.data[2][2], a.data[2][3] - b.data[0][3],
-        a.data[3][0] - b.data[3][0], a.data[3][1] - b.data[3][1], a.data[3][2] - b.data[3][2], a.data[3][3] - b.data[0][3],
-    };
-}
-
-inline mat4 operator-(mat4 a, float b)
-{
-    return mat4{
-        a.data[0][0] - b, a.data[0][1] - b, a.data[0][2] - b, a.data[0][3] - b,
-        a.data[1][0] - b, a.data[1][1] - b, a.data[1][2] - b, a.data[1][3] - b,
-        a.data[2][0] - b, a.data[2][1] - b, a.data[2][2] - b, a.data[2][3] - b,
-        a.data[3][0] - b, a.data[3][1] - b, a.data[3][2] - b, a.data[3][3] - b,
-    };
-}
-
-inline mat4 operator-(float a, mat4 b)
-{
-    return mat4{
-        a - b.data[0][0], a - b.data[0][1], a - b.data[0][2], a - b.data[0][3],
-        a - b.data[1][0], a - b.data[1][1], a - b.data[1][2], a - b.data[0][3],
-        a - b.data[2][0], a - b.data[2][1], a - b.data[2][2], a - b.data[0][3],
-        a - b.data[3][0], a - b.data[3][1], a - b.data[3][2], a - b.data[0][3],
-    };
-}
-
-inline mat4 operator*(mat4 a, mat4 b)
-{
-    return mat4{
-        a.data[0][0] * b.data[0][0], a.data[0][1] * b.data[0][1], a.data[0][2] * b.data[0][2], a.data[0][3] * b.data[0][3],
-        a.data[1][0] * b.data[1][0], a.data[1][1] * b.data[1][1], a.data[1][2] * b.data[1][2], a.data[1][3] * b.data[0][3],
-        a.data[2][0] * b.data[2][0], a.data[2][1] * b.data[2][1], a.data[2][2] * b.data[2][2], a.data[2][3] * b.data[0][3],
-        a.data[3][0] * b.data[3][0], a.data[3][1] * b.data[3][1], a.data[3][2] * b.data[3][2], a.data[3][3] * b.data[0][3],
-    };
-}
-
-inline mat4 operator*(mat4 a, float b)
-{
-    return mat4{
-        a.data[0][0] * b, a.data[0][1] * b, a.data[0][2] * b, a.data[0][3] * b,
-        a.data[1][0] * b, a.data[1][1] * b, a.data[1][2] * b, a.data[1][3] * b,
-        a.data[2][0] * b, a.data[2][1] * b, a.data[2][2] * b, a.data[2][3] * b,
-        a.data[3][0] * b, a.data[3][1] * b, a.data[3][2] * b, a.data[3][3] * b,
-    };
-}
-
-inline mat4 operator*(float a, mat4 b)
-{
-    return mat4{
-        a * b.data[0][0], a * b.data[0][1], a * b.data[0][2], a * b.data[0][3],
-        a * b.data[1][0], a * b.data[1][1], a * b.data[1][2], a * b.data[0][3],
-        a * b.data[2][0], a * b.data[2][1], a * b.data[2][2], a * b.data[0][3],
-        a * b.data[3][0], a * b.data[3][1], a * b.data[3][2], a * b.data[0][3],
-    };
-}
-
-inline mat4 operator/(mat4 a, mat4 b)
-{
-    return mat4{
-        a.data[0][0] / b.data[0][0], a.data[0][1] / b.data[0][1], a.data[0][2] / b.data[0][2], a.data[0][3] / b.data[0][3],
-        a.data[1][0] / b.data[1][0], a.data[1][1] / b.data[1][1], a.data[1][2] / b.data[1][2], a.data[1][3] / b.data[0][3],
-        a.data[2][0] / b.data[2][0], a.data[2][1] / b.data[2][1], a.data[2][2] / b.data[2][2], a.data[2][3] / b.data[0][3],
-        a.data[3][0] / b.data[3][0], a.data[3][1] / b.data[3][1], a.data[3][2] / b.data[3][2], a.data[3][3] / b.data[0][3],
-    };
-}
-
-inline mat4 operator/(mat4 a, float b)
-{
-    return mat4{
-        a.data[0][0] / b, a.data[0][1] / b, a.data[0][2] / b, a.data[0][3] / b,
-        a.data[1][0] / b, a.data[1][1] / b, a.data[1][2] / b, a.data[1][3] / b,
-        a.data[2][0] / b, a.data[2][1] / b, a.data[2][2] / b, a.data[2][3] / b,
-        a.data[3][0] / b, a.data[3][1] / b, a.data[3][2] / b, a.data[3][3] / b,
-    };
-}
-
-inline mat4 operator/(float a, mat4 b)
-{
-    return mat4{
-        a / b.data[0][0], a / b.data[0][1], a / b.data[0][2], a / b.data[0][3],
-        a / b.data[1][0], a / b.data[1][1], a / b.data[1][2], a / b.data[0][3],
-        a / b.data[2][0], a / b.data[2][1], a / b.data[2][2], a / b.data[0][3],
-        a / b.data[3][0], a / b.data[3][1], a / b.data[3][2], a / b.data[0][3],
-    };
-}
-
-inline mat4& operator+=(mat4& a, mat4 b)
-{
-    return (a = a + b);
-}
-
-inline mat4& operator+=(mat4& a, float b)
-{
-    return (a = a + b);
-}
-
-inline mat4& operator-=(mat4& a, mat4 b)
-{
-    return (a = a - b);
-}
-
-inline mat4& operator-=(mat4& a, float b)
-{
-    return (a = a - b);
-}
-
-inline mat4& operator*=(mat4& a, mat4 b)
-{
-    return (a = a * b);
-}
-
-inline mat4& operator*=(mat4& a, float b)
-{
-    return (a = a * b);
-}
-
-inline mat4& operator/=(mat4& a, mat4 b)
-{
-    return (a = a / b);
-}
-
-inline mat4& operator/=(mat4& a, float b)
-{
-    return (a = a + b);
-}
 
 inline int min(int x, int y)
 {
@@ -2341,4 +1445,204 @@ inline mat4 mul(mat4 a, mat4 b)
         v2.x, v2.y, v2.z, v2.w,
         v3.x, v3.y, v3.z, v3.w,
     };
+}
+
+namespace Math
+{
+    inline vec4 ToAxisAngle(quat q)
+    {
+        const float ilen = 1.0f / sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+        const vec4 c = q.w != 0.0f
+            ? vec4{ q.x * ilen, q.y * ilen, q.z * ilen, q.w * ilen }
+        : vec4{ q.x, q.y, q.z, q.w };
+
+        const float den = sqrtf(1.0f - q.w * q.w);
+        const vec3 axis = (den > 0.0001f)
+            ? vec3{ c.x / den, c.y / den, c.z / den }
+        : vec3{ 1, 0, 0 };
+
+        float angle = 2.0f * cosf(c.w);
+        return vec4{ axis.x, axis.y, axis.z, angle };
+    }
+
+    inline quat FromAxisAngle(vec3 axis, float angle)
+    {
+        return quat{};
+    }
+
+    inline mat4 Ortho(float l, float r, float b, float t, float n, float f)
+    {
+        const float x = 1.0f / (r - l);
+        const float y = 1.0f / (t - b);
+        const float z = 1.0f / (f - n);
+
+        return {
+            2.0f * x, 0, 0, 0,
+            0, 2.0f * y, 0, 0,
+            0, 0, 2.0f * z, 0,
+            -x * (l + r), -y * (b + t), -z * (n + f), 1.0f,
+        };
+    }
+
+    inline mat4 Frustum(float l, float r, float b, float t, float n, float f)
+    {
+        const float x = 1.0f / (r - l);
+        const float y = 1.0f / (t - b);
+        const float z = 1.0f / (f - n);
+
+        return {
+            2.0f * x, 0, 0, 0,
+            0, 2.0f * y, 0, 0,
+            x * (l + r), y * (b + t), z * (n + f), 1.0f,
+            0, 0, 2.0f * z, 0
+        };
+    }
+
+    inline mat4 Perspective(float fov, float aspect, float znear, float zfar)
+    {
+        const float a = 1.0f / tanf(fov * 0.5f);
+        const float b = zfar / (znear - zfar);
+
+        return {
+            a / aspect, 0, 0, 0,
+            0, a, 0, 0,
+            0, 0, b, -1,
+            0, 0, znear * b, 0
+        };
+    }
+
+    inline mat4 Scalation(float x, float y, float z = 1.0f)
+    {
+        return {
+            x, 0, 0, 0,
+            0, y, 0, 0,
+            0, 0, z, 0,
+            0, 0, 0, 1
+        };
+    }
+
+    inline mat4 Scalation(float s)
+    {
+        return Scalation(s, s, s);
+    }
+
+    inline mat4 Scalation(vec2 v)
+    {
+        return Scalation(v.x, v.y, 0);
+    }
+
+    inline mat4 Scalation(vec3 v)
+    {
+        return Scalation(v.x, v.y, v.z);
+    }
+
+    inline mat4 Translation(float x, float y, float z = 0.0f)
+    {
+        return {
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            x, y, z, 1
+        };
+    }
+
+    inline mat4 Translation(vec2 v)
+    {
+        return Translation(v.x, v.y, 0);
+    }
+
+    inline mat4 Translation(vec3 v)
+    {
+        return Translation(v.x, v.y, v.z);
+    }
+
+    inline mat4 Rotation(float x, float y, float z, float angle)
+    {
+        const float c = cosf(-angle);
+        const float s = sinf(-angle);
+        const float t = 1.0f - c;
+
+        return {
+            /* Row 1 */
+            t * x * x + c,
+            t * x * y - s * z,
+            t * x * z + s * y,
+            0.0f,
+
+            /* Row 2 */
+            t * x * y + s * z,
+            t * y * y + c,
+            t * y * z - s * x,
+            0.0f,
+
+            /* Row 3 */
+            t * x * z - s * y,
+            t * y * z + s * x,
+            t * z * z + c,
+            0.0f,
+
+            /* Row 4 */
+            0, 0, 0, 1.0f
+        };
+    }
+
+    inline mat4 Rotation(vec3 axis, float angle)
+    {
+        return Rotation(axis.x, axis.y, axis.z, angle);
+    }
+
+    inline mat4 RotationX(float angle)
+    {
+        const float s = sinf(angle);
+        const float c = cosf(angle);
+
+        return {
+            1,  0, 0, 0,
+            0,  c, s, 0,
+            0, -s, c, 0,
+            0,  0, 0, 1
+        };
+    }
+
+    inline mat4 RotationY(float angle)
+    {
+        const float s = sinf(angle);
+        const float c = cosf(angle);
+
+        return {
+             c, 0, s, 0,
+             0, 1, 0, 0,
+            -s, 0, c, 0,
+             0, 0, 0, 1
+        };
+    }
+
+    inline mat4 RotationZ(float angle)
+    {
+        const float s = sinf(angle);
+        const float c = cosf(angle);
+
+        return {
+             c, s, 0, 0,
+            -s, c, 0, 0,
+             0, 0, 1, 0,
+             0, 0, 0, 1
+        };
+    }
+
+    inline mat4 Rotation(quat quaternion)
+    {
+        vec4 axisangle = ToAxisAngle(quaternion);
+        return Rotation(axisangle.x, axisangle.y, axisangle.z, axisangle.w);
+    }
+
+    inline mat4 Transform(vec2 position, float rotation, vec2 scale)
+    {
+        return mul(mul(Math::Translation(position), Math::RotationZ(rotation)), Math::Scalation(scale));
+    }
+
+    inline mat4 Transform(vec3 position, quat rotation, vec3 scale)
+    {
+        return mul(mul(Math::Translation(position), Math::Rotation(rotation)), Math::Scalation(scale));
+    }
 }

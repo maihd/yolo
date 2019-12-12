@@ -1,11 +1,7 @@
 #pragma once
 
-#include <Yolo/Font.h>
-#include <Yolo/Sprite.h>
-#include <Yolo/Texture.h>
-
+#include <Yolo/Types.h>
 #include <Yolo/Vertex.h>
-#include <Yolo/VertexArray.h>
 
 struct DrawSpriteBuffer
 {
@@ -16,23 +12,29 @@ struct DrawSpriteBuffer
         Handle  textureHandle;
     };
 
-    bool        shouldUpdate;
+    bool                    shouldUpdate;
 
-    VertexArray vertexArray;
+    VertexArray             vertexArray;
     
-    Vertex*     vertices;
-    uint16*     indices;
-    Command*    commands;
+    Array<VertexColor>      vertices;
+    Array<uint16>           indices;
+    Array<Command>          commands;
 };
 
 namespace DrawSpriteBufferOps
 {
-    DrawSpriteBuffer New(void);
-    void             Free(DrawSpriteBuffer* drawSpriteBuffer);
+    DrawSpriteBuffer    New(void);
+    void                Free(DrawSpriteBuffer* drawSpriteBuffer);
 
-    void             AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, vec2 position, float rotation, vec2 scale, vec4 color);
-    void             AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, vec2 position, float rotation, vec2 scale, vec4 color);
-    void             AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, vec2 position, float rotation, vec2 scale, vec4 color);
+    void                Clear(DrawSpriteBuffer* drawSpriteBuffer);
 
-    void             UpdateBuffers(DrawSpriteBuffer* drawSpriteBuffer);
+    void                AddTriangle(DrawSpriteBuffer* drawSpriteBuffer, VertexColor v0, VertexColor v1, VertexColor v2, Handle texture);
+    void                AddQuad(DrawSpriteBuffer* drawSpriteBuffer, VertexColor v0, VertexColor v1, VertexColor v2, VertexColor v3, Handle texture);
+    
+    void                AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, vec2 position, float rotation, vec2 scale, vec4 color);
+    void                AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, vec2 position, float rotation, vec2 scale, vec4 color);
+    void                AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, vec2 position, float rotation, vec2 scale, vec4 color);
+
+    void                UpdateBuffers(DrawSpriteBuffer* drawSpriteBuffer);
+    void                Draw(DrawSpriteBuffer* drawSpriteBuffer, Shader shader, mat4 projection);
 }
