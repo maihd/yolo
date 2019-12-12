@@ -44,7 +44,7 @@ int main(void)
 
     float angle = 0.0f;
 
-    Texture texture = TextureOps::Load("../Assets/opengl_logo.png");
+    Texture texture = TextureOps::Load("../Assets/character.png");
     float posX = 0;
 
     HashTable<int> hashTable = HashTableOps::New<int>();

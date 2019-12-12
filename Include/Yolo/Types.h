@@ -976,7 +976,11 @@ struct HashTable
 template <typename TKey, typename TValue>
 struct OrderedTable
 {
+    int         count;
+    int         capacity;
 
+    TKey*       keys;
+    TValue*     values;
 };
 
 // Function types

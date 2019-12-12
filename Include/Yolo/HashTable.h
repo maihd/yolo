@@ -28,8 +28,6 @@ namespace HashTableOps
     {
         assert(hashTable);
 
-        free(hashTable->values);
-        free(hashTable->keys);
         free(hashTable->nexts);
         free(hashTable->hashs);
 
@@ -145,8 +143,8 @@ namespace HashTableOps
 
             if (hashTable->count + 1 > hashTable->capacity)
             {
-                int   oldSize = hashTable->capacity;
-                int   newSize = oldSize | 32;
+                int oldSize = hashTable->capacity;
+                int newSize = oldSize | 32;
 
                 newSize -= 1;
                 newSize |= newSize >> 1;
@@ -155,10 +153,31 @@ namespace HashTableOps
                 newSize |= newSize >> 8;
                 newSize |= newSize >> 16;
                 newSize += 1;
-                
-                hashTable->nexts    = (int*)    realloc(hashTable->nexts,   newSize * sizeof(int));
-                hashTable->keys     = (uint64*) realloc(hashTable->keys,    newSize * sizeof(uint64));
-                hashTable->values   = (T*)      realloc(hashTable->values,  newSize * sizeof(T));
+
+                int oldBufferSize = oldSize * (sizeof(int) + sizeof(uint64) + sizeof(T));
+                int newBufferSize = newSize * (sizeof(int) + sizeof(uint64) + sizeof(T));
+                byte* buffer = (byte*)realloc(hashTable->nexts, newBufferSize);
+
+                if (oldSize > 0)
+                {
+                    // move hashTable->values memory
+                    memmove(
+                        buffer + newBufferSize - newSize * sizeof(T), 
+                        buffer + oldBufferSize - oldSize * sizeof(T), 
+                        oldSize * sizeof(T)
+                    );
+
+                    // move hashTable->keys memory
+                    memmove(
+                        buffer + newBufferSize - newSize * (sizeof(uint64) + sizeof(T)), 
+                        buffer + oldBufferSize - oldSize * (sizeof(uint64) + sizeof(T)), 
+                        oldSize * (sizeof(uint64) + sizeof(T))
+                    );
+                }
+
+                hashTable->nexts    = (int*)buffer;
+                hashTable->keys     = (uint64*)(hashTable->nexts + newSize);
+                hashTable->values   = (T*)(hashTable->keys + newSize);
 
                 hashTable->capacity = newSize;
             }
