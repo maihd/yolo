@@ -34,13 +34,13 @@ uint64 CalcHash64(const void* buffer, int length, uint64 seed)
 
     switch (l & 7)
     {
-    case 7: h ^= uint64((target + n)[6]) << 48;   /* fall through */
-    case 6: h ^= uint64((target + n)[5]) << 40;   /* fall through */
-    case 5: h ^= uint64((target + n)[4]) << 32;   /* fall through */
-    case 4: h ^= uint64((target + n)[3]) << 24;   /* fall through */
-    case 3: h ^= uint64((target + n)[2]) << 16;   /* fall through */
-    case 2: h ^= uint64((target + n)[1]) << 8;   /* fall through */
-    case 1: h ^= uint64((target + n)[0]) << 0;   /* fall through */
+    case 7: h ^= (uint64)((target + n)[6]) << 48;   /* fall through */
+    case 6: h ^= (uint64)((target + n)[5]) << 40;   /* fall through */
+    case 5: h ^= (uint64)((target + n)[4]) << 32;   /* fall through */
+    case 4: h ^= (uint64)((target + n)[3]) << 24;   /* fall through */
+    case 3: h ^= (uint64)((target + n)[2]) << 16;   /* fall through */
+    case 2: h ^= (uint64)((target + n)[1]) << 8;   /* fall through */
+    case 1: h ^= (uint64)((target + n)[0]) << 0;   /* fall through */
     };
 
     h ^= (h << 12);

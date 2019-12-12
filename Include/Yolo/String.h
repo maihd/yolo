@@ -41,6 +41,6 @@ namespace StringOps
 template <>
 inline uint64 CalcHash64(String x, uint64 seed)
 {
-    return CalcHash64(&x, StringOps::Length(x), seed);
+    return CalcHash64(x, StringOps::Length(x), seed);
 }
 
