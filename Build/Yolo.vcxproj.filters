@@ -39,9 +39,6 @@
     <ClInclude Include="..\Include\Yolo\HashTable.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Macros.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Math.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -70,9 +67,6 @@
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Types.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Utils.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Vertex.h">
