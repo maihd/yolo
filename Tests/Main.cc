@@ -10,6 +10,8 @@
 #include <Yolo/Array.h>
 #include <Yolo/HashTable.h>
 
+#include <Yolo/HotDylib.h>
+
 #include <stdio.h>
 #include <string.h>
 
