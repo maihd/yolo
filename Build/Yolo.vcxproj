@@ -183,6 +183,7 @@
     <ClInclude Include="..\Include\Yolo\Font.h" />
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
+    <ClInclude Include="..\Include\Yolo\Json.h" />
     <ClInclude Include="..\Include\Yolo\Math.h" />
     <ClInclude Include="..\Include\Yolo\OrderedTable.h" />
     <ClInclude Include="..\Include\Yolo\Random.h" />
@@ -210,7 +211,7 @@
     <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
     <ClCompile Include="..\Sources\Font.cc" />
     <ClCompile Include="..\Sources\Graphics.cc" />
-    <ClCompile Include="..\Sources\Types.cc" />
+    <ClCompile Include="..\Sources\Json.cc" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
     <ClCompile Include="..\Sources\Runtime.cc" />
@@ -221,6 +222,7 @@
     <ClCompile Include="..\Sources\String.cc" />
     <ClCompile Include="..\Sources\Texture.cc" />
     <ClCompile Include="..\Sources\Time.cc" />
+    <ClCompile Include="..\Sources\Types.cc" />
     <ClCompile Include="..\Sources\VertexArray.cc" />
     <ClCompile Include="..\Sources\Window.cc" />
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />
