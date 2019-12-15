@@ -72,6 +72,9 @@
     <ClInclude Include="..\Include\Yolo\Time.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Tween.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Types.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
