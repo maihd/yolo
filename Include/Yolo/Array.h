@@ -167,4 +167,118 @@ namespace ArrayOps
         
         array->length = 0;
     }
+
+    template <typename T>
+    inline int IndexOf(Array<T> array, T value)
+    {
+        for (int i = 0, n = array.length; i < n; i++)
+        {
+            if (array.elements[i] == value)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    template <typename T>
+    inline int LastIndexOf(Array<T> array, T value)
+    {
+        int index = -1;
+        for (int i = 0, n = array.length; i < n; i++)
+        {
+            if (elements[i] == value)
+            {
+                index = i;
+            }
+        }
+
+        return index;
+    }
+
+    template <typename T>
+    inline bool Erase(Array<T>* array, int index)
+    {
+        if (index < 0 || index >= array->length)
+        {
+            return false;
+        }
+        else
+        {
+            array->length--;
+            if (index < array->length)
+            {
+                ::memcpy(&array->elements[index], &array->elements[index + 1], (array->length - index - 1) * sizeof(T));
+            }
+
+            return true;
+        }
+    }
+
+    template <typename T>
+    inline bool Erase(Array<T>* array, int start, int end)
+    {
+        start   = start > -1 ? start : 0;
+        end     = end > array->length ? array->length : end;
+
+        int eraseCount = (end - start);
+        if (eraseCount <= 0)
+        {
+            return false;
+        }
+        else
+        {
+            if (array->length - end > 0)
+            {
+                ::memcpy(&array->elements[start], &array->elements[end - 1], (array->length - end) * sizeof(T));
+            }
+            array->length = array->length - eraseCount;
+
+            return true;
+        }
+    }
+
+    template <typename T>
+    inline bool UnorderedErase(Array<T>* array, int index)
+    {
+        if (index < 0 || index >= array->length)
+        {
+            return false;
+        }
+        else
+        {
+            array->length--;
+            if (index < array->length)
+            {
+                array->elements[index] = array->elements[array->length];
+            }
+
+            return true;
+        }
+    }
+
+    template <typename T>
+    inline bool Remove(Array<T>* array, T value)
+    {
+        return Erase(array, IndexOf(*array, value));
+    }
+
+    template <typename T>
+    inline bool RemoveLast(Array<T>* array, T value)
+    {
+        return Erase(array, LastIndexOf(*array, value));
+    }
+
+    template <typename T>
+    inline bool UnorderedRemove(Array<T>* array, T value)
+    {
+        return UnorderedErase(array, IndexOf(*array, value));
+    }
+
+    template <typename T>
+    inline bool UnorderedRemoveLast(Array<T>* array, T value)
+    {
+        return UnorderedErase(array, LastIndexOf(*array, value));
+    }
 }

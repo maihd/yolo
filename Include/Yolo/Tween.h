@@ -1,5 +1,6 @@
 #pragma once
 
+#include <math.h>
 #include <Yolo/Types.h>
 
 namespace Tween

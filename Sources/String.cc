@@ -78,14 +78,14 @@ namespace StringOps
 
     String Format(int bufferSize, String format, ...)
     {
-        va_list argv;
-        va_start(argv, format);
+        ArgList argv;
+        ArgListBegin(argv, format);
         String result = FormatArgv(bufferSize, format, argv);
-        va_end(argv);
+        ArgListEnd(argv);
         return result;
     }
 
-    String FormatArgv(int bufferSize, String format, va_list argv)
+    String FormatArgv(int bufferSize, String format, ArgList argv)
     {
         void* buffer = malloc(bufferSize);
         return FormatArgv(buffer, bufferSize, format, argv);
@@ -93,14 +93,14 @@ namespace StringOps
 
     String Format(void* buffer, int bufferSize, String format, ...)
     {
-        va_list argv;
-        va_start(argv, format);
+        ArgList argv;
+        ArgListBegin(argv, format);
         String result = FormatArgv(buffer, bufferSize, format, argv);
-        va_end(argv);
+        ArgListEnd(argv);
         return result;
     }
 
-    String FormatArgv(void* buffer, int bufferSize, String format, va_list argv)
+    String FormatArgv(void* buffer, int bufferSize, String format, ArgList argv)
     {
         vsprintf((char*)buffer, format, argv);
         return (char*)buffer;

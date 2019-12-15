@@ -5,10 +5,10 @@
 namespace StringOps
 {
     String Format(int bufferSize, String format, ...);
-    String FormatArgv(int bufferSize, String format, va_list argv);
+    String FormatArgv(int bufferSize, String format, ArgList argv);
 
     String Format(void* buffer, int bufferSize, String format, ...);
-    String FormatArgv(void* buffer, int bufferSize, String format, va_list argv);
+    String FormatArgv(void* buffer, int bufferSize, String format, ArgList argv);
 
     int    Length(String target);
     bool   IsEmpty(String target);

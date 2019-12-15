@@ -184,6 +184,7 @@
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
     <ClInclude Include="..\Include\Yolo\HotDylib.h" />
+    <ClInclude Include="..\Include\Yolo\Job.h" />
     <ClInclude Include="..\Include\Yolo\Json.h" />
     <ClInclude Include="..\Include\Yolo\Math.h" />
     <ClInclude Include="..\Include\Yolo\OrderedTable.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="..\Sources\DrawBuffer.h" />
     <ClInclude Include="..\Sources\DrawSpriteBuffer.h" />
     <ClInclude Include="..\Sources\DrawTextBuffer.h" />
+    <ClInclude Include="..\Sources\Job.cc" />
     <ClInclude Include="..\Sources\OpenGL.h" />
     <ClInclude Include="..\Sources\Runtime.h" />
     <ClInclude Include="..\Sources\SpriteBatch.h" />

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdarg.h>
-
 // Primitive types
 
 using byte    = unsigned char;
@@ -20,9 +18,16 @@ using String  = const char*;
 using Handle  = unsigned int;
 using NullPtr = decltype(nullptr);
 
-// Math
+// Arguments
 
-#include <math.h>
+#include <stdarg.h>
+using ArgList = va_list;
+#define ArgListBegin    va_start
+#define ArgListEnd      va_end
+#define ArgListGet      va_arg
+#define ArgListCopy     va_copy
+
+// Math
 
 constexpr const float PI = 3.141592653589f;
 
@@ -1064,6 +1069,13 @@ inline bool operator!=(NullPtr, Function<R(Args...)> b)
 {
     return b.executor != nullptr;
 }
+
+// Runtime
+
+struct Job
+{
+    Function<void(void)> executor;
+};
 
 // IO types
 

@@ -42,6 +42,9 @@
     <ClInclude Include="..\Include\Yolo\HotDylib.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Job.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Json.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -106,6 +109,9 @@
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SpriteMesh.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Job.cc">
       <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
