@@ -48,6 +48,7 @@ int main(void)
 
     Texture texture = TextureOps::Load("../Assets/character.png");
     float posX = 0;
+    Texture texture2 = TextureOps::Load("../Assets/character.png");
 
     HashTable<int> hashTable = HashTableOps::New<int>();
     HashTableOps::SetValue(&hashTable, CalcHash64("ten"), 10);

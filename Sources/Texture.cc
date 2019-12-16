@@ -7,10 +7,14 @@
 #include <GL/glew.h>
 
 #include <Yolo/File.h>
+#include <Yolo/String.h>
 #include <Yolo/Texture.h>
+#include <Yolo/HashTable.h>
 
 namespace TextureOps
 {
+    static HashTable<Texture> loadedTextures = HashTableOps::New<Texture>(64);
+
     static GLenum PixelFormatToGLenum(PixelFormat value)
     {
         const GLenum enums[] = { GL_NONE, GL_RGB, GL_RGBA, GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA };
@@ -51,6 +55,14 @@ namespace TextureOps
             return {};
         }
 
+        uint64 textureHash = CalcHash64(fullPath);
+
+        Texture cachedTexture;
+        if (HashTableOps::TryGetValue(loadedTextures, textureHash, &cachedTexture))
+        {
+            return cachedTexture;
+        }
+
         int width, height, channel;
         void* pixels = stbi_load(fullPath, &width, &height, &channel, 0);
         if (!pixels)
@@ -65,6 +77,7 @@ namespace TextureOps
 
         stbi_image_free(pixels);
 
+        HashTableOps::SetValue(&loadedTextures, textureHash, texture);
         return texture;
     }
 

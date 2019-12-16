@@ -1247,12 +1247,6 @@ inline int NextPOT(int x)
 
 uint64 CalcHash64(const void* buffer, int length, uint64 seed = 0);
 
-template <typename T>
-inline uint64 CalcHash64(T x, uint64 seed = 0)
-{
-    return CalcHash64(&x, sizeof(x), seed);
-}
-
 template <uint64 length>
 constexpr uint64 CalcHash64(const char(&buffer)[length], uint64 seed = 0)
 {
