@@ -1079,19 +1079,37 @@ struct Job
 
 // IO types
 
-enum struct FileMode
+namespace FileModes
 {
-    None,
-    Read = 1 << 0,
-    Write = 1 << 1,
-    Binary = 1 << 2,
-    Create = 1 << 3,
+    enum
+    {
+        None,
+
+        Sync        = 1 << 15,
+        DataSync    = 1 << 14,
+        NonBlock    = 1 << 13,
+
+        NoLink      = 1 << 12,
+        Append      = 1 << 11,
+        Create      = 1 << 10,
+        Direct      = 1 << 9,
+        Existing    = 1 << 8,
+        Truncate    = 1 << 7,
+
+        Directory   = 1 << 6, 
+        ShortLive   = 1 << 5,
+        Temporary   = 1 << 4,
+
+        Random      = 1 << 3,
+        Sequence    = 1 << 2,
+
+        Read        = 1 << 0,
+        Write       = 1 << 1,
+        ReadWrite   = Read | Write,
+    };
 };
 
-struct File
-{
-    Handle handle;
-};
+using File = Handle;
 
 // Graphics
 

@@ -212,6 +212,7 @@
     <ClCompile Include="..\Sources\DrawBuffer.cc" />
     <ClCompile Include="..\Sources\DrawSpriteBuffer.cc" />
     <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
+    <ClCompile Include="..\Sources\File.cc" />
     <ClCompile Include="..\Sources\Font.cc" />
     <ClCompile Include="..\Sources\Graphics.cc" />
     <ClCompile Include="..\Sources\HotDylib.cc" />

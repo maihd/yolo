@@ -4,18 +4,21 @@
 
 namespace FileOps
 {
-    File Open(String path, FileMode mode);
-    void Close(File file);
+    void    AddSearchPath(String path);
+    void    RemoveSearchPath(String path);
 
-    int  GetSize(File file);
-    int  GetSize(String path);
+    bool    Exists(String path, bool useSearchPath = true);
+    String  GetFullPath(String expectPath);
 
-    uint64 GetSize64(File file);
-    uint64 GetSize64(String path);
+    File    Open(String path, int mode);
+    void    Close(File file);
 
-    int Read(File file, void* buffer, int length);
-    uint64 Read64(File file, void* buffer, uint64 length);
+    int     GetSize(File file);
+    int     GetSize(String path);
 
-    int Write(File file, const void* buffer, int length);
-    uint64 Write(File file, const void* buffer, uint64 length);
+    int64   GetSize64(File file);
+    int64   GetSize64(String path);
+
+    int     Read(File file, void* buffer, int length);
+    int     Write(File file, const void* buffer, int length);
 }

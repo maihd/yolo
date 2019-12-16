@@ -33,6 +33,11 @@ namespace StringOps
     template <int length>
     inline String Static(const char(&source)[length])
     {
+        if (length == 0)
+        {
+            return "";
+        }
+
         uint64 hash = CalcHash64<length>(source);
         return InternNoAllocation(hash, source);
     }

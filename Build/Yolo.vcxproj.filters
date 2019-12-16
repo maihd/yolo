@@ -122,6 +122,9 @@
     <ClCompile Include="..\Sources\DrawTextBuffer.cc">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\File.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\Font.cc">
       <Filter>Sources</Filter>
     </ClCompile>

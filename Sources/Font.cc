@@ -6,6 +6,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 
+#include <Yolo/File.h>
 #include <Yolo/Font.h>
 #include <Yolo/Array.h>
 #include <Yolo/Texture.h>
@@ -17,23 +18,20 @@ namespace FontOps
         constexpr int TEXTURE_WIDTH = 1024;
         constexpr int TEXTURE_HEIGHT = 1024;
         constexpr int GLYPHS_COUNT = 256;
-
-        FILE* file = fopen(path, "rb");
+        File file = FileOps::Open(path, FileModes::Read);
         while (file)
         {
-            fseek(file, 0, SEEK_END);
-            long fileSize = (long)ftell(file);
-            fseek(file, 0, SEEK_SET);
+            int fileSize = FileOps::GetSize(file);
 
             uint8* buffer = (uint8*)malloc(fileSize);
             if (!buffer)
             {
-                fclose(file);
+                FileOps::Close(file);
                 break;
             }
 
-            fread(buffer, fileSize, 1, file);
-            fclose(file);
+            FileOps::Read(file, buffer, fileSize);
+            FileOps::Close(file);
 
             uint8* pixels = (uint8*)malloc(TEXTURE_WIDTH * TEXTURE_HEIGHT);
             stbtt_bakedchar* bakedChars = (stbtt_bakedchar*)malloc(sizeof(stbtt_bakedchar) * GLYPHS_COUNT);

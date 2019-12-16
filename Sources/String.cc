@@ -27,6 +27,11 @@ namespace StringOps
 
     String Intern(uint64 hash, String source)
     {
+        if (Length(source) == 0)
+        {
+            return "";
+        }
+
         String result;
         if (HashTableOps::TryGetValue(internedStrings, hash, &result))
         {
@@ -42,6 +47,11 @@ namespace StringOps
 
     String InternNoAllocation(uint64 hash, String source)
     {
+        if (Length(source) == 0)
+        {
+            return "";
+        }
+
         String result;
         if (HashTableOps::TryGetValue(internedStrings, hash, &result))
         {
