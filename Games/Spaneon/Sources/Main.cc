@@ -1,3 +1,4 @@
+#include <Yolo/Math.h>
 #include <Yolo/Time.h>
 #include <Yolo/File.h>
 #include <Yolo/Input.h>
@@ -6,48 +7,30 @@
 #include <Yolo/Texture.h>
 #include <Yolo/Graphics.h>
 
+namespace Game
+{
+    void Init(void);
+    void Update(float dt);
+    void Render(void);
+}
+
 int main(void)
 {
     Window::Init("Spaneon", 1280, 720);
     Graphics::Init();
 
-#ifndef NDEBUG
-    FileOps::AddSearchPath("../Games/Spaneon/Assets");
-#endif
+    Game::Init();
 
-    Texture texture = TextureOps::Load("Art/Player.png");
-    vec2 position = { 640, 360 };
     while (!Window::PollEvents())
     {
+        Time::UpdateAndSleep(60);
+        Game::Update(Time::GetDeltaTime());
+
         Graphics::Clear();
 
-        Graphics::DrawTexture(texture, position);
+        Game::Render();
 
         Graphics::Present();
-
-        float vertical = 0.0f;
-        float horizontal = 0.0f;
-        if (Input::GetKey(KeyCode::LeftArrow))
-        {
-            horizontal = -1.0f;
-        }
-        else if (Input::GetKey(KeyCode::RightArrow))
-        {
-            horizontal = 1.0f;
-        }
-
-        if (Input::GetKey(KeyCode::DownArrow))
-        {
-            vertical = -1.0f;
-        }
-        else if (Input::GetKey(KeyCode::UpArrow))
-        {
-            vertical = 1.0f;
-        }
-        position.x += 100 * Time::GetDeltaTime() * horizontal;
-        position.y += 100 * Time::GetDeltaTime() * vertical;
-
-        Time::UpdateAndSleep(60);
     }
 
     Graphics::Quit();
