@@ -14,6 +14,18 @@ struct Entity
     Texture texture;
 };
 
+struct PhysicsBody
+{
+    float radius;
+    vec2  position;
+};
+
+struct Player
+{
+    Entity      entity;
+    PhysicsBody body;
+};
+
 namespace EntityOps
 {
     Entity Update(Entity entity, float dt)
