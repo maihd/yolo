@@ -1,11 +1,13 @@
-#include <Yolo/Texture.h>
 
 #include <assert.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "Runtime.h"
+#include <GL/glew.h>
+
+#include <Yolo/File.h>
+#include <Yolo/Texture.h>
 
 namespace TextureOps
 {
@@ -43,8 +45,14 @@ namespace TextureOps
 
     Texture Load(String path)
     {
+        String fullPath = FileOps::GetFullPath(path);
+        if (fullPath == "")
+        {
+            return {};
+        }
+
         int width, height, channel;
-        void* pixels = stbi_load(path, &width, &height, &channel, 0);
+        void* pixels = stbi_load(fullPath, &width, &height, &channel, 0);
         if (!pixels)
         {
             return {};
