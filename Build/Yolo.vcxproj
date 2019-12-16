@@ -184,6 +184,7 @@
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
     <ClInclude Include="..\Include\Yolo\HotDylib.h" />
+    <ClInclude Include="..\Include\Yolo\Input.h" />
     <ClInclude Include="..\Include\Yolo\Job.h" />
     <ClInclude Include="..\Include\Yolo\Json.h" />
     <ClInclude Include="..\Include\Yolo\Math.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="..\Sources\Font.cc" />
     <ClCompile Include="..\Sources\Graphics.cc" />
     <ClCompile Include="..\Sources\HotDylib.cc" />
+    <ClCompile Include="..\Sources\Input.cc" />
     <ClCompile Include="..\Sources\Job.cc" />
     <ClCompile Include="..\Sources\Json.cc" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
