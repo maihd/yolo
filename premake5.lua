@@ -124,3 +124,21 @@ do
 
     filter {}
 end
+
+project "Spaneon"
+do
+    kind "ConsoleApp"
+
+    links { 
+        "Yolo"
+    }
+
+    includedirs {
+        path.join(ROOT_DI, "Include"),
+    }
+
+    files {
+        path.join(ROOT_DIR, "Games/Spaneon/Sources/*.cc"),
+        path.join(ROOT_DIR, "Games/Spaneon/Sources/**/*.cc"),
+    }
+end

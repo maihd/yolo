@@ -19,35 +19,35 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C8C38F7C-B4FA-900D-5DE7-761049FD0C0F}</ProjectGuid>
+    <ProjectGuid>{596D3C05-C54C-BBA0-CE64-46773AC32102}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Yolo</RootNamespace>
+    <RootNamespace>Spaneon</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
@@ -70,28 +70,32 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
     <OutDir>bin\x32\Debug\</OutDir>
-    <IntDir>obj\x32\Debug\Yolo\</IntDir>
-    <TargetName>Yolo</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <IntDir>obj\x32\Debug\Spaneon\</IntDir>
+    <TargetName>Spaneon</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
     <OutDir>bin\x64\Debug\</OutDir>
-    <IntDir>obj\x64\Debug\Yolo\</IntDir>
-    <TargetName>Yolo</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <IntDir>obj\x64\Debug\Spaneon\</IntDir>
+    <TargetName>Spaneon</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
     <OutDir>bin\x32\Release\</OutDir>
-    <IntDir>obj\x32\Release\Yolo\</IntDir>
-    <TargetName>Yolo</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <IntDir>obj\x32\Release\Spaneon\</IntDir>
+    <TargetName>Spaneon</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
     <OutDir>bin\x64\Release\</OutDir>
-    <IntDir>obj\x64\Release\Yolo\</IntDir>
-    <TargetName>Yolo</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <IntDir>obj\x64\Release\Spaneon\</IntDir>
+    <TargetName>Spaneon</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -99,8 +103,8 @@
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <PreprocessorDefinitions>GLEW_STATIC;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Include;..\ThirdParty\Include;..\ThirdParty\Sources\stb;..\ThirdParty\Sources\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <OmitFramePointers>true</OmitFramePointers>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -108,11 +112,8 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>..\ThirdParty\Libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -120,8 +121,8 @@
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <PreprocessorDefinitions>GLEW_STATIC;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Include;..\ThirdParty\Include;..\ThirdParty\Sources\stb;..\ThirdParty\Sources\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <OmitFramePointers>true</OmitFramePointers>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -129,11 +130,8 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>..\ThirdParty\Libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -141,8 +139,8 @@
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <PreprocessorDefinitions>GLEW_STATIC;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Include;..\ThirdParty\Include;..\ThirdParty\Sources\stb;..\ThirdParty\Sources\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <OmitFramePointers>true</OmitFramePointers>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -150,11 +148,8 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>..\ThirdParty\Libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -162,8 +157,8 @@
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <PreprocessorDefinitions>GLEW_STATIC;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Include;..\ThirdParty\Include;..\ThirdParty\Sources\stb;..\ThirdParty\Sources\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <OmitFramePointers>true</OmitFramePointers>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -171,66 +166,16 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
     </Link>
-    <Lib>
-      <AdditionalLibraryDirectories>..\ThirdParty\Libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Include\Yolo\Array.h" />
-    <ClInclude Include="..\Include\Yolo\File.h" />
-    <ClInclude Include="..\Include\Yolo\Font.h" />
-    <ClInclude Include="..\Include\Yolo\Graphics.h" />
-    <ClInclude Include="..\Include\Yolo\HashTable.h" />
-    <ClInclude Include="..\Include\Yolo\HotDylib.h" />
-    <ClInclude Include="..\Include\Yolo\Job.h" />
-    <ClInclude Include="..\Include\Yolo\Json.h" />
-    <ClInclude Include="..\Include\Yolo\Math.h" />
-    <ClInclude Include="..\Include\Yolo\OrderedTable.h" />
-    <ClInclude Include="..\Include\Yolo\Random.h" />
-    <ClInclude Include="..\Include\Yolo\Shader.h" />
-    <ClInclude Include="..\Include\Yolo\Shapes.h" />
-    <ClInclude Include="..\Include\Yolo\Sprite.h" />
-    <ClInclude Include="..\Include\Yolo\String.h" />
-    <ClInclude Include="..\Include\Yolo\Texture.h" />
-    <ClInclude Include="..\Include\Yolo\Time.h" />
-    <ClInclude Include="..\Include\Yolo\Tween.h" />
-    <ClInclude Include="..\Include\Yolo\Types.h" />
-    <ClInclude Include="..\Include\Yolo\Vertex.h" />
-    <ClInclude Include="..\Include\Yolo\VertexArray.h" />
-    <ClInclude Include="..\Include\Yolo\Window.h" />
-    <ClInclude Include="..\Sources\DrawBuffer.h" />
-    <ClInclude Include="..\Sources\DrawSpriteBuffer.h" />
-    <ClInclude Include="..\Sources\DrawTextBuffer.h" />
-    <ClInclude Include="..\Sources\OpenGL.h" />
-    <ClInclude Include="..\Sources\Runtime.h" />
-    <ClInclude Include="..\Sources\SpriteBatch.h" />
-    <ClInclude Include="..\Sources\SpriteMesh.h" />
+    <ClCompile Include="..\Games\Spaneon\Sources\Main.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\DrawBuffer.cc" />
-    <ClCompile Include="..\Sources\DrawSpriteBuffer.cc" />
-    <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
-    <ClCompile Include="..\Sources\Font.cc" />
-    <ClCompile Include="..\Sources\Graphics.cc" />
-    <ClCompile Include="..\Sources\HotDylib.cc" />
-    <ClCompile Include="..\Sources\Job.cc" />
-    <ClCompile Include="..\Sources\Json.cc" />
-    <ClCompile Include="..\Sources\OpenGL.cc" />
-    <ClCompile Include="..\Sources\Random.cc" />
-    <ClCompile Include="..\Sources\Runtime.cc" />
-    <ClCompile Include="..\Sources\Shader.cc" />
-    <ClCompile Include="..\Sources\Sprite.cc" />
-    <ClCompile Include="..\Sources\SpriteBatch.cc" />
-    <ClCompile Include="..\Sources\SpriteMesh.cc" />
-    <ClCompile Include="..\Sources\String.cc" />
-    <ClCompile Include="..\Sources\Texture.cc" />
-    <ClCompile Include="..\Sources\Time.cc" />
-    <ClCompile Include="..\Sources\Types.cc" />
-    <ClCompile Include="..\Sources\VertexArray.cc" />
-    <ClCompile Include="..\Sources\Window.cc" />
-    <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />
+    <ProjectReference Include="Yolo.vcxproj">
+      <Project>{C8C38F7C-B4FA-900D-5DE7-761049FD0C0F}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

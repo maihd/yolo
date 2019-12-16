@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 #include <Yolo/Types.h>
@@ -209,7 +210,7 @@ namespace ArrayOps
             array->length--;
             if (index < array->length)
             {
-                ::memcpy(&array->elements[index], &array->elements[index + 1], (array->length - index - 1) * sizeof(T));
+                memcpy(&array->elements[index], &array->elements[index + 1], (array->length - index - 1) * sizeof(T));
             }
 
             return true;
@@ -231,7 +232,7 @@ namespace ArrayOps
         {
             if (array->length - end > 0)
             {
-                ::memcpy(&array->elements[start], &array->elements[end - 1], (array->length - end) * sizeof(T));
+                memcpy(&array->elements[start], &array->elements[end - 1], (array->length - end) * sizeof(T));
             }
             array->length = array->length - eraseCount;
 
