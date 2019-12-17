@@ -12,6 +12,7 @@ namespace Window
 
     bool    ShouldQuit(void);
 
+    vec2    GetSize(void);
     int     GetWidth(void);
     int     GetHeight(void);
 

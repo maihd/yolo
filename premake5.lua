@@ -138,6 +138,9 @@ do
     }
 
     files {
+        path.join(ROOT_DIR, "Games/Spaneon/Sources/*.h"),
+        path.join(ROOT_DIR, "Games/Spaneon/Sources/**/*.h"),
+
         path.join(ROOT_DIR, "Games/Spaneon/Sources/*.cc"),
         path.join(ROOT_DIR, "Games/Spaneon/Sources/**/*.cc"),
     }

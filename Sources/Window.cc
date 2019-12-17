@@ -358,12 +358,25 @@ namespace Window
         return Runtime::shouldQuit;
     }
 
+    vec2 GetSize(void)
+    {
+        RECT rect;
+        if (GetClientRect(Runtime::mainWindow, &rect))
+        {
+            return { (float)(rect.right - rect.left), (float)(rect.bottom - rect.top) };
+        }
+        else
+        {
+            return {};
+        }
+    }
+
     int GetWidth(void)
     {
         RECT rect;
         if (GetClientRect(Runtime::mainWindow, &rect))
         {
-            return (int)rect.right - rect.left;
+            return (int)(rect.right - rect.left);
         }
         else
         {
@@ -376,7 +389,7 @@ namespace Window
         RECT rect;
         if (GetClientRect(Runtime::mainWindow, &rect))
         {
-            return (int)rect.bottom - rect.top;
+            return (int)(rect.bottom - rect.top);
         }
         else
         {

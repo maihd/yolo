@@ -170,6 +170,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Games\Spaneon\Sources\World.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\Games\Spaneon\Sources\Game.cc" />
     <ClCompile Include="..\Games\Spaneon\Sources\Main.cc" />
     <ClCompile Include="..\Games\Spaneon\Sources\World.cc" />
