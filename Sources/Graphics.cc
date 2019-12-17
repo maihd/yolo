@@ -14,22 +14,22 @@
 
 namespace Graphics
 {
-    HGLRC glContext;
+    static HGLRC            glContext;
     
-    float lineWidth;
+    static float            lineWidth;
 
-    mat4 projection;
+    static mat4             projection;
 
-    Shader shader;
-    Shader fontShader;
-    Shader spriteShader;
-    SpriteMesh spriteMesh;
+    static Shader           shader;
+    static Shader           fontShader;
+    static Shader           spriteShader;
+    static SpriteMesh       spriteMesh;
 
-    DrawBuffer drawBuffer;
-    DrawTextBuffer drawTextBuffer;
-    DrawSpriteBuffer drawSpriteBuffer;
+    static DrawBuffer       drawBuffer;
+    static DrawTextBuffer   drawTextBuffer;
+    static DrawSpriteBuffer drawSpriteBuffer;
 
-    static String vshaderSource =
+    constexpr String vshaderSource =
         "#version 330 core\n"
         "layout (location = 0) in vec3 pos;"
         "layout (location = 1) in vec2 uv;"
@@ -44,7 +44,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    static String fshaderSource =
+    constexpr String fshaderSource =
         "#version 330\n"
 
         "in vec2 fragUV;"
@@ -58,7 +58,7 @@ namespace Graphics
         "resultColor = vec4(1.0);"
         "}";
 
-    static String spriteVertexSource =
+    constexpr String spriteVertexSource =
         "#version 330 core\n"
 
         "layout (location = 0) in vec3 pos;"
@@ -77,7 +77,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    static String spritePixelSource =
+    constexpr String spritePixelSource =
         "#version 330 core\n"
 
         "in vec2 uv;"
@@ -92,7 +92,7 @@ namespace Graphics
         "}";
 
 
-    static String fontVertexSource =
+    constexpr String fontVertexSource =
         "#version 330 core\n"
 
         "layout (location = 0) in vec3 pos;"
@@ -108,7 +108,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    static String fontPixelSource =
+    constexpr String fontPixelSource =
         "#version 330 core\n"
 
         "in vec2 uv;"
@@ -337,11 +337,6 @@ namespace Graphics
 
     void Clear(void)
     {
-        float width = (float)Window::GetWidth();
-        float height = (float)Window::GetHeight();
-        
-        projection = Math::Ortho(0, width, 0, height, 0.0f, 100.0f);
-
         // Set viewport
         glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
         glClear(GL_COLOR_BUFFER_BIT);
@@ -428,6 +423,16 @@ namespace Graphics
     {
         glLineWidth(width);
         lineWidth = width;
+    }
+
+    mat4 GetProjection(void)
+    {
+        return projection;
+    }
+
+    void SetProjection(mat4 projection)
+    {
+        Graphics::projection = projection;
     }
 
     void DrawCircle(DrawMode mode, vec2 position, float radius, vec4 color, int segments)

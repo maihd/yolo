@@ -18,6 +18,9 @@ namespace Graphics
     bool    IsWireframe(void);
     void    SetWireframe(bool enable);
 
+    mat4    GetProjection(void);
+    void    SetProjection(mat4 projection);
+
     float   GetLineWidth(void);
     void    SetLineWidth(float width);
 
