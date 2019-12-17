@@ -40,5 +40,19 @@ namespace Audio
 {
     bool        Init(void);
     void        Quit(void);
+
+    void        SetVolume(float volume);
+    float       GetVolume(void);
+
+    void        PlayEffect(String path, bool loop = false);
+    void        StopEffect(String path);
+
+    void        PlayMusic(String path, bool loop = false);
+    void        StopMusic(String path);
+    void        PauseMusic(String path);
+    void        ResumeMusic(String path);
+
+    void        StopAllEffects(void);
+    void        StopAllMusics(void);
 }
 
