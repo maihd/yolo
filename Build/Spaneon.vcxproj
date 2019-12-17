@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClCompile Include="..\Games\Spaneon\Sources\Game.cc" />
     <ClCompile Include="..\Games\Spaneon\Sources\Main.cc" />
+    <ClCompile Include="..\Games\Spaneon\Sources\World.cc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Yolo.vcxproj">
