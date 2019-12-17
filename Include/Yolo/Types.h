@@ -1215,6 +1215,26 @@ struct Sprite
     int     height;
 };
 
+// Audios
+
+enum struct AudioFormat
+{
+    Mono8,
+    Mono16,
+    Stereo8,
+    Stereo16,
+};
+
+struct AudioBuffer
+{
+    Handle handle;
+};
+
+struct AudioSource
+{
+    Handle handle;
+};
+
 // Utils work on types
 
 #include <stddef.h>

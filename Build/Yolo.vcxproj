@@ -111,6 +111,7 @@
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
+      <AdditionalDependencies>OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\ThirdParty\Libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -132,6 +133,7 @@
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
+      <AdditionalDependencies>OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\ThirdParty\Libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -153,6 +155,7 @@
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
+      <AdditionalDependencies>OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\ThirdParty\Libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -174,11 +177,13 @@
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
+      <AdditionalDependencies>OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\ThirdParty\Libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Yolo\Array.h" />
+    <ClInclude Include="..\Include\Yolo\Audio.h" />
     <ClInclude Include="..\Include\Yolo\File.h" />
     <ClInclude Include="..\Include\Yolo\Font.h" />
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
@@ -210,6 +215,7 @@
     <ClInclude Include="..\Sources\SpriteMesh.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\Audio.cc" />
     <ClCompile Include="..\Sources\DrawBuffer.cc" />
     <ClCompile Include="..\Sources\DrawSpriteBuffer.cc" />
     <ClCompile Include="..\Sources\DrawTextBuffer.cc" />

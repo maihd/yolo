@@ -61,7 +61,7 @@ do
 
     links {
         --"SDL2",
-        --"OpenAL32",
+        "OpenAL32",
     }
 
     includedirs {

@@ -27,6 +27,9 @@
     <ClInclude Include="..\Include\Yolo\Array.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Audio.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\File.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -116,6 +119,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\Audio.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\DrawBuffer.cc">
       <Filter>Sources</Filter>
     </ClCompile>
