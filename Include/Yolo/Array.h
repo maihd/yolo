@@ -78,13 +78,13 @@ namespace ArrayOps
 
         free(array->elements);
 
-        array->length   = 0;
+        array->length = 0;
         array->capacity = 0;
         array->elements = 0;
     }
 
     template <typename T>
-    inline int SizeOf(const Array<T> array) 
+    inline int SizeOf(const Array<T> array)
     {
         return array.length * sizeof(T);
     }
@@ -140,7 +140,7 @@ namespace ArrayOps
     inline int Push(Array<T>* array, T element)
     {
         assert(array != NULL);
-        
+
         if (Ensure(array, array->length + 1))
         {
             int index = array->length++;
@@ -165,7 +165,7 @@ namespace ArrayOps
     inline void Clear(Array<T>* array)
     {
         assert(array);
-        
+
         array->length = 0;
     }
 
@@ -220,8 +220,8 @@ namespace ArrayOps
     template <typename T>
     inline bool Erase(Array<T>* array, int start, int end)
     {
-        start   = start > -1 ? start : 0;
-        end     = end > array->length ? array->length : end;
+        start = start > -1 ? start : 0;
+        end = end > array->length ? array->length : end;
 
         int eraseCount = (end - start);
         if (eraseCount <= 0)
