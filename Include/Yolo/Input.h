@@ -170,7 +170,7 @@ namespace Input
     void    SetMouseCursorVisible(bool visible);
 
     int     GetMouseState(float* x, float* y);
-    vec2    GetMousePosition(void);
+    Vector2    GetMousePosition(void);
 
     bool    GetMouseButton(MouseButton button);
     bool    GetMouseButtonUp(MouseButton button);

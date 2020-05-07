@@ -18,7 +18,7 @@ namespace Graphics
     
     static float            lineWidth;
 
-    static mat4             projection;
+    static Matrix4             projection;
 
     static Shader           shader;
     static Shader           fontShader;
@@ -361,7 +361,7 @@ namespace Graphics
     {
         DrawBufferOps::UpdateBuffers(&drawBuffer);
 
-        mat4 model = Math::Translation(0, 0);
+        Matrix4 model = Math::Translation(0, 0);
 
         glUseProgram(shader.handle);
         glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
@@ -425,17 +425,17 @@ namespace Graphics
         lineWidth = width;
     }
 
-    mat4 GetProjection(void)
+    Matrix4 GetProjection(void)
     {
         return projection;
     }
 
-    void SetProjection(mat4 projection)
+    void SetProjection(Matrix4 projection)
     {
         Graphics::projection = projection;
     }
 
-    void DrawCircle(DrawMode mode, vec2 position, float radius, vec4 color, int segments)
+    void DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, int segments)
     {
         DrawBufferOps::Clear(&drawBuffer);
 
@@ -451,7 +451,7 @@ namespace Graphics
         }
     }
 
-    void DrawRectangle(DrawMode mode, vec2 position, vec2 size, vec4 color)
+    void DrawRectangle(DrawMode mode, Vector2 position, Vector2 size, Vector4 color)
     {
         DrawBufferOps::Clear(&drawBuffer);
         if (mode == DrawMode::Line)
@@ -466,10 +466,10 @@ namespace Graphics
         }
     }
 
-    void DrawTexture(Texture texture, vec2 position, float rotation, vec2 scale, vec4 color, vec2 pivot)
+    void DrawTexture(Texture texture, Vector2 position, float rotation, Vector2 scale, Vector4 color, Vector2 pivot)
     {
 #if 0
-        mat4 model = mul(mat4::Translation(position), mat4::Scalation(size));
+        Matrix4 model = mul(Matrix4::Translation(position), Matrix4::Scalation(size));
         
         int projectionLocation = glGetUniformLocation(shader.handle, "projection");
         int modelLocation = glGetUniformLocation(shader.handle, "model");
@@ -499,12 +499,12 @@ namespace Graphics
     }
 
 #undef DrawText
-    void DrawText(String text, Font font, vec2 position)
+    void DrawText(String text, Font font, Vector2 position)
     {
         DrawTextBuffer::AddText(&drawTextBuffer, text, font);
         DrawTextBuffer::UpdateBuffers(&drawTextBuffer);
 
-        mat4 model = mul(Math::Translation(position), Math::Scalation(1.0f, -1.0f));
+        Matrix4 model = mul(Math::Translation(position), Math::Scalation(1.0f, -1.0f));
 
         glUseProgram(fontShader.handle);
 
@@ -534,7 +534,7 @@ namespace Graphics
         DrawTextBuffer::Clear(&drawTextBuffer);
     }
 
-    void DrawFramerate(Font font, vec2 position)
+    void DrawFramerate(Font font, Vector2 position)
     {
         char buffer[1024];
         float framerate = Time::GetFramerate();

@@ -180,9 +180,9 @@ namespace Input
         return _mouseState;
     }
     
-    vec2 GetMousePosition(void)
+    Vector2 GetMousePosition(void)
     {
-        return vec2{ _mouseX, _mouseY };
+        return Vector2{ _mouseX, _mouseY };
     }
 
     bool GetMouseButton(MouseButton button)

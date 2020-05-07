@@ -106,11 +106,11 @@ void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, String text, Font f
             {
                 FontGlyph glyph = font.glyphs.elements[c];
 
-                vec2 pos0 = vec2{ advanceX + glyph.x0, advanceY + glyph.y0 };
-                vec2 pos1 = vec2{ advanceX + glyph.x1, advanceY + glyph.y1 };
+                Vector2 pos0 = Vector2{ advanceX + glyph.x0, advanceY + glyph.y0 };
+                Vector2 pos1 = Vector2{ advanceX + glyph.x1, advanceY + glyph.y1 };
 
-                vec2 uv0 = vec2{ glyph.u0, glyph.v0 };
-                vec2 uv1 = vec2{ glyph.u1, glyph.v1 };
+                Vector2 uv0 = Vector2{ glyph.u0, glyph.v0 };
+                Vector2 uv1 = Vector2{ glyph.u1, glyph.v1 };
 
                 const uint16 startIndex = (uint16)drawTextBuffer->vertices.length;
                 ArrayOps::Push(&drawTextBuffer->indices, (uint16)(startIndex + 0));

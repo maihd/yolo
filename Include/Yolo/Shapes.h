@@ -4,13 +4,13 @@
 
 struct Rect
 {
-    vec2 position;
-    vec2 size;  
+    Vector2 position;
+    Vector2 size;  
 };
 
 struct Circle
 {
-    vec2  position;
+    Vector2  position;
     float radius;  
 };
 

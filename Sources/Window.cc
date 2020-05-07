@@ -358,7 +358,7 @@ namespace Window
         return Runtime::shouldQuit;
     }
 
-    vec2 GetSize(void)
+    Vector2 GetSize(void)
     {
         RECT rect;
         if (GetClientRect(Runtime::mainWindow, &rect))

@@ -22,7 +22,7 @@ namespace Game
 
     void Update(float dt)
     {
-        WorldOps::Update(&world, 0, 0, vec2{}, false, dt);
+        WorldOps::Update(&world, 0, 0, Vector2{}, false, dt);
     }
 
     void Render(void)

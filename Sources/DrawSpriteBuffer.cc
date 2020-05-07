@@ -112,39 +112,39 @@ namespace DrawSpriteBufferOps
         }
     }
 
-    void AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, vec2 position, float rotation, vec2 scale, vec4 color);
+    void AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, Vector2 position, float rotation, Vector2 scale, Vector4 color);
 
-    void AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, vec2 position, float rotation, vec2 scale, vec4 color);
-    void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, vec2 position, float rotation, vec2 scale, vec4 color, vec2 pivot)
+    void AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, Vector2 position, float rotation, Vector2 scale, Vector4 color);
+    void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, Vector2 position, float rotation, Vector2 scale, Vector4 color, Vector2 pivot)
     {
-        mat4 transform = Math::Transform2D(position, rotation, scale, pivot * vec2{ (float)texture.width, (float)texture.height });
+        Matrix4 transform = Math::Transform2D(position, rotation, scale, pivot * Vector2{ (float)texture.width, (float)texture.height });
 
-        vec3 pos0 = mul(transform, vec3{ 0, 0 });
-        vec3 pos1 = mul(transform, vec3{ 0, (float)texture.height });
-        vec3 pos2 = mul(transform, vec3{ (float)texture.width, (float)texture.height });
-        vec3 pos3 = mul(transform, vec3{ (float)texture.width, 0 });
+        Vector3 pos0 = mul(transform, Vector3{ 0, 0 });
+        Vector3 pos1 = mul(transform, Vector3{ 0, (float)texture.height });
+        Vector3 pos2 = mul(transform, Vector3{ (float)texture.width, (float)texture.height });
+        Vector3 pos3 = mul(transform, Vector3{ (float)texture.width, 0 });
 
         VertexColor v0 = {
             pos0,
-            vec2{ 0.0f, 1.0f },
+            Vector2{ 0.0f, 1.0f },
             color,
         };
 
         VertexColor v1 = {
             pos1,
-            vec2{ 0.0f, 0.0f },
+            Vector2{ 0.0f, 0.0f },
             color,
         };
 
         VertexColor v2 = {
             pos2,
-            vec2{ 1.0f, 0.0f },
+            Vector2{ 1.0f, 0.0f },
             color,
         };
 
         VertexColor v3 = {
             pos3,
-            vec2{ 1.0f, 1.0f },
+            Vector2{ 1.0f, 1.0f },
             color,
         };
 
@@ -164,11 +164,11 @@ namespace DrawSpriteBufferOps
         }
     }
 
-    void Draw(DrawSpriteBuffer* drawSpriteBuffer, Shader shader, mat4 projection)
+    void Draw(DrawSpriteBuffer* drawSpriteBuffer, Shader shader, Matrix4 projection)
     {
         UpdateBuffers(drawSpriteBuffer);
 
-        mat4 model = Math::Translation(0, 0, 0);
+        Matrix4 model = Math::Translation(0, 0, 0);
 
         glUseProgram(shader.handle);
         glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);

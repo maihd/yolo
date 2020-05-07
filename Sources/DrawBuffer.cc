@@ -91,7 +91,7 @@ namespace DrawBufferOps
         }
     }
 
-    void AddCircle(DrawBuffer* drawBuffer, vec2 position, float radius, vec4 color, int segments)
+    void AddCircle(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, int segments)
     {
         assert(drawBuffer);
 
@@ -120,7 +120,7 @@ namespace DrawBufferOps
         }
     }
 
-    void AddCircleLines(DrawBuffer* drawBuffer, vec2 position, float radius, vec4 color, int segments)
+    void AddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, int segments)
     {
         assert(drawBuffer != nullptr);
 
@@ -144,7 +144,7 @@ namespace DrawBufferOps
         }
     }
 
-    void AddRectangle(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color)
+    void AddRectangle(DrawBuffer* drawBuffer, Vector2 position, Vector2 size, Vector4 color)
     {
         const VertexShape v0 = {
             { position.x, position.y },
@@ -178,7 +178,7 @@ namespace DrawBufferOps
         drawBuffer->shouldUpdate = true;
     }
 
-    void AddRectangleLines(DrawBuffer* drawBuffer, vec2 position, vec2 size, vec4 color)
+    void AddRectangleLines(DrawBuffer* drawBuffer, Vector2 position, Vector2 size, Vector4 color)
     {
         const VertexShape v0 = {
             { position.x, position.y },

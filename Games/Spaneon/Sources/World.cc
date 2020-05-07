@@ -9,21 +9,21 @@
 
 namespace Color
 {
-    vec4 HSV(float h, float s, float v)
+    Vector4 HSV(float h, float s, float v)
     {
         if (h == 0 && s == 0)
-            return vec4{ v, v, v, 1.0f };
+            return Vector4{ v, v, v, 1.0f };
 
         float c = s * v;
         float x = c * (1 - fabsf(fmodf(h, 2) - 1));
         float m = v - c;
 
-        if (h < 1)      return vec4{ c + m, x + m, m, 1.0f };
-        else if (h < 2) return vec4{ x + m, c + m, m, 1.0f };
-        else if (h < 3) return vec4{ m, c + m, x + m, 1.0f };
-        else if (h < 4) return vec4{ m, x + m, c + m, 1.0f };
-        else if (h < 5) return vec4{ x + m, m, c + m, 1.0f };
-        else            return vec4{ c + m, m, x + m, 1.0f };
+        if (h < 1)      return Vector4{ c + m, x + m, m, 1.0f };
+        else if (h < 2) return Vector4{ x + m, c + m, m, 1.0f };
+        else if (h < 3) return Vector4{ m, c + m, x + m, 1.0f };
+        else if (h < 4) return Vector4{ m, x + m, c + m, 1.0f };
+        else if (h < 5) return Vector4{ x + m, m, c + m, 1.0f };
+        else            return Vector4{ c + m, m, x + m, 1.0f };
     }
 }
 
@@ -56,9 +56,9 @@ namespace EntityOps
         }
     }
 
-    Entity Update(Entity entity, vec2 bound, float dt)
+    Entity Update(Entity entity, Vector2 bound, float dt)
     {
-        vec2  pos = entity.position + entity.velocity * dt;
+        Vector2  pos = entity.position + entity.velocity * dt;
         float rad = entity.radius;
 
         if (pos.x + rad > bound.x)
@@ -96,7 +96,7 @@ namespace EntityOps
         };
     }
 
-    void Update(Array<Entity>* entities, vec2 bound, float dt)
+    void Update(Array<Entity>* entities, Vector2 bound, float dt)
     {
         for (int i = 0, n = entities->length; i < n; i++)
         {
@@ -134,10 +134,10 @@ namespace WorldOps
         World world = {};
 
         world.player.active         = true;
-        world.player.color          = vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-        world.player.position       = vec2{ 0.0f, 0.0f };
+        world.player.color          = Vector4{ 1.0f, 1.0f, 1.0f, 1.0f };
+        world.player.position       = Vector2{ 0.0f, 0.0f };
         world.player.rotation       = 0.0f;
-        world.player.scale          = vec2{ 1.0f, 1.0f };
+        world.player.scale          = Vector2{ 1.0f, 1.0f };
         world.player.movespeed      = 720.0f;
         world.player.texture        = TextureOps::Load("Art/Player.png");
         world.player.radius         = world.player.texture.width * 0.5f;
@@ -179,19 +179,19 @@ namespace WorldOps
         world = {};
     }
 
-    void SpawnBullet(World* world, vec2 pos, vec2 vel)
+    void SpawnBullet(World* world, Vector2 pos, Vector2 vel)
     {
         Texture texture = TextureOps::Load("Art/Bullet.png");
         Entity entity = {
             true,
-            vec2{ 1.0f, 1.0f },
+            Vector2{ 1.0f, 1.0f },
             pos,
             atan2f(vel.y, vel.x),
 
             vel,
             1280.0f,
 
-            vec4{1.0f, 1.0f, 1.0f, 1.0f},
+            Vector4{1.0f, 1.0f, 1.0f, 1.0f},
             texture.height * 0.5f,
             texture,
         };
@@ -207,38 +207,38 @@ namespace WorldOps
         }
     }
 
-    void FireBullets(World* world, vec2 aim_dir)
+    void FireBullets(World* world, Vector2 aim_dir)
     {
         float angle = atan2f(aim_dir.y, aim_dir.x) + (rand() % 101) / 100.0f * (PI * 0.025f);
         float offset = PI * 0.1f;
 
-        aim_dir = vec2{ cosf(angle), sinf(angle) };
+        aim_dir = Vector2{ cosf(angle), sinf(angle) };
 
         // First bullet
         {
-            vec2 vel = normalize(aim_dir);
-            vec2 pos = world->player.position + vec2{ cosf(angle + offset), sinf(angle + offset) } * (float)world->player.texture.width * 1.25f;
+            Vector2 vel = normalize(aim_dir);
+            Vector2 pos = world->player.position + Vector2{ cosf(angle + offset), sinf(angle + offset) } * (float)world->player.texture.width * 1.25f;
             SpawnBullet(world, pos, vel);
         }
 
         // Second bullet
         {
-            vec2 vel = normalize(aim_dir);
-            vec2 pos = world->player.position + vec2{ cosf(angle - offset), sinf(angle - offset) } * (float)world->player.texture.width * 1.25f;
+            Vector2 vel = normalize(aim_dir);
+            Vector2 pos = world->player.position + Vector2{ cosf(angle - offset), sinf(angle - offset) } * (float)world->player.texture.width * 1.25f;
             SpawnBullet(world, pos, vel);
         }
     }
 
-    vec2 GetSpawnPosition(World world)
+    Vector2 GetSpawnPosition(World world)
     {
         const float min_distance_sqr = (Window::GetHeight() * 0.3f) * (Window::GetHeight() * 0.3f);
 
-        vec2 pos;
+        Vector2 pos;
         do
         {
             float x = (2.0f * (rand() % 101) / 100.0f - 1.0f) * 0.8f * Window::GetWidth();
             float y = (2.0f * (rand() % 101) / 100.0f - 1.0f) * 0.8f * Window::GetHeight();
-            pos = vec2{ x, y };
+            pos = Vector2{ x, y };
         } while (distsqr(pos, world.player.position) < min_distance_sqr);
 
         return pos;
@@ -248,22 +248,22 @@ namespace WorldOps
     {
         //GameAudio::PlaySpawn();
 
-        vec2 pos = GetSpawnPosition(*world);
-        vec2 vel = normalize(world->player.position - pos);
+        Vector2 pos = GetSpawnPosition(*world);
+        Vector2 vel = normalize(world->player.position - pos);
 
         Texture texture = TextureOps::Load("Art/Seeker.png");
 
         Entity entity = {
             true,
 
-            vec2{ 1.0f, 1.0f },
+            Vector2{ 1.0f, 1.0f },
             pos,
             atan2f(vel.y, vel.x),
 
             vel,
             360.0f,
 
-            vec4{1.0f, 1.0f, 1.0f, 0.0f},
+            Vector4{1.0f, 1.0f, 1.0f, 0.0f},
             texture.width * 0.5f,
             texture
         };
@@ -283,22 +283,22 @@ namespace WorldOps
     {
         //GameAudio::PlaySpawn();
 
-        vec2 pos = GetSpawnPosition(*world);
-        vec2 vel = normalize(world->player.position - pos);
+        Vector2 pos = GetSpawnPosition(*world);
+        Vector2 vel = normalize(world->player.position - pos);
 
         Texture texture = TextureOps::Load("Art/Wanderer.png");
 
         Entity entity = {
             true,
 
-            vec2{ 1.0f, 1.0f },
+            Vector2{ 1.0f, 1.0f },
             pos,
             atan2f(vel.y, vel.x),
 
             vel,
             240.0f,
 
-            vec4{1.0f, 1.0f, 1.0f, 0.0f},
+            Vector4{1.0f, 1.0f, 1.0f, 0.0f},
             texture.width * 0.5f,
             texture
         };
@@ -318,22 +318,22 @@ namespace WorldOps
     {
         //GameAudio::PlaySpawn();
 
-        vec2 pos = GetSpawnPosition(*world);
-        vec2 vel = vec2{ 0.0f, 0.0f };
+        Vector2 pos = GetSpawnPosition(*world);
+        Vector2 vel = Vector2{ 0.0f, 0.0f };
 
         Texture texture = TextureOps::Load("Art/Black Hole.png");
 
         Entity entity = {
             true,
 
-            vec2{ 1.0f, 1.0f },
+            Vector2{ 1.0f, 1.0f },
             pos,
             atan2f(vel.y, vel.x),
 
             vel,
             240.0f,
 
-            vec4{1.0f, 1.0f, 1.0f, 0.0f},
+            Vector4{1.0f, 1.0f, 1.0f, 0.0f},
             texture.width * 0.5f,
             texture
         };
@@ -363,8 +363,8 @@ namespace WorldOps
             {
                 float speed = 640.0f * (0.2f + (rand() % 101 / 100.0f) * 0.8f);
                 float angle = rand() % 101 / 100.0f * 2 * PI;
-                vec2  vel   = vec2{ cosf(angle) * speed, sinf(angle) * speed };
-                vec4  color = vec4{ 0.6f, 1.0f, 1.0f, 1.0f };
+                Vector2  vel   = Vector2{ cosf(angle) * speed, sinf(angle) * speed };
+                Vector4  color = Vector4{ 0.6f, 1.0f, 1.0f, 1.0f };
 
                 //ParticleSystem::SpawnParticle(texture, bullet->position, color, 1.0f, float2(1.0f), 0.0f, vel);
             }
@@ -382,17 +382,17 @@ namespace WorldOps
 
         float hue1 = rand() % 101 / 100.0f * 6.0f;
         float hue2 = fmodf(hue1 + (rand() % 101 / 100.0f * 2.0f), 6.0f);
-        vec4  color1 = Color::HSV(hue1, 0.5f, 1);
-        vec4  color2 = Color::HSV(hue2, 0.5f, 1);
+        Vector4  color1 = Color::HSV(hue1, 0.5f, 1);
+        Vector4  color2 = Color::HSV(hue2, 0.5f, 1);
 
         for (int i = 0; i < 120; i++)
         {
             float speed = 640.0f * (0.2f + (rand() % 101 / 100.0f) * 0.8f);
             float angle = rand() % 101 / 100.0f * 2 * PI;
-            vec2  vel   = vec2{ cosf(angle) * speed, sinf(angle) * speed };
-            vec4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
+            Vector2  vel   = Vector2{ cosf(angle) * speed, sinf(angle) * speed };
+            Vector4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
 
-            //ParticleSystem::SpawnParticle(texture, world->seekers.elements[index].position, color, 1.0f, vec2{ 1.0f, 1.0f }, 0.0f, vel);
+            //ParticleSystem::SpawnParticle(texture, world->seekers.elements[index].position, color, 1.0f, Vector2{ 1.0f, 1.0f }, 0.0f, vel);
         }
     }
 
@@ -407,17 +407,17 @@ namespace WorldOps
 
         float hue1 = rand() % 101 / 100.0f * 6.0f;
         float hue2 = fmodf(hue1 + (rand() % 101 / 100.0f * 2.0f), 6.0f);
-        vec4  color1 = Color::HSV(hue1, 0.5f, 1);
-        vec4  color2 = Color::HSV(hue2, 0.5f, 1);
+        Vector4  color1 = Color::HSV(hue1, 0.5f, 1);
+        Vector4  color2 = Color::HSV(hue2, 0.5f, 1);
 
         for (int i = 0; i < 120; i++)
         {
             float speed = 640.0f * (0.2f + (rand() % 101 / 100.0f) * 0.8f);
             float angle = rand() % 101 / 100.0f * 2 * PI;
-            vec2  vel   = vec2{ cosf(angle) * speed, sinf(angle) * speed };
-            vec4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
+            Vector2  vel   = Vector2{ cosf(angle) * speed, sinf(angle) * speed };
+            Vector4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
 
-            //ParticleSystem::SpawnParticle(texture, world->seekers.elements[index].position, color, 1.0f, vec2{ 1.0f, 1.0f }, 0.0f, vel);
+            //ParticleSystem::SpawnParticle(texture, world->seekers.elements[index].position, color, 1.0f, Vector2{ 1.0f, 1.0f }, 0.0f, vel);
         }
     }
 
@@ -432,17 +432,17 @@ namespace WorldOps
 
         float hue1 = rand() % 101 / 100.0f * 6.0f;
         float hue2 = fmodf(hue1 + (rand() % 101 / 100.0f * 2.0f), 6.0f);
-        vec4  color1 = Color::HSV(hue1, 0.5f, 1);
-        vec4  color2 = Color::HSV(hue2, 0.5f, 1);
+        Vector4  color1 = Color::HSV(hue1, 0.5f, 1);
+        Vector4  color2 = Color::HSV(hue2, 0.5f, 1);
 
         for (int i = 0; i < 120; i++)
         {
             float speed = 640.0f * (0.2f + (rand() % 101 / 100.0f) * 0.8f);
             float angle = rand() % 101 / 100.0f * 2 * PI;
-            vec2  vel   = vec2{ cosf(angle) * speed, sinf(angle) * speed };
-            vec4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
+            Vector2  vel   = Vector2{ cosf(angle) * speed, sinf(angle) * speed };
+            Vector4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
 
-            //ParticleSystem::SpawnParticle(texture, world->seekers.elements[index].position, color, 1.0f, vec2{ 1.0f, 1.0f }, 0.0f, vel);
+            //ParticleSystem::SpawnParticle(texture, world->seekers.elements[index].position, color, 1.0f, Vector2{ 1.0f, 1.0f }, 0.0f, vel);
         }
     }
 
@@ -464,16 +464,16 @@ namespace WorldOps
 
         float hue1      = rand() % 101 / 100.0f * 6.0f;
         float hue2      = fmodf(hue1 + (rand() % 101 / 100.0f * 2.0f), 6.0f);
-        vec4  color1    = Color::HSV(hue1, 0.5f, 1);
-        vec4  color2    = Color::HSV(hue2, 0.5f, 1);
+        Vector4  color1    = Color::HSV(hue1, 0.5f, 1);
+        Vector4  color2    = Color::HSV(hue2, 0.5f, 1);
 
         for (int i = 0; i < 1200; i++)
         {
             float speed = 10.0f * maxf((float)Window::GetWidth(), (float)Window::GetHeight()) * (0.6f + (rand() % 101 / 100.0f) * 0.4f);
             float angle = rand() % 101 / 100.0f * 2 * PI;
-            vec2  vel   = vec2{cosf(angle) * speed, sinf(angle) * speed };
+            Vector2  vel   = Vector2{cosf(angle) * speed, sinf(angle) * speed };
 
-            vec4 color  = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
+            Vector4 color  = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
             //ParticleSystem::SpawnParticle(texture, player.position, color, gameOverTimer, float2(1.0f), 0.0f, vel);
         }
 
@@ -490,7 +490,7 @@ namespace WorldOps
         }
         else if (distance(other->position, blackhole->position) <= other->radius + blackhole->radius * 10.0f)
         {
-            vec2 diff = blackhole->position - other->position;
+            Vector2 diff = blackhole->position - other->position;
             other->velocity += normalize(diff) * lerpf(1, 0, length(diff) / (Window::GetWidth() * 0.2f));
             other->velocity  = normalize(other->velocity);
         }
@@ -498,7 +498,7 @@ namespace WorldOps
         return false;
     }
 
-    void Update(World* world, float vertical, float horizontal, vec2 aim_dir, bool fire, float dt)
+    void Update(World* world, float vertical, float horizontal, Vector2 aim_dir, bool fire, float dt)
     {
         if (world->gameOverTimer > 0.0f)
         {
@@ -509,7 +509,7 @@ namespace WorldOps
         // Update is in progress, locking the list
         world->lock = true;
 
-        world->player.velocity = lerp(world->player.velocity, normalize(vec2{ horizontal, vertical }), 5.0f * dt);
+        world->player.velocity = lerp(world->player.velocity, normalize(Vector2{ horizontal, vertical }), 5.0f * dt);
         world->player = EntityOps::Update(world->player, Window::GetSize(), dt);
         //if (lensqr(world->player.velocity) > 0.1f && fmodf(Time::GetTotalTime(), 0.025f) <= 0.01f)
         //{
@@ -607,7 +607,7 @@ namespace WorldOps
                         }
 
                         s->rotation = direction;
-                        s->velocity = vec2{ cosf(direction), sinf(direction) };
+                        s->velocity = Vector2{ cosf(direction), sinf(direction) };
                         s->position = s->position + s->velocity * real_speed * dt;
                     }
                 }
@@ -700,17 +700,17 @@ namespace WorldOps
                 Texture glow_tex = TextureOps::Load("Art/Glow.png");
                 Texture line_tex = TextureOps::Load("Art/Laser.png");
 
-                vec4 color1 = vec4{ 0.3f, 0.8f, 0.4f, 1.0f };
-                vec4 color2 = vec4{ 0.5f, 1.0f, 0.7f, 1.0f };
+                Vector4 color1 = Vector4{ 0.3f, 0.8f, 0.4f, 1.0f };
+                Vector4 color2 = Vector4{ 0.5f, 1.0f, 0.7f, 1.0f };
 
                 if (Time::GetTotalFrames() % 3 == 0)
                 {
                     float speed = 16.0f * s->radius * (0.8f + (rand() % 101 / 100.0f) * 0.2f);
                     float angle = rand() % 101 / 100.0f * Time::GetTotalTime();
-                    vec2  vel   = vec2{ cosf(angle) * speed, sinf(angle) * speed };
-                    vec2  pos   = s->position + 0.4f * vec2{vel.y, -vel.x } + (4.0f + rand() % 101 / 100.0f * 4.0f);
+                    Vector2  vel   = Vector2{ cosf(angle) * speed, sinf(angle) * speed };
+                    Vector2  pos   = s->position + 0.4f * Vector2{vel.y, -vel.x } + (4.0f + rand() % 101 / 100.0f * 4.0f);
 
-                    vec4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
+                    Vector4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
                     //ParticleSystem::SpawnParticle(glow_tex, pos, color, 4.0f, float2(0.3f, 0.2f), 0.0f, vel);
                     //ParticleSystem::SpawnParticle(line_tex, pos, color, 4.0f, float2(1.0f, 1.0f), 0.0f, vel);
                 }
@@ -721,16 +721,16 @@ namespace WorldOps
 
                     float hue1 = rand() % 101 / 100.0f * 6.0f;
                     float hue2 = fmodf(hue1 + (rand() % 101 / 100.0f * 2.0f), 6.0f);
-                    vec4  color1 = Color::HSV(hue1, 0.5f, 1);
-                    vec4  color2 = Color::HSV(hue2, 0.5f, 1);
+                    Vector4  color1 = Color::HSV(hue1, 0.5f, 1);
+                    Vector4  color2 = Color::HSV(hue2, 0.5f, 1);
 
                     for (int i = 0; i < 120.0f; i++)
                     {
                         float speed = 180.0f;
                         float angle = rand() % 101 / 100.0f * 2 * PI;
-                        vec2  vel   = vec2{ cosf(angle) * speed, sinf(angle) * speed };
-                        vec2  pos   = s->position + vel;
-                        vec4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
+                        Vector2  vel   = Vector2{ cosf(angle) * speed, sinf(angle) * speed };
+                        Vector2  pos   = s->position + vel;
+                        Vector4  color = color1 + (color2 - color1) * ((rand() % 101) / 100.0f);
                         //ParticleSystem::SpawnParticle(texture, pos, color, 2.0f, float2(1.0f), 0.0f, float2(0.0f));
                     }
                 }
