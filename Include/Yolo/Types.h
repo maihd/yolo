@@ -28,10 +28,6 @@ using ArgList = va_list;
 #define ArgListGet      va_arg
 #define ArgListCopy     va_copy
 
-// Math
-
-constexpr const float PI = 3.141592653589f;
-
 struct Vector2;
 struct Vector3;
 struct Vector4;
@@ -62,12 +58,20 @@ struct Matrix4
     F32 data[4][4];
 };
 
+struct Rectangle
+{
+    F32 x;
+    F32 y;
+    F32 width;
+    F32 height;
+};
+
 // Container types
 
 template <typename T>
 struct Array
 {
-    I32 length;
+    I32 count;
     I32 capacity;
     T*  elements;
 };
@@ -134,7 +138,7 @@ struct Function<R(Args...)>
 
         this->context  = *(void**)&lambda;
         this->executor = &ExecuteLambda<T>;
-    }
+    } 
 
     inline R operator()(Args... args)
     {
@@ -187,7 +191,7 @@ struct Job
 
 // IO types
 
-namespace FileModes
+namespace _FileMode
 {
     enum Type
     {
@@ -217,7 +221,7 @@ namespace FileModes
     };
 };
 
-using FileMode = FileModes::Type;
+using FileMode = _FileMode::Type;
 using File = Handle;
 
 // Graphics
@@ -284,8 +288,8 @@ struct Texture
     Handle      handle;
     PixelFormat format;
 
-    I32         width;
-    I32         height;
+    F32         width;
+    F32         height;
 };
 
 struct Shader
@@ -316,12 +320,11 @@ struct Font
 
 struct Sprite
 {
-    Texture texture;
-
-    I32     x;
-    I32     y;
-    I32     width;
-    I32     height;
+    Texture     texture;
+    F32         x;
+    F32         y;
+    F32         width;
+    F32         height;
 };
 
 // Audios
@@ -344,15 +347,19 @@ struct AudioSource
     Handle handle;
 };
 
+// Constants
+
+constexpr const float PI = 3.141592653589f;
+
 // Utils work on types
 
 #include <stddef.h>
 
 #undef offsetof
 #ifndef _CRT_USE_BUILTIN_OFFSETOF
-#define offsetof(s, m) (int)(&((s*)0)->m)
+#define offsetof(s, m) (I32)(&((s*)0)->m)
 #else
-#define offsetof(s, m) (int)__builtin_offsetof(s,m)
+#define offsetof(s, m) (I32)__builtin_offsetof(s,m)
 #endif
 
 template <typename T, I32 count>

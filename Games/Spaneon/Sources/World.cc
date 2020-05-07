@@ -50,7 +50,7 @@ namespace EntityOps
 
     void Update(Array<Entity>* entities, float dt)
     {
-        for (int i = 0, n = entities->length; i < n; i++)
+        for (int i = 0, n = entities->count; i < n; i++)
         {
             entities->elements[i] = Update(entities->elements[i], dt);
         }
@@ -98,7 +98,7 @@ namespace EntityOps
 
     void Update(Array<Entity>* entities, Vector2 bound, float dt)
     {
-        for (int i = 0, n = entities->length; i < n; i++)
+        for (int i = 0, n = entities->count; i < n; i++)
         {
             entities->elements[i] = Update(entities->elements[i], bound, dt);
         }
@@ -114,7 +114,7 @@ namespace EntityOps
 
     void Render(Array<Entity> entities)
     {
-        for (int i = 0, n = entities.length; i < n; i++)
+        for (int i = 0, n = entities.count; i < n; i++)
         {
             Entity entity = entities.elements[i];
             if (entity.active)
@@ -196,7 +196,7 @@ namespace WorldOps
             texture,
         };
 
-        if (world->freeBullets.length > 0)
+        if (world->freeBullets.count > 0)
         {
             int index = ArrayOps::Pop(&world->freeBullets);
             world->bullets.elements[index] = entity;
@@ -268,7 +268,7 @@ namespace WorldOps
             texture
         };
 
-        if (world->freeSeekers.length > 0)
+        if (world->freeSeekers.count > 0)
         {
             int index = ArrayOps::Pop(&world->freeSeekers);
             world->seekers.elements[index] = entity;
@@ -303,7 +303,7 @@ namespace WorldOps
             texture
         };
 
-        if (world->freeWanderers.length > 0)
+        if (world->freeWanderers.count > 0)
         {
             int index = ArrayOps::Pop(&world->freeWanderers);
             world->wanderers.elements[index] = entity;
@@ -338,7 +338,7 @@ namespace WorldOps
             texture
         };
 
-        if (world->freeBlackHoles.length > 0)
+        if (world->freeBlackHoles.count > 0)
         {
             int index = ArrayOps::Pop(&world->freeBlackHoles);
             world->blackHoles.elements[index] = entity;
@@ -541,7 +541,7 @@ namespace WorldOps
         //    ParticleSystem::SpawnParticle(line_tex, pos, float4(1.0f, 1.0f, 1.0f, 1.0f) * alpha, 0.4f, float2(3.0f, 1.0f), angle, side_vel2);
         //}
 
-        for (int i = 0, n = world->bullets.length; i < n; i++)
+        for (int i = 0, n = world->bullets.count; i < n; i++)
         {
             if (world->bullets.elements[i].active)
             {
@@ -556,7 +556,7 @@ namespace WorldOps
             }
         }
 
-        for (int i = 0, n = world->seekers.length; i < n; i++)
+        for (int i = 0, n = world->seekers.count; i < n; i++)
         {
             Entity* s = &world->seekers.elements[i];
             if (s->active)
@@ -577,7 +577,7 @@ namespace WorldOps
             }
         }
 
-        for (int i = 0, n = world->wanderers.length; i < n; i++)
+        for (int i = 0, n = world->wanderers.count; i < n; i++)
         {
             Entity* s = &world->wanderers.elements[i];
             if (s->active)
@@ -614,12 +614,12 @@ namespace WorldOps
             }
         }
 
-        for (int i = 0, n = world->bullets.length; i < n; i++)
+        for (int i = 0, n = world->bullets.count; i < n; i++)
         {
             Entity* b = &world->bullets.elements[i];
 
             if (!b->active) continue;
-            for (int j = 0, m = world->seekers.length; j < m; j++)
+            for (int j = 0, m = world->seekers.count; j < m; j++)
             {
                 Entity* s = &world->seekers.elements[j];
                 if (!s->active || s->color.w < 1.0f) continue;
@@ -633,7 +633,7 @@ namespace WorldOps
             }
 
             if (!b->active) continue;
-            for (int j = 0, m = world->wanderers.length; j < m; j++)
+            for (int j = 0, m = world->wanderers.count; j < m; j++)
             {
                 Entity* s = &world->wanderers.elements[j];
                 if (!s->active || s->color.w < 1.0f) continue;
@@ -647,7 +647,7 @@ namespace WorldOps
             }
 
             if (!b->active) continue;
-            for (int j = 0, m = world->blackHoles.length; j < m; j++)
+            for (int j = 0, m = world->blackHoles.count; j < m; j++)
             {
                 Entity* s = &world->blackHoles.elements[j];
                 if (!s->active || s->color.w < 1.0f) continue;
@@ -668,7 +668,7 @@ namespace WorldOps
             }
         }
 
-        for (int j = 0, m = world->seekers.length; j < m; j++)
+        for (int j = 0, m = world->seekers.count; j < m; j++)
         {
             Entity* s = &world->seekers.elements[j];
             if (!s->active || s->color.w < 1.0f) continue;
@@ -680,7 +680,7 @@ namespace WorldOps
             }
         }
 
-        for (int j = 0, m = world->wanderers.length; j < m; j++)
+        for (int j = 0, m = world->wanderers.count; j < m; j++)
         {
             Entity* s = &world->wanderers.elements[j];
             if (!s->active || s->color.w < 1.0f) continue;
@@ -692,7 +692,7 @@ namespace WorldOps
             }
         }
 
-        for (int i = 0, n = world->blackHoles.length; i < n; i++)
+        for (int i = 0, n = world->blackHoles.count; i < n; i++)
         {
             Entity* s = &world->blackHoles.elements[i];
             if (s->active)
@@ -751,7 +751,7 @@ namespace WorldOps
                         break;
                     }
 
-                    for (int j = 0, m = world->seekers.length; j < m; j++)
+                    for (int j = 0, m = world->seekers.count; j < m; j++)
                     {
                         Entity* other = &world->seekers.elements[j];
                         if (!other->active || other->color.w < 1.0f) continue;
@@ -763,7 +763,7 @@ namespace WorldOps
                         }
                     }
 
-                    for (int j = 0, m = world->wanderers.length; j < m; j++)
+                    for (int j = 0, m = world->wanderers.count; j < m; j++)
                     {
                         Entity* other = &world->wanderers.elements[j];
                         if (!other->active || other->color.w < 1.0f) continue;

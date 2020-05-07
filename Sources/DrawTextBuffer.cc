@@ -102,7 +102,7 @@ void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, String text, Font f
             drawTextBuffer->shouldUpdate = true;
 
             I32 c = text[i];
-            if (c > 0 && c < font.glyphs.length)
+            if (c > 0 && c < font.glyphs.count)
             {
                 FontGlyph glyph = font.glyphs.elements[c];
 
@@ -112,7 +112,7 @@ void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, String text, Font f
                 Vector2 uv0 = Vector2{ glyph.u0, glyph.v0 };
                 Vector2 uv1 = Vector2{ glyph.u1, glyph.v1 };
 
-                const U16 startIndex = (U16)drawTextBuffer->vertices.length;
+                const U16 startIndex = (U16)drawTextBuffer->vertices.count;
                 ArrayOps::Push(&drawTextBuffer->indices, (U16)(startIndex + 0));
                 ArrayOps::Push(&drawTextBuffer->indices, (U16)(startIndex + 1));
                 ArrayOps::Push(&drawTextBuffer->indices, (U16)(startIndex + 2));

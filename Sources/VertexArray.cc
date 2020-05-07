@@ -28,7 +28,7 @@ namespace VertexArrayOps
             GL_FLOAT,           // Matrix4x4,
         };
 
-        return enums[(int)type];
+        return enums[(I32)type];
     }
 
     static inline GLint DataTypeComponents(DataType type)
@@ -54,7 +54,7 @@ namespace VertexArrayOps
             16, // Matrix4x4,
         };
 
-        return components[(int)type];
+        return components[(I32)type];
     }
 
     static inline GLenum BufferUsageToGLenum(BufferUsage usage)
@@ -67,7 +67,7 @@ namespace VertexArrayOps
             GL_DYNAMIC_DRAW,
         };
 
-        return enums[(int)usage];
+        return enums[(I32)usage];
     }
 
     VertexArray New(void)
@@ -105,7 +105,7 @@ namespace VertexArrayOps
         vertexArray->vertexBuffer = 0;
     }
 
-    void SetIndexData(VertexArray vertexArray, const void* data, int size, BufferUsage usage)
+    void SetIndexData(VertexArray vertexArray, const void* data, I32 size, BufferUsage usage)
     {
         glBindVertexArray(vertexArray.handle);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexArray.indexBuffer);
@@ -114,7 +114,7 @@ namespace VertexArrayOps
         glBindVertexArray(0);
     }
 
-    void SetVertexData(VertexArray vertexArray, const void* data, int size, BufferUsage usage)
+    void SetVertexData(VertexArray vertexArray, const void* data, I32 size, BufferUsage usage)
     {
         glBindVertexArray(vertexArray.handle);
         glBindBuffer(GL_ARRAY_BUFFER, vertexArray.vertexBuffer);
@@ -123,7 +123,7 @@ namespace VertexArrayOps
         glBindVertexArray(0);
     }
 
-    void DefineAttribute(VertexArray vertexArray, int location, DataType type, int stride, int offset)
+    void DefineAttribute(VertexArray vertexArray, I32 location, DataType type, I32 stride, I32 offset)
     {
         if (location < 0)
         {

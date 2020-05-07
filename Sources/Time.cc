@@ -4,14 +4,14 @@
 
 namespace Time
 {
-    int totalFrames = 0;
-    float framerate = 0.0f;
-    float deltaTime = 0.0f;
-    float totalTime = 0.0f;
-    float timeScale = 1.0f;
+    I32 totalFrames = 0;
+    F32 framerate = 0.0f;
+    F32 deltaTime = 0.0f;
+    F32 totalTime = 0.0f;
+    F32 timeScale = 1.0f;
 
-    float updateFramerateTimer    = 0.0f;
-    float updateFramerateInterval = 1.0f;
+    F32 updateFramerateTimer    = 0.0f;
+    F32 updateFramerateInterval = 1.0f;
 
     U64 prevCounter = 0;
 
@@ -35,60 +35,60 @@ namespace Time
        /* '#define NTAPI __stdcall' =)) */
        typedef LONG(__stdcall * NtDelayExecutionFN)(BOOL, PLARGE_INTEGER);
        
-       static int done_finding;
+       static bool haveLoadFunction;
        static NtDelayExecutionFN NtDelayExecution;
        
-       if (!NtDelayExecution && !done_finding)
+       if (!NtDelayExecution && !haveLoadFunction)
        {
-           done_finding = 1;
+           haveLoadFunction = true;
+
            HMODULE module = GetModuleHandle(TEXT("ntdll.dll"));
-           const char* func = "NtDelayExecution";
-           NtDelayExecution = (NtDelayExecutionFN)GetProcAddress(module, func);
+           NtDelayExecution = (NtDelayExecutionFN)GetProcAddress(module, "NtDelayExecution");
        }
        
        if (NtDelayExecution)
        {
            LARGE_INTEGER times;
-           times.QuadPart = -(I64)microseconds * 10;
+           times.QuadPart = -(LONGLONG)microseconds * 10;
            NtDelayExecution(FALSE, &times);
        }
        else
        {
-           ::Sleep((U32)(microseconds / 1000U));
+           ::Sleep((DWORD)(microseconds / 1000U));
        }
     }
 
-    float GetFramerate(void)
+    F32 GetFramerate(void)
     {
         return framerate;
     }
 
-    int GetTotalFrames(void)
+    I32 GetTotalFrames(void)
     {
         return totalFrames;
     }
 
-    float GetTotalTime(void)
+    F32 GetTotalTime(void)
     {
         return totalTime;
     }
 
-    float GetTimeScale(void)
+    F32 GetTimeScale(void)
     {
         return timeScale;
     }
 
-    void SetTimeScale(float timeScale)
+    void SetTimeScale(F32 timeScale)
     {
         Time::timeScale = timeScale;
     }
 
-    float GetDeltaTime(void)
+    F32 GetDeltaTime(void)
     {
         return deltaTime * timeScale;
     }
 
-    float GetUnscaledDeltaTime(void)
+    F32 GetUnscaledDeltaTime(void)
     {
         return deltaTime;
     }
@@ -98,7 +98,7 @@ namespace Time
         U64 counter = GetCounter();
         U64 ticks = counter - prevCounter;
 
-        deltaTime = (float)((double)ticks / (double)GetFrequency());
+        deltaTime = (F32)((F64)ticks / (F64)GetFrequency());
         totalTime = totalTime + deltaTime;
 
         updateFramerateTimer += deltaTime;
@@ -113,10 +113,10 @@ namespace Time
         prevCounter = counter;
     }
 
-    bool UpdateAndSleep(float targetFramerate)
+    bool UpdateAndSleep(F32 targetFramerate)
     {
-        U64 frequency = GetFrequency();
-        U64 limitTicks = (U64)(frequency / (double)(targetFramerate < 1.0f ? 1.0f : targetFramerate));
+        U64 frequency  = GetFrequency();
+        U64 limitTicks = (U64)(frequency / (F64)(targetFramerate < 1.0f ? 1.0f : targetFramerate));
 
         U64 counter = GetCounter();
         U64 ticks = prevCounter > 0 ? counter - prevCounter : limitTicks;
@@ -127,14 +127,14 @@ namespace Time
             isSleep = true;
 
             U64 remainTicks = limitTicks - ticks;
-            double remainSeconds = ((double)remainTicks) / frequency;
+            F64 remainSeconds = ((F64)remainTicks) / frequency;
             U64 remainMicroSeconds = (U64)(remainSeconds * 1000000ULL);
             MicroSleep(remainMicroSeconds);
 
             ticks = limitTicks;
         }
 
-        deltaTime = (float)((double)ticks / (double)frequency);
+        deltaTime = (F32)((F64)ticks / (F64)frequency);
         totalTime = totalTime + deltaTime;
 
         updateFramerateTimer += deltaTime;

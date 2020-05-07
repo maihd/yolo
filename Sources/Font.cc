@@ -18,7 +18,7 @@ namespace FontOps
         constexpr I32 TEXTURE_WIDTH     = 1024;
         constexpr I32 TEXTURE_HEIGHT    = 1024;
         constexpr I32 GLYPHS_COUNT      = 256;
-        File file = FileOps::Open(path, FileModes::Read);
+        File file = FileOps::Open(path, FileMode::Read);
         while (file)
         {
             I32 fileSize = FileOps::GetSize(file);

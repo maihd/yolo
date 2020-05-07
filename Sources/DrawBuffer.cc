@@ -37,7 +37,7 @@ namespace DrawBufferOps
     {
         assert(drawBuffer);
 
-        U16 startIndex = (U16)drawBuffer->vertices.length;
+        U16 startIndex = (U16)drawBuffer->vertices.count;
         ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 0u));
         ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 1u));
         ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 2u));
@@ -53,7 +53,7 @@ namespace DrawBufferOps
     {
         assert(drawBuffer);
 
-        AddTriangle(drawBuffer, vertices.elements, vertices.length);
+        AddTriangle(drawBuffer, vertices.elements, vertices.count);
     }
 
     void AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, I32 count)
@@ -138,7 +138,7 @@ namespace DrawBufferOps
                 { position.x + cosf(angle) * radius, position.y + sinf(angle) * radius },
             };
 
-            const U16 index = (U16)drawBuffer->vertices.length;
+            const U16 index = (U16)drawBuffer->vertices.count;
             ArrayOps::Push(&drawBuffer->indices, index);
             ArrayOps::Push(&drawBuffer->vertices, v);
         }
@@ -162,7 +162,7 @@ namespace DrawBufferOps
             { position.x + size.x, position.y },
         };
 
-        const U16 startIndex = (U16)drawBuffer->vertices.length;
+        const U16 startIndex = (U16)drawBuffer->vertices.count;
         ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 0u));
         ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 1u));
         ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 2u));
@@ -196,7 +196,7 @@ namespace DrawBufferOps
             { position.x + size.x, position.y },
         };
 
-        const U16 startIndex = (U16)drawBuffer->vertices.length;
+        const U16 startIndex = (U16)drawBuffer->vertices.count;
         ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 0u));
         ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 1u));
         ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 2u));

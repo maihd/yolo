@@ -8,9 +8,9 @@
 
 namespace DrawSpriteBufferOps
 {
-    static inline bool ShouldAppendCommand(DrawSpriteBuffer::Command command, Handle texture)
+    static inline bool ShouldAppendCommand(DrawSpriteBuffer::Command command, Handle textureHandle)
     {
-        return command.textureHandle == texture;
+        return command.textureHandle == textureHandle;
     }
 
     DrawSpriteBuffer New(void)
@@ -54,7 +54,7 @@ namespace DrawSpriteBufferOps
     {
         drawSpriteBuffer->shouldUpdate = true;
 
-        U16 startIndex = (U16)drawSpriteBuffer->vertices.length;
+        U16 startIndex = (U16)drawSpriteBuffer->vertices.count;
         ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
         ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
         ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
@@ -76,7 +76,7 @@ namespace DrawSpriteBufferOps
     {
         drawSpriteBuffer->shouldUpdate = true;
 
-        U16 startIndex = (U16)drawSpriteBuffer->vertices.length;
+        U16 startIndex = (U16)drawSpriteBuffer->vertices.count;
         ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
         ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
         ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
@@ -90,9 +90,9 @@ namespace DrawSpriteBufferOps
         ArrayOps::Push(&drawSpriteBuffer->vertices, v3);
 
         bool addNewCommand = true;
-        if (drawSpriteBuffer->commands.length > 0)
+        if (drawSpriteBuffer->commands.count > 0)
         {
-            DrawSpriteBuffer::Command* command = &drawSpriteBuffer->commands.elements[drawSpriteBuffer->commands.length - 1];
+            DrawSpriteBuffer::Command* command = &drawSpriteBuffer->commands.elements[drawSpriteBuffer->commands.count - 1];
             if (ShouldAppendCommand(*command, texture))
             {
                 command->indexCount += 6;
@@ -112,9 +112,16 @@ namespace DrawSpriteBufferOps
         }
     }
 
-    void AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, Vector2 position, F32 rotation, Vector2 scale, Vector4 color);
+    void AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, Vector2 position, F32 rotation, Vector2 scale, Vector4 color)
+    {
 
-    void AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, Vector2 position, F32 rotation, Vector2 scale, Vector4 color);
+    }
+
+    void AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, Vector2 position, F32 rotation, Vector2 scale, Vector4 color)
+    {
+
+    }
+
     void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, Vector2 position, F32 rotation, Vector2 scale, Vector4 color, Vector2 pivot)
     {
         Matrix4 transform = Math::Transform2D(position, rotation, scale, pivot * Vector2{ (F32)texture.width, (F32)texture.height });
@@ -178,7 +185,7 @@ namespace DrawSpriteBufferOps
         glBindBuffer(GL_ARRAY_BUFFER, drawSpriteBuffer->vertexArray.vertexBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawSpriteBuffer->vertexArray.indexBuffer);
 
-        for (I32 i = 0, n = drawSpriteBuffer->commands.length; i < n; i++)
+        for (I32 i = 0, n = drawSpriteBuffer->commands.count; i < n; i++)
         {
             DrawSpriteBuffer::Command command = drawSpriteBuffer->commands.elements[i];
 

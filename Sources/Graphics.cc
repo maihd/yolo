@@ -388,7 +388,7 @@ namespace Graphics
         glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.vertexArray.vertexBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.vertexArray.indexBuffer);
 
-        GLsizei indexCount = drawBuffer.indices.length;
+        GLsizei indexCount = drawBuffer.indices.count;
         glDrawElements(drawMode, indexCount, GL_UNSIGNED_SHORT, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -537,7 +537,7 @@ namespace Graphics
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, font.texture.handle);
 
-        I32 indexCount = drawTextBuffer.indices.length;
+        I32 indexCount = drawTextBuffer.indices.count;
         glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0);
 
         glBindTexture(GL_TEXTURE_2D, 0);
