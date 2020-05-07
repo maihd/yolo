@@ -5,13 +5,6 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#ifndef HOTDYLIB_PDB_UNLOCK
-#define HOTDYLIB_PDB_UNLOCK 1
-#endif
-
-#define HOTDYLIB_MAX_PATH   1024
-#define HotDylib_CountOf(x) (sizeof(x) / sizeof((x)[0]))
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +13,13 @@
 #include <signal.h>
 
 #include <Yolo/HotDylib.h>
+
+#ifndef HOTDYLIB_PDB_UNLOCK
+#define HOTDYLIB_PDB_UNLOCK 1
+#endif
+
+constexpr int HOTDYLIB_MAX_PATH = 1024;
+#define HotDylib_CountOf(x) (sizeof(x) / sizeof((x)[0]))
 
 #if defined(__MINGW32__) || (defined(_WIN32) && defined(__clang__))
 #   define HOTDYLIB_TRY(lib)      if (SEHBegin(lib))
@@ -530,7 +530,7 @@ namespace HotDylibOps
     }
 
     #undef GetTempPath
-    static int GetTempPath(String path, char* buffer, int length)
+    static int GetTempPath(String path, char* buffer, I32 length)
     {
         int res;
 

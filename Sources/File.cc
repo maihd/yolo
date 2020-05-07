@@ -38,7 +38,7 @@ namespace FileOps
                 if (!Exists(path, false))
                 {
                     String originPath = path;
-                    for (int i = 0, n = searchPaths.length; i < n; i++)
+                    for (I32 i = 0, n = searchPaths.length; i < n; i++)
                     {
                         String searchPath = searchPaths.elements[i];
 
@@ -68,7 +68,7 @@ namespace FileOps
             if (!Exists(path, false))
             {
                 String originPath = path;
-                for (int i = 0, n = searchPaths.length; i < n; i++)
+                for (I32 i = 0, n = searchPaths.length; i < n; i++)
                 {
                     String searchPath = searchPaths.elements[i];
 
@@ -88,7 +88,7 @@ namespace FileOps
         }
     }
 
-    File Open(String path, int mode)
+    File Open(String path, FileMode mode)
     {
         String fullPath = GetFullPath(path);
         if (fullPath == "")
@@ -287,21 +287,21 @@ namespace FileOps
         CloseHandle((HANDLE)file);
     }
 
-    int GetSize(File file)
+    I32 GetSize(File file)
     {
-        return (int)::GetFileSize((HANDLE)file, 0);
+        return (I32)::GetFileSize((HANDLE)file, 0);
     }
 
-    int GetSize(String path)
+    I32 GetSize(String path)
     {
         File file = Open(path, FileModes::Read);
-        int  size = GetSize(file);
+        I32  size = GetSize(file);
         Close(file);
 
         return size;
     }
 
-    int64 GetSize64(File file)
+    I64 GetSize64(File file)
     {
         LARGE_INTEGER size;
         if (::GetFileSizeEx((HANDLE)file, &size))
@@ -314,16 +314,16 @@ namespace FileOps
         }
     }
 
-    int64 GetSize64(String path)
+    I64 GetSize64(String path)
     {
         File  file = Open(path, FileModes::Read);
-        int64 size = GetSize64(file);
+        I64 size = GetSize64(file);
         Close(file);
 
         return size;
     }
 
-    int Read(File file, void* buffer, int length)
+    I32 Read(File file, void* buffer, I32 length)
     {
         if (length <= 0)
         {
@@ -333,7 +333,7 @@ namespace FileOps
         DWORD readBytes;
         if (::ReadFile((HANDLE)file, buffer, (DWORD)length, &readBytes, 0))
         {
-            return (int)readBytes;
+            return (I32)readBytes;
         }
         else
         {
@@ -341,7 +341,7 @@ namespace FileOps
         }
     }
 
-    int Write(File file, const void* buffer, int length)
+    I32 Write(File file, const void* buffer, I32 length)
     {
         if (length <= 0)
         {
@@ -351,7 +351,7 @@ namespace FileOps
         DWORD writeBytes;
         if (::WriteFile((HANDLE)file, buffer, (DWORD)length, &writeBytes, 0))
         {
-            return (int)writeBytes;
+            return (I32)writeBytes;
         }
         else
         {

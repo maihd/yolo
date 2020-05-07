@@ -2,21 +2,22 @@
 
 // Primitive types
 
-using byte    = unsigned char;
-using uint    = unsigned int;
+using I8        = signed char;
+using I16       = signed short;
+using I32       = signed int;
+using I64       = signed long long;
 
-using int8    = signed char;
-using int16   = signed short;
-using int32   = signed int;
-using int64   = signed long long;
-using uint8   = unsigned char;
-using uint16  = unsigned short;
-using uint32  = unsigned int;
-using uint64  = unsigned long long;
+using U8        = unsigned char;
+using U16       = unsigned short;
+using U32       = unsigned int;
+using U64       = unsigned long long;
 
-using String  = const char*;
-using Handle  = unsigned int;
-using NullPtr = decltype(nullptr);
+using F32       = float;
+using F64       = double;
+
+using String    = const char*;
+using Handle    = unsigned int;
+using NullPtr   = decltype(nullptr);
 
 // Arguments
 
@@ -38,27 +39,27 @@ struct Matrix4;
 
 struct Vector2
 {
-    float x, y;
+    F32 x, y;
 };
 
 struct Vector3
 {
-    float x, y, z;
+    F32 x, y, z;
 };
 
 struct Vector4
 {
-    float x, y, z, w;
+    F32 x, y, z, w;
 };
 
 struct Quaternion
 {
-    float x, y, z, w;
+    F32 x, y, z, w;
 };
 
 struct Matrix4
 {
-    float data[4][4];
+    F32 data[4][4];
 };
 
 // Container types
@@ -66,30 +67,30 @@ struct Matrix4
 template <typename T>
 struct Array
 {
-    int length;
-    int capacity;
+    I32 length;
+    I32 capacity;
     T*  elements;
 };
 
 template <typename T>
 struct HashTable
 {
-    int         count;
-    int         capacity;
+    I32         count;
+    I32         capacity;
 
-    int*        hashs;
-    int         hashCount;
+    I32*        hashs;
+    I32         hashCount;
 
-    int*        nexts;
-    uint64*     keys;
+    I32*        nexts;
+    U64*        keys;
     T*          values;
 };
 
 template <typename TKey, typename TValue>
 struct OrderedTable
 {
-    int         count;
-    int         capacity;
+    I32         count;
+    I32         capacity;
 
     TKey*       keys;
     TValue*     values;
@@ -131,7 +132,7 @@ struct Function<R(Args...)>
     {
         static_assert(sizeof(lambda) <= sizeof(void*), "Lambda is too big, it must be <= sizeof(void*). We only should one variable binding, because closure is undefined behaviour.");
 
-        this->context = *(void**)&lambda;
+        this->context  = *(void**)&lambda;
         this->executor = &ExecuteLambda<T>;
     }
 
@@ -188,7 +189,7 @@ struct Job
 
 namespace FileModes
 {
-    enum
+    enum Type
     {
         None,
 
@@ -216,6 +217,7 @@ namespace FileModes
     };
 };
 
+using FileMode = FileModes::Type;
 using File = Handle;
 
 // Graphics
@@ -243,16 +245,16 @@ enum struct DataType
 {
     Void,
 
-    Int8,
-    Int16,
-    Int32,
+    I8,
+    I16,
+    I32,
 
-    Uint8,
-    Uint16,
-    Uint32,
+    U8,
+    U16,
+    U32,
 
-    Float32,
-    Float64,
+    F32,
+    F64,
 
     Vector2,
     Vector3,
@@ -282,8 +284,8 @@ struct Texture
     Handle      handle;
     PixelFormat format;
 
-    int         width;
-    int         height;
+    I32         width;
+    I32         height;
 };
 
 struct Shader
@@ -293,20 +295,20 @@ struct Shader
 
 struct FontGlyph
 {
-    int     value;
+    I32     value;
 
-    float   x0, y0;
-    float   x1, y1;
+    F32     x0, y0;
+    F32     x1, y1;
 
-    float   u0, v0;
-    float   u1, v1;
+    F32     u0, v0;
+    F32     u1, v1;
 
-    float   advance;
+    F32     advance;
 };
 
 struct Font
 {
-    float               size;
+    F32                 size;
     Array<FontGlyph>    glyphs;
 
     Texture             texture;
@@ -316,10 +318,10 @@ struct Sprite
 {
     Texture texture;
 
-    int     x;
-    int     y;
-    int     width;
-    int     height;
+    I32     x;
+    I32     y;
+    I32     width;
+    I32     height;
 };
 
 // Audios
@@ -353,15 +355,15 @@ struct AudioSource
 #define offsetof(s, m) (int)__builtin_offsetof(s,m)
 #endif
 
-template <typename T, int count>
-constexpr int CountOf(const T(&_)[count])
+template <typename T, I32 count>
+constexpr I32 CountOf(const T(&_)[count])
 {
     return count;
 }
 
-inline int NextPOT(int x)
+inline I32 NextPOT(I32 x)
 {
-    int result = x - 1;
+    I32 result = x - 1;
 
     result = result | (result >> 1);
     result = result | (result >> 2);
@@ -372,32 +374,46 @@ inline int NextPOT(int x)
     return result + 1;
 }
 
-uint64 CalcHash64(const void* buffer, int length, uint64 seed = 0);
-
-template <uint64 length>
-constexpr uint64 CalcHash64(const char(&buffer)[length], uint64 seed = 0)
+inline I64 NextPOT(I64 x)
 {
-    uint8* target = (uint8*)buffer;
+    I64 result = x - 1;
 
-    uint64 h = seed;
+    result = result | (result >> 1);
+    result = result | (result >> 2);
+    result = result | (result >> 4);
+    result = result | (result >> 8);
+    result = result | (result >> 16);
+    result = result | (result >> 32);
 
-    const uint32 l = length - 1;
-    const uint32 n = (l >> 3) << 3;
+    return result + 1;
+}
 
-    for (uint32 i = 0; i < n; i += 8)
+U64 CalcHash64(const void* buffer, I32 length, U64 seed = 0);
+
+template <U64 length>
+constexpr U64 CalcHash64(const char (&buffer)[length], U64 seed = 0)
+{
+    U8* target = (U8*)buffer;
+
+    U64 h = seed;
+
+    const U32 l = length - 1;
+    const U32 n = (l >> 3) << 3;
+
+    for (U32 i = 0; i < n; i += 8)
     {
-        uint64 b0 = target[i + 0];
-        uint64 b1 = target[i + 1];
-        uint64 b2 = target[i + 2];
-        uint64 b3 = target[i + 3];
-        uint64 b4 = target[i + 4];
-        uint64 b5 = target[i + 5];
-        uint64 b6 = target[i + 6];
-        uint64 b7 = target[i + 7];
+        U64 b0 = target[i + 0];
+        U64 b1 = target[i + 1];
+        U64 b2 = target[i + 2];
+        U64 b3 = target[i + 3];
+        U64 b4 = target[i + 4];
+        U64 b5 = target[i + 5];
+        U64 b6 = target[i + 6];
+        U64 b7 = target[i + 7];
 #if CPU_LITTLE_ENDIAN
-        uint64 k = (b7 << 56) | (b6 << 48) | (b5 << 40) | (b4 << 32) | (b3 << 24) | (b2 << 16) | (b1 << 8) | (b0 << 0);
+        U64 k = (b7 << 56) | (b6 << 48) | (b5 << 40) | (b4 << 32) | (b3 << 24) | (b2 << 16) | (b1 << 8) | (b0 << 0);
 #else
-        uint64 k = (b0 << 56) | (b1 << 48) | (b2 << 40) | (b3 << 32) | (b4 << 24) | (b5 << 16) | (b6 << 8) | (b7 << 0);
+        U64 k = (b0 << 56) | (b1 << 48) | (b2 << 40) | (b3 << 32) | (b4 << 24) | (b5 << 16) | (b6 << 8) | (b7 << 0);
 #endif
 
         k ^= (k << 12);
@@ -409,13 +425,13 @@ constexpr uint64 CalcHash64(const char(&buffer)[length], uint64 seed = 0)
 
     switch (l & 7)
     {
-    case 7: h ^= (uint64)((target + n)[6]) << 48;   /* fall through */
-    case 6: h ^= (uint64)((target + n)[5]) << 40;   /* fall through */
-    case 5: h ^= (uint64)((target + n)[4]) << 32;   /* fall through */
-    case 4: h ^= (uint64)((target + n)[3]) << 24;   /* fall through */
-    case 3: h ^= (uint64)((target + n)[2]) << 16;   /* fall through */
-    case 2: h ^= (uint64)((target + n)[1]) << 8;   /* fall through */
-    case 1: h ^= (uint64)((target + n)[0]) << 0;   /* fall through */
+    case 7: h ^= (U64)((target + n)[6]) << 48;   /* fall through */
+    case 6: h ^= (U64)((target + n)[5]) << 40;   /* fall through */
+    case 5: h ^= (U64)((target + n)[4]) << 32;   /* fall through */
+    case 4: h ^= (U64)((target + n)[3]) << 24;   /* fall through */
+    case 3: h ^= (U64)((target + n)[2]) << 16;   /* fall through */
+    case 2: h ^= (U64)((target + n)[1]) <<  8;   /* fall through */
+    case 1: h ^= (U64)((target + n)[0]) <<  0;   /* fall through */
     };
 
     h ^= (h << 12);

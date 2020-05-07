@@ -8,7 +8,11 @@ namespace Graphics
     void    Quit(void);
 
     void    Clear(void);
-    void    ClearColor(float r, float g, float b, float a = 1.0f);
+
+    Vector4 GetClearColor(void);
+    void    SetClearColor(Vector3 color);
+    void    SetClearColor(Vector4 color);
+    void    SetClearColor(F32 r, F32 g, F32 b, F32 a = 1.0f);
 
     void    Present(void);
 
@@ -18,7 +22,7 @@ namespace Graphics
     bool    IsWireframe(void);
     void    SetWireframe(bool enable);
 
-    Matrix4    GetProjection(void);
+    Matrix4 GetProjection(void);
     void    SetProjection(Matrix4 projection);
 
     float   GetLineWidth(void);

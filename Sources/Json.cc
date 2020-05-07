@@ -846,7 +846,7 @@ namespace JsonOps
         return Find(obj, CalcHash64(name));
     }
 
-    Json Find(Json obj, uint64 hash)
+    Json Find(Json obj, U64 hash)
     {
         if (obj.type == JsonType::Object)
         {

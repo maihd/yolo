@@ -399,6 +399,6 @@ namespace Window
 
     Handle GetHandle(void)
     {
-        return (Handle)(uint64)Runtime::mainWindow;
+        return (Handle)(U64)Runtime::mainWindow;
     }
 }

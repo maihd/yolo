@@ -20,12 +20,12 @@ namespace StringOps
 
     String Intern(String source)
     {
-        uint64 hash = CalcHash64(source);
+        U64 hash = CalcHash64(source);
 
         return Intern(hash, source);
     }
 
-    String Intern(uint64 hash, String source)
+    String Intern(U64 hash, String source)
     {
         if (Length(source) == 0)
         {
@@ -45,7 +45,7 @@ namespace StringOps
         }
     }
 
-    String InternNoAllocation(uint64 hash, String source)
+    String InternNoAllocation(U64 hash, String source)
     {
         if (Length(source) == 0)
         {

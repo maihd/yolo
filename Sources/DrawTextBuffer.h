@@ -11,8 +11,8 @@ struct DrawTextBuffer
     Handle  indexBuffer;
     Handle  vertexArray;
 
-    Array<Vertex> vertices;
-    Array<uint16> indices;
+    Array<Vertex>   vertices;
+    Array<U16>      indices;
 
     static DrawTextBuffer   New();
     static void             Free(DrawTextBuffer* drawBuffer);

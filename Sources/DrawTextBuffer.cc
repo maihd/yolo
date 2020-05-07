@@ -8,13 +8,13 @@
 
 DrawTextBuffer DrawTextBuffer::New()
 {
-    return { 
+    return DrawTextBuffer{
         false,
         0, 
         0, 
         0, 
         ArrayOps::New<Vertex>(), 
-        ArrayOps::New<uint16>(),
+        ArrayOps::New<U16>(),
     };
 }
 
@@ -91,17 +91,17 @@ void DrawTextBuffer::UpdateBuffers(DrawTextBuffer* drawBuffer)
 
 void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, String text, Font font)
 {
-    int length = StringOps::Length(text);
+    I32 length = StringOps::Length(text);
     if (length > 0)
     {
-        float advanceX = 0;
-        float advanceY = 0;
+        F32 advanceX = 0;
+        F32 advanceY = 0;
 
-        for (int i = 0; i < length; i++)
+        for (I32 i = 0; i < length; i++)
         {
             drawTextBuffer->shouldUpdate = true;
 
-            int c = text[i];
+            I32 c = text[i];
             if (c > 0 && c < font.glyphs.length)
             {
                 FontGlyph glyph = font.glyphs.elements[c];
@@ -112,13 +112,13 @@ void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, String text, Font f
                 Vector2 uv0 = Vector2{ glyph.u0, glyph.v0 };
                 Vector2 uv1 = Vector2{ glyph.u1, glyph.v1 };
 
-                const uint16 startIndex = (uint16)drawTextBuffer->vertices.length;
-                ArrayOps::Push(&drawTextBuffer->indices, (uint16)(startIndex + 0));
-                ArrayOps::Push(&drawTextBuffer->indices, (uint16)(startIndex + 1));
-                ArrayOps::Push(&drawTextBuffer->indices, (uint16)(startIndex + 2));
-                ArrayOps::Push(&drawTextBuffer->indices, (uint16)(startIndex + 0));
-                ArrayOps::Push(&drawTextBuffer->indices, (uint16)(startIndex + 2));
-                ArrayOps::Push(&drawTextBuffer->indices, (uint16)(startIndex + 3));
+                const U16 startIndex = (U16)drawTextBuffer->vertices.length;
+                ArrayOps::Push(&drawTextBuffer->indices, (U16)(startIndex + 0));
+                ArrayOps::Push(&drawTextBuffer->indices, (U16)(startIndex + 1));
+                ArrayOps::Push(&drawTextBuffer->indices, (U16)(startIndex + 2));
+                ArrayOps::Push(&drawTextBuffer->indices, (U16)(startIndex + 0));
+                ArrayOps::Push(&drawTextBuffer->indices, (U16)(startIndex + 2));
+                ArrayOps::Push(&drawTextBuffer->indices, (U16)(startIndex + 3));
 
                 ArrayOps::Push(&drawTextBuffer->vertices, Vertex{ pos0.x, pos0.y, 0.0f, uv0.x, uv0.y });
                 ArrayOps::Push(&drawTextBuffer->vertices, Vertex{ pos0.x, pos1.y, 0.0f, uv0.x, uv1.y });

@@ -17,7 +17,7 @@ namespace DrawBufferOps
             false,
             vertexArray,
             ArrayOps::New<VertexShape>(),
-            ArrayOps::New<uint16>()
+            ArrayOps::New<U16>()
         };
 
         return drawBuffer;
@@ -37,10 +37,10 @@ namespace DrawBufferOps
     {
         assert(drawBuffer);
 
-        uint16 startIndex = (uint16)drawBuffer->vertices.length;
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
+        U16 startIndex = (U16)drawBuffer->vertices.length;
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 0u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 1u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 2u));
 
         ArrayOps::Push(&drawBuffer->vertices, v0);
         ArrayOps::Push(&drawBuffer->vertices, v1);
@@ -56,11 +56,11 @@ namespace DrawBufferOps
         AddTriangle(drawBuffer, vertices.elements, vertices.length);
     }
 
-    void AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, int count)
+    void AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, I32 count)
     {
         assert(drawBuffer);
 
-        for (int i = 0; i < count; i += 3)
+        for (I32 i = 0; i < count; i += 3)
         {
             VertexShape v0 = vertices[i + 0];
             VertexShape v1 = vertices[i + 1];
@@ -91,18 +91,18 @@ namespace DrawBufferOps
         }
     }
 
-    void AddCircle(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, int segments)
+    void AddCircle(DrawBuffer* drawBuffer, Vector2 position, F32 radius, Vector4 color, I32 segments)
     {
         assert(drawBuffer);
 
         segments = segments < 0 ? 30 : segments;
 
-        float step = PI * 2.0f / segments;
+        F32 step = PI * 2.0f / segments;
 
-        for (int i = 0; i < segments; i++)
+        for (I32 i = 0; i < segments; i++)
         {
-            float angle0 = step * i;
-            float angle1 = step * (i + 1);
+            F32 angle0 = step * i;
+            F32 angle1 = step * (i + 1);
 
             const VertexShape v0 = {
                 { position.x + cosf(angle0) * radius, position.y + sinf(angle0) * radius },
@@ -120,7 +120,7 @@ namespace DrawBufferOps
         }
     }
 
-    void AddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, int segments)
+    void AddCircleLines(DrawBuffer* drawBuffer, Vector2 position, F32 radius, Vector4 color, I32 segments)
     {
         assert(drawBuffer != nullptr);
 
@@ -128,17 +128,17 @@ namespace DrawBufferOps
 
         segments = segments < 0 ? 30 : segments;
 
-        float step = PI * 2.0f / segments;
+        F32 step = PI * 2.0f / segments;
 
-        for (int i = 0; i <= segments; i++)
+        for (I32 i = 0; i <= segments; i++)
         {
-            float angle = step * i;
+            F32 angle = step * i;
 
             const VertexShape v = {
                 { position.x + cosf(angle) * radius, position.y + sinf(angle) * radius },
             };
 
-            const uint16 index = (uint16)drawBuffer->vertices.length;
+            const U16 index = (U16)drawBuffer->vertices.length;
             ArrayOps::Push(&drawBuffer->indices, index);
             ArrayOps::Push(&drawBuffer->vertices, v);
         }
@@ -162,13 +162,13 @@ namespace DrawBufferOps
             { position.x + size.x, position.y },
         };
 
-        const uint16 startIndex = (uint16)drawBuffer->vertices.length;
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 3u));
+        const U16 startIndex = (U16)drawBuffer->vertices.length;
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 0u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 1u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 2u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 0u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 2u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 3u));
 
         ArrayOps::Push(&drawBuffer->vertices, v0);
         ArrayOps::Push(&drawBuffer->vertices, v1);
@@ -196,12 +196,12 @@ namespace DrawBufferOps
             { position.x + size.x, position.y },
         };
 
-        const uint16 startIndex = (uint16)drawBuffer->vertices.length;
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 1u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 2u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 3u));
-        ArrayOps::Push(&drawBuffer->indices, (uint16)(startIndex + 0u));
+        const U16 startIndex = (U16)drawBuffer->vertices.length;
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 0u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 1u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 2u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 3u));
+        ArrayOps::Push(&drawBuffer->indices, (U16)(startIndex + 0u));
 
         ArrayOps::Push(&drawBuffer->vertices, v0);
         ArrayOps::Push(&drawBuffer->vertices, v1);

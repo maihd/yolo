@@ -10,16 +10,16 @@ namespace VertexArrayOps
         const GLenum enums[] = {
             0,                  // Void,
 
-            GL_BYTE,            // Int8,
-            GL_SHORT,           // Int16,
-            GL_INT,             // Int32,
+            GL_BYTE,            // I8,
+            GL_SHORT,           // I16,
+            GL_INT,             // I32,
 
-            GL_UNSIGNED_BYTE,   // Uint8,
-            GL_UNSIGNED_SHORT,  // Uint16,
-            GL_UNSIGNED_INT,    // Uint32,
+            GL_UNSIGNED_BYTE,   // U8,
+            GL_UNSIGNED_SHORT,  // U16,
+            GL_UNSIGNED_INT,    // U32,
 
-            GL_FLOAT,           // Float32,
-            GL_DOUBLE,          // Float64,
+            GL_FLOAT,           // F32,
+            GL_DOUBLE,          // F64,
 
             GL_FLOAT,           // Vector2,
             GL_FLOAT,           // Vector3,
@@ -36,16 +36,16 @@ namespace VertexArrayOps
         const GLint components[] = {
             0,  // Void,
 
-            1,  // Int8,
-            1,  // Int16,
-            1,  // Int32,
+            1,  // I8,
+            1,  // I16,
+            1,  // I32,
 
-            1,  // Uint8,
-            1,  // Uint16,
-            1,  // Uint32,
+            1,  // U8,
+            1,  // U16,
+            1,  // U32,
 
-            1,  // Float32,
-            1,  // Float64,
+            1,  // F32,
+            1,  // F64,
 
             2,  // Vector2,
             3,  // Vector3,

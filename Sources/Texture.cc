@@ -55,7 +55,7 @@ namespace TextureOps
             return {};
         }
 
-        uint64 textureHash = CalcHash64(fullPath);
+        U64 textureHash = CalcHash64(fullPath);
 
         Texture cachedTexture;
         if (HashTableOps::TryGetValue(loadedTextures, textureHash, &cachedTexture))

@@ -25,7 +25,7 @@ namespace DrawSpriteBufferOps
             vertexArray,
 
             ArrayOps::New<VertexColor>(),
-            ArrayOps::New<uint16>(),
+            ArrayOps::New<U16>(),
             ArrayOps::New<DrawSpriteBuffer::Command>(),
         };
     }
@@ -54,10 +54,10 @@ namespace DrawSpriteBufferOps
     {
         drawSpriteBuffer->shouldUpdate = true;
 
-        uint16 startIndex = (uint16)drawSpriteBuffer->vertices.length;
-        ArrayOps::Push(&drawSpriteBuffer->indices, (uint16)(startIndex + 0));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (uint16)(startIndex + 1));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (uint16)(startIndex + 2));
+        U16 startIndex = (U16)drawSpriteBuffer->vertices.length;
+        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
+        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
+        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
 
         ArrayOps::Push(&drawSpriteBuffer->vertices, v0);
         ArrayOps::Push(&drawSpriteBuffer->vertices, v1);
@@ -76,13 +76,13 @@ namespace DrawSpriteBufferOps
     {
         drawSpriteBuffer->shouldUpdate = true;
 
-        uint16 startIndex = (uint16)drawSpriteBuffer->vertices.length;
-        ArrayOps::Push(&drawSpriteBuffer->indices, (uint16)(startIndex + 0));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (uint16)(startIndex + 1));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (uint16)(startIndex + 2));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (uint16)(startIndex + 0));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (uint16)(startIndex + 2));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (uint16)(startIndex + 3));
+        U16 startIndex = (U16)drawSpriteBuffer->vertices.length;
+        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
+        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
+        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
+        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
+        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
+        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 3));
 
         ArrayOps::Push(&drawSpriteBuffer->vertices, v0);
         ArrayOps::Push(&drawSpriteBuffer->vertices, v1);
@@ -112,17 +112,17 @@ namespace DrawSpriteBufferOps
         }
     }
 
-    void AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, Vector2 position, float rotation, Vector2 scale, Vector4 color);
+    void AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, Vector2 position, F32 rotation, Vector2 scale, Vector4 color);
 
-    void AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, Vector2 position, float rotation, Vector2 scale, Vector4 color);
-    void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, Vector2 position, float rotation, Vector2 scale, Vector4 color, Vector2 pivot)
+    void AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, Vector2 position, F32 rotation, Vector2 scale, Vector4 color);
+    void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, Vector2 position, F32 rotation, Vector2 scale, Vector4 color, Vector2 pivot)
     {
-        Matrix4 transform = Math::Transform2D(position, rotation, scale, pivot * Vector2{ (float)texture.width, (float)texture.height });
+        Matrix4 transform = Math::Transform2D(position, rotation, scale, pivot * Vector2{ (F32)texture.width, (F32)texture.height });
 
         Vector3 pos0 = mul(transform, Vector3{ 0, 0 });
-        Vector3 pos1 = mul(transform, Vector3{ 0, (float)texture.height });
-        Vector3 pos2 = mul(transform, Vector3{ (float)texture.width, (float)texture.height });
-        Vector3 pos3 = mul(transform, Vector3{ (float)texture.width, 0 });
+        Vector3 pos1 = mul(transform, Vector3{ 0, (F32)texture.height });
+        Vector3 pos2 = mul(transform, Vector3{ (F32)texture.width, (F32)texture.height });
+        Vector3 pos3 = mul(transform, Vector3{ (F32)texture.width, 0 });
 
         VertexColor v0 = {
             pos0,
@@ -171,21 +171,21 @@ namespace DrawSpriteBufferOps
         Matrix4 model = Math::Translation(0, 0, 0);
 
         glUseProgram(shader.handle);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (float*)&model);
+        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (F32*)&projection);
+        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (F32*)&model);
 
         glBindVertexArray(drawSpriteBuffer->vertexArray.handle);
         glBindBuffer(GL_ARRAY_BUFFER, drawSpriteBuffer->vertexArray.vertexBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawSpriteBuffer->vertexArray.indexBuffer);
 
-        for (int i = 0, n = drawSpriteBuffer->commands.length; i < n; i++)
+        for (I32 i = 0, n = drawSpriteBuffer->commands.length; i < n; i++)
         {
             DrawSpriteBuffer::Command command = drawSpriteBuffer->commands.elements[i];
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, command.textureHandle);
 
-            glDrawElements(GL_TRIANGLES, command.indexCount, GL_UNSIGNED_SHORT, (const void*)(GLintptr)(command.indexOffset * sizeof(uint16)));
+            glDrawElements(GL_TRIANGLES, command.indexCount, GL_UNSIGNED_SHORT, (const void*)(GLintptr)(command.indexOffset * sizeof(U16)));
 
             glBindTexture(GL_TEXTURE_2D, 0);
         }

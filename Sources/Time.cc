@@ -13,22 +13,22 @@ namespace Time
     float updateFramerateTimer    = 0.0f;
     float updateFramerateInterval = 1.0f;
 
-    uint64 prevCounter = 0;
+    U64 prevCounter = 0;
 
-    uint64 GetCounter(void)
+    U64 GetCounter(void)
     {
         LARGE_INTEGER value;
-        return QueryPerformanceCounter(&value) ? (uint64)value.QuadPart : 0;
+        return QueryPerformanceCounter(&value) ? (U64)value.QuadPart : 0;
     }
 
-    uint64 GetFrequency(void)
+    U64 GetFrequency(void)
     {
         LARGE_INTEGER value;
-        return QueryPerformanceFrequency(&value) ? (uint64)value.QuadPart : 0;
+        return QueryPerformanceFrequency(&value) ? (U64)value.QuadPart : 0;
     }
 
 
-    void MicroSleep(uint64 microseconds)
+    void MicroSleep(U64 microseconds)
     {
        /* 'NTSTATUS NTAPI NtDelayExecution(BOOL Alerted, PLARGE_INTEGER time);' */
        /* 'typedef LONG NTSTATUS;' =)) */
@@ -49,12 +49,12 @@ namespace Time
        if (NtDelayExecution)
        {
            LARGE_INTEGER times;
-           times.QuadPart = -(int64)microseconds * 10;
+           times.QuadPart = -(I64)microseconds * 10;
            NtDelayExecution(FALSE, &times);
        }
        else
        {
-           ::Sleep((uint32)(microseconds / 1000U));
+           ::Sleep((U32)(microseconds / 1000U));
        }
     }
 
@@ -95,8 +95,8 @@ namespace Time
 
     void Update(void)
     {
-        uint64 counter = GetCounter();
-        uint64 ticks = counter - prevCounter;
+        U64 counter = GetCounter();
+        U64 ticks = counter - prevCounter;
 
         deltaTime = (float)((double)ticks / (double)GetFrequency());
         totalTime = totalTime + deltaTime;
@@ -115,20 +115,20 @@ namespace Time
 
     bool UpdateAndSleep(float targetFramerate)
     {
-        uint64 frequency = GetFrequency();
-        uint64 limitTicks = (uint64)(frequency / (double)(targetFramerate < 1.0f ? 1.0f : targetFramerate));
+        U64 frequency = GetFrequency();
+        U64 limitTicks = (U64)(frequency / (double)(targetFramerate < 1.0f ? 1.0f : targetFramerate));
 
-        uint64 counter = GetCounter();
-        uint64 ticks = prevCounter > 0 ? counter - prevCounter : limitTicks;
+        U64 counter = GetCounter();
+        U64 ticks = prevCounter > 0 ? counter - prevCounter : limitTicks;
 
         bool isSleep = false;
         if (ticks < limitTicks)
         {
             isSleep = true;
 
-            uint64 remainTicks = limitTicks - ticks;
+            U64 remainTicks = limitTicks - ticks;
             double remainSeconds = ((double)remainTicks) / frequency;
-            uint64 remainMicroSeconds = (uint64)(remainSeconds * 1000000ULL);
+            U64 remainMicroSeconds = (U64)(remainSeconds * 1000000ULL);
             MicroSleep(remainMicroSeconds);
 
             ticks = limitTicks;

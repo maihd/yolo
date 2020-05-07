@@ -10,7 +10,7 @@ struct Rect
 
 struct Circle
 {
-    Vector2  position;
-    float radius;  
+    Vector2 position;
+    F32     radius;  
 };
 

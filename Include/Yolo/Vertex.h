@@ -19,7 +19,7 @@ struct VertexColorU32
 {
     Vector3     position;
     Vector2     uv;
-    uint32      color;
+    U32         color;
 };
 
 struct VertexShape
@@ -36,5 +36,5 @@ struct VertexShapeColor
 struct VertexShapeColorU32
 {
     Vector3     position;
-    uint32      color;
+    U32         color;
 };

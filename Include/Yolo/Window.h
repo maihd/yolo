@@ -4,7 +4,7 @@
 
 namespace Window
 {
-    bool    Init(String title, int width, int height);
+    bool    Init(String title, I32 width, I32 height);
     void    Quit(void);
 
     bool    PollEvents(void);
@@ -12,9 +12,9 @@ namespace Window
 
     bool    ShouldQuit(void);
 
-    Vector2    GetSize(void);
-    int     GetWidth(void);
-    int     GetHeight(void);
+    Vector2 GetSize(void);
+    I32     GetWidth(void);
+    I32     GetHeight(void);
 
     Handle  GetHandle(void);
 }

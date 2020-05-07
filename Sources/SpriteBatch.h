@@ -20,9 +20,9 @@ struct SpriteBatch
     Handle  vertexArray;
 
     VertexColor* vertices;
-    uint16* indices;
+    U16* indices;
 
-    static SpriteBatch  New(VertexColor* vertices = 0, uint16* indices = 0);
+    static SpriteBatch  New(VertexColor* vertices = 0, U16* indices = 0);
     static void         Free(SpriteBatch* drawBuffer);
 
     static void         AddTriangle(SpriteBatch* drawBuffer, VertexColor v0, VertexColor v1, VertexColor v2);

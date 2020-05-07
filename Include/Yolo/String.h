@@ -4,33 +4,33 @@
 
 namespace StringOps
 {
-    String Format(int bufferSize, String format, ...);
-    String FormatArgv(int bufferSize, String format, ArgList argv);
+    String Format(I32 bufferSize, String format, ...);
+    String FormatArgv(I32 bufferSize, String format, ArgList argv);
 
-    String Format(void* buffer, int bufferSize, String format, ...);
-    String FormatArgv(void* buffer, int bufferSize, String format, ArgList argv);
+    String Format(void* buffer, I32 bufferSize, String format, ...);
+    String FormatArgv(void* buffer, I32 bufferSize, String format, ArgList argv);
 
-    int    Length(String target);
+    I32    Length(String target);
     bool   IsEmpty(String target);
 
-    int    Compare(String str0, String str1);
+    I32    Compare(String str0, String str1);
 
-    char   CharAt(String target, int index);
-    int    CharCodeAt(String target, int index);
+    char   CharAt(String target, I32 index);
+    I32    CharCodeAt(String target, I32 index);
 
-    int    IndexOf(String target, int charCode);
-    int    IndexOf(String target, String substring);
+    I32    IndexOf(String target, I32 charCode);
+    I32    IndexOf(String target, String substring);
 
-    int    LastIndexOf(String target, int charCode);
-    int    LastIndexOf(String target, String substring);
+    I32    LastIndexOf(String target, I32 charCode);
+    I32    LastIndexOf(String target, String substring);
 
-    String SubString(String source, int start, int end = -1);
+    String SubString(String source, I32 start, I32 end = -1);
 
     String Intern(String source);
-    String Intern(uint64 hash, String source);
-    String InternNoAllocation(uint64 hash, String source);
+    String Intern(U64 hash, String source);
+    String InternNoAllocation(U64 hash, String source);
 
-    template <int length>
+    template <I32 length>
     inline String Static(const char(&source)[length])
     {
         if (length == 0)
@@ -38,12 +38,12 @@ namespace StringOps
             return "";
         }
 
-        uint64 hash = CalcHash64<length>(source);
+        U64 hash = CalcHash64<length>(source);
         return InternNoAllocation(hash, source);
     }
 }
 
-inline uint64 CalcHash64(String x, uint64 seed = 0)
+inline U64 CalcHash64(String x, U64 seed = 0)
 {
     return CalcHash64(x, StringOps::Length(x), seed);
 }
