@@ -324,7 +324,7 @@ namespace Graphics
         F32 width = (F32)Window::GetWidth();
         F32 height = (F32)Window::GetHeight();
 
-        projection = Math::Ortho(0, width, 0, height, 0.0f, 100.0f);
+        projection = Matrix4Ortho(0, width, 0, height, 0.0f, 100.0f);
         shader = ShaderOps::Compile(vshaderSource, fshaderSource);
 
         fontShader = ShaderOps::Compile(fontVertexSource, fontPixelSource);
@@ -378,7 +378,7 @@ namespace Graphics
     {
         DrawBufferOps::UpdateBuffers(&drawBuffer);
 
-        Matrix4 model = Math::Translation(0, 0);
+        Matrix4 model = Matrix4Translation(0, 0);
 
         glUseProgram(shader.handle);
         glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (F32*)&projection);
@@ -521,7 +521,7 @@ namespace Graphics
         DrawTextBuffer::AddText(&drawTextBuffer, text, font);
         DrawTextBuffer::UpdateBuffers(&drawTextBuffer);
 
-        Matrix4 model = mul(Math::Translation(position), Math::Scalation(1.0f, -1.0f));
+        Matrix4 model = mul(Matrix4Translation(position), Matrix4Scalation(1.0f, -1.0f));
 
         glUseProgram(fontShader.handle);
 

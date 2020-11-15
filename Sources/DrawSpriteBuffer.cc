@@ -124,7 +124,7 @@ namespace DrawSpriteBufferOps
 
     void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, Vector2 position, F32 rotation, Vector2 scale, Vector4 color, Vector2 pivot)
     {
-        Matrix4 transform = Math::Transform2D(position, rotation, scale, pivot * Vector2{ (F32)texture.width, (F32)texture.height });
+        Matrix4 transform = Matrix4Transform2D(position, rotation, scale, pivot * Vector2{ (F32)texture.width, (F32)texture.height });
 
         Vector3 pos0 = mul(transform, Vector3{ 0, 0 });
         Vector3 pos1 = mul(transform, Vector3{ 0, (F32)texture.height });
@@ -175,7 +175,7 @@ namespace DrawSpriteBufferOps
     {
         UpdateBuffers(drawSpriteBuffer);
 
-        Matrix4 model = Math::Translation(0, 0, 0);
+        Matrix4 model = Matrix4Translation(0, 0, 0);
 
         glUseProgram(shader.handle);
         glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (F32*)&projection);

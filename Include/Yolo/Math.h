@@ -3,9 +3,9 @@
 #include <math.h>
 #include <Yolo/Types.h>
 
-//
+// ------------------------
 // Operators
-//
+// ------------------------
 
 inline Vector2 operator-(Vector2 v)
 {
@@ -900,9 +900,10 @@ inline Matrix4& operator/=(Matrix4& a, F32 b)
     return (a = a + b);
 }
 
-//
+// --------------------------------------------------------------------
 // Functions
-//
+// @note: use single word lowercase name for standard math functions
+// --------------------------------------------------------------------
 
 inline I32 min(I32 x, I32 y)
 {
@@ -2348,211 +2349,213 @@ inline Matrix4 mul(Matrix4 a, Matrix4 b)
     };
 }
 
-namespace Math
+// -----------------------------------------
+// Math objects creation functions
+// @note: use PascalCase for function name
+// -----------------------------------------
+
+inline Vector4 QuaternionToAxisAngle(Quaternion q)
 {
-    inline Vector4 ToAxisAngle(Quaternion q)
-    {
-        const F32 ilen = 1.0f / sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
-        const Vector4 c = q.w != 0.0f
-            ? Vector4{ q.x * ilen, q.y * ilen, q.z * ilen, q.w * ilen }
-        : Vector4{ q.x, q.y, q.z, q.w };
+    const F32 ilen = 1.0f / sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+    const Vector4 c = q.w != 0.0f
+        ? Vector4{ q.x * ilen, q.y * ilen, q.z * ilen, q.w * ilen }
+    : Vector4{ q.x, q.y, q.z, q.w };
 
-        const F32 den = sqrtf(1.0f - q.w * q.w);
-        const Vector3 axis = (den > 0.0001f)
-            ? Vector3{ c.x / den, c.y / den, c.z / den }
-        : Vector3{ 1, 0, 0 };
+    const F32 den = sqrtf(1.0f - q.w * q.w);
+    const Vector3 axis = (den > 0.0001f)
+        ? Vector3{ c.x / den, c.y / den, c.z / den }
+    : Vector3{ 1, 0, 0 };
 
-        F32 angle = 2.0f * cosf(c.w);
-        return Vector4{ axis.x, axis.y, axis.z, angle };
-    }
+    F32 angle = 2.0f * cosf(c.w);
+    return Vector4{ axis.x, axis.y, axis.z, angle };
+}
 
-    inline Quaternion FromAxisAngle(Vector3 axis, F32 angle)
-    {
-        return Quaternion{};
-    }
+inline Quaternion QuaternionFromAxisAngle(Vector3 axis, F32 angle)
+{
+    return Quaternion{};
+}
 
-    inline Matrix4 Ortho(F32 l, F32 r, F32 b, F32 t, F32 n, F32 f)
-    {
-        const F32 x = 1.0f / (r - l);
-        const F32 y = 1.0f / (t - b);
-        const F32 z = 1.0f / (f - n);
+inline Matrix4 Matrix4Ortho(F32 l, F32 r, F32 b, F32 t, F32 n, F32 f)
+{
+    const F32 x = 1.0f / (r - l);
+    const F32 y = 1.0f / (t - b);
+    const F32 z = 1.0f / (f - n);
 
-        return {
-            2.0f * x, 0, 0, 0,
-            0, 2.0f * y, 0, 0,
-            0, 0, 2.0f * z, 0,
-            -x * (l + r), -y * (b + t), -z * (n + f), 1.0f,
-        };
-    }
+    return {
+        2.0f * x, 0, 0, 0,
+        0, 2.0f * y, 0, 0,
+        0, 0, 2.0f * z, 0,
+        -x * (l + r), -y * (b + t), -z * (n + f), 1.0f,
+    };
+}
 
-    inline Matrix4 Frustum(F32 l, F32 r, F32 b, F32 t, F32 n, F32 f)
-    {
-        const F32 x = 1.0f / (r - l);
-        const F32 y = 1.0f / (t - b);
-        const F32 z = 1.0f / (f - n);
+inline Matrix4 Matrix4Frustum(F32 l, F32 r, F32 b, F32 t, F32 n, F32 f)
+{
+    const F32 x = 1.0f / (r - l);
+    const F32 y = 1.0f / (t - b);
+    const F32 z = 1.0f / (f - n);
 
-        return {
-            2.0f * x, 0, 0, 0,
-            0, 2.0f * y, 0, 0,
-            x * (l + r), y * (b + t), z * (n + f), 1.0f,
-            0, 0, 2.0f * z, 0
-        };
-    }
+    return {
+        2.0f * x, 0, 0, 0,
+        0, 2.0f * y, 0, 0,
+        x * (l + r), y * (b + t), z * (n + f), 1.0f,
+        0, 0, 2.0f * z, 0
+    };
+}
 
-    inline Matrix4 Perspective(F32 fov, F32 aspect, F32 znear, F32 zfar)
-    {
-        const F32 a = 1.0f / tanf(fov * 0.5f);
-        const F32 b = zfar / (znear - zfar);
+inline Matrix4 Matrix4Perspective(F32 fov, F32 aspect, F32 znear, F32 zfar)
+{
+    const F32 a = 1.0f / tanf(fov * 0.5f);
+    const F32 b = zfar / (znear - zfar);
 
-        return {
-            a / aspect, 0, 0, 0,
-            0, a, 0, 0,
-            0, 0, b, -1,
-            0, 0, znear * b, 0
-        };
-    }
+    return {
+        a / aspect, 0, 0, 0,
+        0, a, 0, 0,
+        0, 0, b, -1,
+        0, 0, znear * b, 0
+    };
+}
 
-    inline Matrix4 Scalation(F32 x, F32 y, F32 z = 1.0f)
-    {
-        return {
-            x, 0, 0, 0,
-            0, y, 0, 0,
-            0, 0, z, 0,
-            0, 0, 0, 1
-        };
-    }
+inline Matrix4 Matrix4Scalation(F32 x, F32 y, F32 z = 1.0f)
+{
+    return {
+        x, 0, 0, 0,
+        0, y, 0, 0,
+        0, 0, z, 0,
+        0, 0, 0, 1
+    };
+}
 
-    inline Matrix4 Scalation(F32 s)
-    {
-        return Scalation(s, s, s);
-    }
+inline Matrix4 Matrix4Scalation(F32 s)
+{
+    return Matrix4Scalation(s, s, s);
+}
 
-    inline Matrix4 Scalation(Vector2 v)
-    {
-        return Scalation(v.x, v.y, 0);
-    }
+inline Matrix4 Matrix4Scalation(Vector2 v)
+{
+    return Matrix4Scalation(v.x, v.y, 0);
+}
 
-    inline Matrix4 Scalation(Vector3 v)
-    {
-        return Scalation(v.x, v.y, v.z);
-    }
+inline Matrix4 Matrix4Scalation(Vector3 v)
+{
+    return Matrix4Scalation(v.x, v.y, v.z);
+}
 
-    inline Matrix4 Translation(F32 x, F32 y, F32 z = 0.0f)
-    {
-        return {
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            x, y, z, 1
-        };
-    }
+inline Matrix4 Matrix4Translation(F32 x, F32 y, F32 z = 0.0f)
+{
+    return {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        x, y, z, 1
+    };
+}
 
-    inline Matrix4 Translation(Vector2 v)
-    {
-        return Translation(v.x, v.y, 0);
-    }
+inline Matrix4 Matrix4Translation(Vector2 v)
+{
+    return Matrix4Translation(v.x, v.y, 0);
+}
 
-    inline Matrix4 Translation(Vector3 v)
-    {
-        return Translation(v.x, v.y, v.z);
-    }
+inline Matrix4 Matrix4Translation(Vector3 v)
+{
+    return Matrix4Translation(v.x, v.y, v.z);
+}
 
-    inline Matrix4 Rotation(F32 x, F32 y, F32 z, F32 angle)
-    {
-        const F32 c = cosf(-angle);
-        const F32 s = sinf(-angle);
-        const F32 t = 1.0f - c;
+inline Matrix4 Matrix4Rotation(F32 x, F32 y, F32 z, F32 angle)
+{
+    const F32 c = cosf(-angle);
+    const F32 s = sinf(-angle);
+    const F32 t = 1.0f - c;
 
-        return {
-            /* Row 1 */
-            t * x * x + c,
-            t * x * y - s * z,
-            t * x * z + s * y,
-            0.0f,
+    return {
+        /* Row 1 */
+        t * x * x + c,
+        t * x * y - s * z,
+        t * x * z + s * y,
+        0.0f,
 
-            /* Row 2 */
-            t * x * y + s * z,
-            t * y * y + c,
-            t * y * z - s * x,
-            0.0f,
+        /* Row 2 */
+        t * x * y + s * z,
+        t * y * y + c,
+        t * y * z - s * x,
+        0.0f,
 
-            /* Row 3 */
-            t * x * z - s * y,
-            t * y * z + s * x,
-            t * z * z + c,
-            0.0f,
+        /* Row 3 */
+        t * x * z - s * y,
+        t * y * z + s * x,
+        t * z * z + c,
+        0.0f,
 
-            /* Row 4 */
-            0, 0, 0, 1.0f
-        };
-    }
+        /* Row 4 */
+        0, 0, 0, 1.0f
+    };
+}
 
-    inline Matrix4 Rotation(Vector3 axis, F32 angle)
-    {
-        return Rotation(axis.x, axis.y, axis.z, angle);
-    }
+inline Matrix4 Matrix4Rotation(Vector3 axis, F32 angle)
+{
+    return Matrix4Rotation(axis.x, axis.y, axis.z, angle);
+}
 
-    inline Matrix4 RotationX(F32 angle)
-    {
-        const F32 s = sinf(angle);
-        const F32 c = cosf(angle);
+inline Matrix4 Matrix4RotationX(F32 angle)
+{
+    const F32 s = sinf(angle);
+    const F32 c = cosf(angle);
 
-        return {
-            1,  0, 0, 0,
-            0,  c, s, 0,
-            0, -s, c, 0,
-            0,  0, 0, 1
-        };
-    }
+    return {
+        1,  0, 0, 0,
+        0,  c, s, 0,
+        0, -s, c, 0,
+        0,  0, 0, 1
+    };
+}
 
-    inline Matrix4 RotationY(F32 angle)
-    {
-        const F32 s = sinf(angle);
-        const F32 c = cosf(angle);
+inline Matrix4 Matrix4RotationY(F32 angle)
+{
+    const F32 s = sinf(angle);
+    const F32 c = cosf(angle);
 
-        return {
-             c, 0, s, 0,
-             0, 1, 0, 0,
-            -s, 0, c, 0,
-             0, 0, 0, 1
-        };
-    }
+    return {
+         c, 0, s, 0,
+         0, 1, 0, 0,
+        -s, 0, c, 0,
+         0, 0, 0, 1
+    };
+}
 
-    inline Matrix4 RotationZ(F32 angle)
-    {
-        const F32 s = sinf(angle);
-        const F32 c = cosf(angle);
+inline Matrix4 Matrix4RotationZ(F32 angle)
+{
+    const F32 s = sinf(angle);
+    const F32 c = cosf(angle);
 
-        return {
-             c, s, 0, 0,
-            -s, c, 0, 0,
-             0, 0, 1, 0,
-             0, 0, 0, 1
-        };
-    }
+    return {
+         c, s, 0, 0,
+        -s, c, 0, 0,
+         0, 0, 1, 0,
+         0, 0, 0, 1
+    };
+}
 
-    inline Matrix4 Rotation(Quaternion quaternion)
-    {
-        Vector4 axisangle = ToAxisAngle(quaternion);
-        return Rotation(axisangle.x, axisangle.y, axisangle.z, axisangle.w);
-    }
+inline Matrix4 Matrix4Rotation(Quaternion quaternion)
+{
+    Vector4 axisAngle = QuaternionToAxisAngle(quaternion);
+    return Matrix4Rotation(axisAngle.x, axisAngle.y, axisAngle.z, axisAngle.w);
+}
 
-    inline Matrix4 Transform(Vector2 position, F32 rotation, Vector2 scale)
-    {
-        return mul(mul(Math::Translation(position), Math::RotationZ(rotation)), Math::Scalation(scale));
-    }
+inline Matrix4 Matrix4Transform(Vector2 position, F32 rotation, Vector2 scale)
+{
+    return mul(mul(Matrix4Translation(position), Matrix4RotationZ(rotation)), Matrix4Scalation(scale));
+}
 
-    inline Matrix4 Transform(Vector3 position, Quaternion rotation, Vector3 scale)
-    {
-        return mul(mul(Math::Translation(position), Math::Rotation(rotation)), Math::Scalation(scale));
-    }
+inline Matrix4 Matrix4Transform(Vector3 position, Quaternion rotation, Vector3 scale)
+{
+    return mul(mul(Matrix4Translation(position), Matrix4Rotation(rotation)), Matrix4Scalation(scale));
+}
 
-    inline Matrix4 Transform2D(Vector2 position, F32 rotation, Vector2 scale, Vector2 pivot)
-    {
-        Matrix4 translation = Translation(position - pivot);
-        Matrix4 rotationMat4 = mul(mul(Translation(pivot.x, pivot.y), RotationZ(rotation)), Translation(-pivot.x, -pivot.y));
-        Matrix4 scalation = Scalation(scale);
+inline Matrix4 Matrix4Transform2D(Vector2 position, F32 rotation, Vector2 scale, Vector2 pivot)
+{
+    Matrix4 translation = Matrix4Translation(position - pivot);
+    Matrix4 rotationMat4 = mul(mul(Matrix4Translation(pivot.x, pivot.y), Matrix4RotationZ(rotation)), Matrix4Translation(-pivot.x, -pivot.y));
+    Matrix4 scalation = Matrix4Scalation(scale);
 
-        return mul(mul(translation, rotationMat4), scalation);
-    }
+    return mul(mul(translation, rotationMat4), scalation);
 }
