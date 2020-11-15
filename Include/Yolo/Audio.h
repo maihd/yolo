@@ -13,12 +13,12 @@ namespace AudioSourceOps
     AudioSource New(void);
     void        Free(AudioSource* source);
 
-    void        SetGain(AudioSource source, F32 value);
-    void        SetPitch(AudioSource source, F32 value);
+    void        SetGain(AudioSource source, float value);
+    void        SetPitch(AudioSource source, float value);
     void        SetLooping(AudioSource source, bool value);
 
-    void        SetPosition(AudioSource source, F32 x, F32 y, F32 z = 0.0f);
-    void        SetVelocity(AudioSource source, F32 x, F32 y, F32 z = 0.0f);
+    void        SetPosition(AudioSource source, float x, float y, float z = 0.0f);
+    void        SetVelocity(AudioSource source, float x, float y, float z = 0.0f);
 
     void        SetBuffer(AudioSource source, AudioBuffer buffer);
 
@@ -30,10 +30,10 @@ namespace AudioSourceOps
 
 namespace AudioListener
 {
-    void        SetPosition(F32 x, F32 y, F32 z = 0.0f);
-    void        SetVelocity(F32 x, F32 y, F32 z = 0.0f);
-    void        SetOrientation(F32 x0, F32 y0, F32 x1, F32 y1);
-    void        SetOrientation(F32 x0, F32 y0, F32 z0, F32 x1, F32 y1, F32 z1);
+    void        SetPosition(float x, float y, float z = 0.0f);
+    void        SetVelocity(float x, float y, float z = 0.0f);
+    void        SetOrientation(float x0, float y0, float x1, float y1);
+    void        SetOrientation(float x0, float y0, float z0, float x1, float y1, float z1);
 };
 
 namespace Audio
@@ -41,7 +41,7 @@ namespace Audio
     bool        Init(void);
     void        Quit(void);
 
-    void        SetVolume(F32 volume);
+    void        SetVolume(float volume);
     float       GetVolume(void);
 
     void        PlayEffect(String path, bool loop = false);

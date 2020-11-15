@@ -16,7 +16,7 @@ namespace Graphics
 {
     static HGLRC            glContext;
     
-    static F32              lineWidth;
+    static float              lineWidth;
     static Vector4          clearColor;
 
     static Matrix4          projection;
@@ -119,7 +119,7 @@ namespace Graphics
         "out vec4 resultColor;"
 
         "void main() {"
-        "F32 alpha = texture(tex, uv).r;"
+        "float alpha = texture(tex, uv).r;"
         "resultColor = vec4(1.0, 1.0, 1.0, alpha);"
         "}";
 
@@ -321,8 +321,8 @@ namespace Graphics
 
     void CreateDefaultObjects(void)
     {
-        F32 width = (F32)Window::GetWidth();
-        F32 height = (F32)Window::GetHeight();
+        float width = (float)Window::GetWidth();
+        float height = (float)Window::GetHeight();
 
         projection = Matrix4Ortho(0, width, 0, height, 0.0f, 100.0f);
         shader = ShaderOps::Compile(vshaderSource, fshaderSource);
@@ -361,7 +361,7 @@ namespace Graphics
         SetClearColor(color.x, color.y, color.z, color.w);
     }
 
-    void SetClearColor(F32 r, F32 g, F32 b, F32 a)
+    void SetClearColor(float r, float g, float b, float a)
     {
         clearColor = Vector4{ r, g, b, a };
         glClearColor(r, g, b, a);
@@ -381,8 +381,8 @@ namespace Graphics
         Matrix4 model = Matrix4Translation(0, 0);
 
         glUseProgram(shader.handle);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (F32*)&projection);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (F32*)&model);
+        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
+        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (float*)&model);
 
         glBindVertexArray(drawBuffer.vertexArray.handle);
         glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.vertexArray.vertexBuffer);
@@ -431,12 +431,12 @@ namespace Graphics
         glPolygonMode(GL_FRONT_AND_BACK, enable ? GL_LINE : GL_FILL);
     }
 
-    F32 GetLineWidth(void)
+    float GetLineWidth(void)
     {
         return lineWidth;
     }
 
-    void SetLineWidth(F32 width)
+    void SetLineWidth(float width)
     {
         glLineWidth(width);
         lineWidth = width;
@@ -452,7 +452,7 @@ namespace Graphics
         Graphics::projection = projection;
     }
 
-    void DrawCircle(DrawMode mode, Vector2 position, F32 radius, Vector4 color, I32 segments)
+    void DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, I32 segments)
     {
         DrawBufferOps::Clear(&drawBuffer);
 
@@ -483,7 +483,7 @@ namespace Graphics
         }
     }
 
-    void DrawTexture(Texture texture, Vector2 position, F32 rotation, Vector2 scale, Vector4 color, Vector2 pivot)
+    void DrawTexture(Texture texture, Vector2 position, float rotation, Vector2 scale, Vector4 color, Vector2 pivot)
     {
 #if 0
         Matrix4 model = mul(Matrix4::Translation(position), Matrix4::Scalation(size));
@@ -492,8 +492,8 @@ namespace Graphics
         I32 modelLocation = glGetUniformLocation(shader.handle, "model");
 
         glUseProgram(spriteShader.handle);
-        glUniformMatrix4fv(projectionLocation, 1, false, (F32*)&projection);
-        glUniformMatrix4fv(modelLocation, 1, false, (F32*)&model);
+        glUniformMatrix4fv(projectionLocation, 1, false, (float*)&projection);
+        glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
 
         glBindVertexArray(spriteMesh.vertexArray);
         glBindBuffer(GL_ARRAY_BUFFER, spriteMesh.vertexArray);
@@ -527,8 +527,8 @@ namespace Graphics
 
         I32 projectionLocation = glGetUniformLocation(shader.handle, "projection");
         I32 modelLocation = glGetUniformLocation(shader.handle, "model");
-        glUniformMatrix4fv(projectionLocation, 1, false, (F32*)&projection);
-        glUniformMatrix4fv(modelLocation, 1, false, (F32*)&model);
+        glUniformMatrix4fv(projectionLocation, 1, false, (float*)&projection);
+        glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
 
         glBindVertexArray(drawTextBuffer.vertexArray);
         glBindBuffer(GL_ARRAY_BUFFER, drawTextBuffer.vertexBuffer);
@@ -554,7 +554,7 @@ namespace Graphics
     void DrawFramerate(Font font, Vector2 position)
     {
         char buffer[1024];
-        F32 framerate = Time::GetFramerate();
+        float framerate = Time::GetFramerate();
         String text = StringOps::Format(buffer, sizeof(buffer), "FPS: %.2f", framerate);
         DrawText(text, font, position);
     }

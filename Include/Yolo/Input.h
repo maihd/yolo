@@ -169,7 +169,7 @@ namespace Input
     bool    IsMouseCursorVisibled(void);
     void    SetMouseCursorVisible(bool visible);
 
-    I32     GetMouseState(F32* x, F32* y);
+    I32     GetMouseState(float* x, float* y);
     Vector2 GetMousePosition(void);
 
     bool    GetMouseButton(MouseButton button);
@@ -183,7 +183,7 @@ namespace Input
     bool    GetKeyDown(KeyCode button);
 
     bool    IsGamepadAttached(I32 gamepadID);
-    F32     GetAxis(I32 gamepadID, GamepadAxis axis);
+    float   GetAxis(I32 gamepadID, GamepadAxis axis);
     bool    GetButton(I32 gamepadID, GamepadButton button);
     bool    GetButtonUp(I32 gamepadID, GamepadButton button);
     bool    GetButtonDown(I32 gamepadID, GamepadButton button);

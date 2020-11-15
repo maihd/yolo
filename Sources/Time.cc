@@ -5,13 +5,13 @@
 namespace Time
 {
     I32 totalFrames = 0;
-    F32 framerate = 0.0f;
-    F32 deltaTime = 0.0f;
-    F32 totalTime = 0.0f;
-    F32 timeScale = 1.0f;
+    float framerate = 0.0f;
+    float deltaTime = 0.0f;
+    float totalTime = 0.0f;
+    float timeScale = 1.0f;
 
-    F32 updateFramerateTimer    = 0.0f;
-    F32 updateFramerateInterval = 1.0f;
+    float updateFramerateTimer    = 0.0f;
+    float updateFramerateInterval = 1.0f;
 
     U64 prevCounter = 0;
 
@@ -58,7 +58,7 @@ namespace Time
        }
     }
 
-    F32 GetFramerate(void)
+    float GetFramerate(void)
     {
         return framerate;
     }
@@ -68,27 +68,27 @@ namespace Time
         return totalFrames;
     }
 
-    F32 GetTotalTime(void)
+    float GetTotalTime(void)
     {
         return totalTime;
     }
 
-    F32 GetTimeScale(void)
+    float GetTimeScale(void)
     {
         return timeScale;
     }
 
-    void SetTimeScale(F32 timeScale)
+    void SetTimeScale(float timeScale)
     {
         Time::timeScale = timeScale;
     }
 
-    F32 GetDeltaTime(void)
+    float GetDeltaTime(void)
     {
         return deltaTime * timeScale;
     }
 
-    F32 GetUnscaledDeltaTime(void)
+    float GetUnscaledDeltaTime(void)
     {
         return deltaTime;
     }
@@ -98,7 +98,7 @@ namespace Time
         U64 counter = GetCounter();
         U64 ticks = counter - prevCounter;
 
-        deltaTime = (F32)((F64)ticks / (F64)GetFrequency());
+        deltaTime = (float)((double)ticks / (double)GetFrequency());
         totalTime = totalTime + deltaTime;
 
         updateFramerateTimer += deltaTime;
@@ -113,10 +113,10 @@ namespace Time
         prevCounter = counter;
     }
 
-    bool UpdateAndSleep(F32 targetFramerate)
+    bool UpdateAndSleep(float targetFramerate)
     {
         U64 frequency  = GetFrequency();
-        U64 limitTicks = (U64)(frequency / (F64)(targetFramerate < 1.0f ? 1.0f : targetFramerate));
+        U64 limitTicks = (U64)(frequency / (double)(targetFramerate < 1.0f ? 1.0f : targetFramerate));
 
         U64 counter = GetCounter();
         U64 ticks = prevCounter > 0 ? counter - prevCounter : limitTicks;
@@ -127,14 +127,14 @@ namespace Time
             isSleep = true;
 
             U64 remainTicks = limitTicks - ticks;
-            F64 remainSeconds = ((F64)remainTicks) / frequency;
+            double remainSeconds = ((double)remainTicks) / frequency;
             U64 remainMicroSeconds = (U64)(remainSeconds * 1000000ULL);
             MicroSleep(remainMicroSeconds);
 
             ticks = limitTicks;
         }
 
-        deltaTime = (F32)((F64)ticks / (F64)frequency);
+        deltaTime = (float)((double)ticks / (double)frequency);
         totalTime = totalTime + deltaTime;
 
         updateFramerateTimer += deltaTime;

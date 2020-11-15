@@ -12,9 +12,6 @@ using U16       = unsigned short;
 using U32       = unsigned int;
 using U64       = unsigned long long;
 
-using F32       = float;
-using F64       = double;
-
 using String    = const char*;
 using Handle    = unsigned int;
 using NullPtr   = decltype(nullptr);
@@ -28,42 +25,40 @@ using ArgList = va_list;
 #define ArgListGet      va_arg
 #define ArgListCopy     va_copy
 
-struct Vector2;
-struct Vector3;
-struct Vector4;
-struct Matrix4;
-
+#ifndef MATH_TYPES_DEFINED
+#define MATH_TYPES_DEFINED
 struct Vector2
 {
-    F32 x, y;
+    float x, y;
 };
 
 struct Vector3
 {
-    F32 x, y, z;
+    float x, y, z;
 };
 
 struct Vector4
 {
-    F32 x, y, z, w;
+    float x, y, z, w;
 };
 
 struct Quaternion
 {
-    F32 x, y, z, w;
+    float x, y, z, w;
 };
 
 struct Matrix4
 {
-    F32 data[4][4];
+    float data[4][4];
 };
+#endif
 
 struct Rectangle
 {
-    F32 x;
-    F32 y;
-    F32 width;
-    F32 height;
+    float x;
+    float y;
+    float width;
+    float height;
 };
 
 // Container types
@@ -257,8 +252,8 @@ enum struct DataType
     U16,
     U32,
 
-    F32,
-    F64,
+    Float,
+    Double,
 
     Vector2,
     Vector3,
@@ -288,8 +283,8 @@ struct Texture
     Handle      handle;
     PixelFormat format;
 
-    F32         width;
-    F32         height;
+    float         width;
+    float         height;
 };
 
 struct Shader
@@ -301,18 +296,18 @@ struct FontGlyph
 {
     I32     value;
 
-    F32     x0, y0;
-    F32     x1, y1;
+    float     x0, y0;
+    float     x1, y1;
 
-    F32     u0, v0;
-    F32     u1, v1;
+    float     u0, v0;
+    float     u1, v1;
 
-    F32     advance;
+    float     advance;
 };
 
 struct Font
 {
-    F32                 size;
+    float                 size;
     Array<FontGlyph>    glyphs;
 
     Texture             texture;
@@ -321,10 +316,10 @@ struct Font
 struct Sprite
 {
     Texture     texture;
-    F32         x;
-    F32         y;
-    F32         width;
-    F32         height;
+    float         x;
+    float         y;
+    float         width;
+    float         height;
 };
 
 // Audios

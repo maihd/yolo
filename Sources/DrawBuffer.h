@@ -22,8 +22,8 @@ namespace DrawBufferOps
     void       AddTriangle(DrawBuffer* drawBuffer, Array<VertexShape> vertices);
     void       AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, I32 count);
 
-    void       AddCircle(DrawBuffer* drawBuffer, Vector2 position, F32 radius, Vector4 color, I32 segments = 30);
-    void       AddCircleLines(DrawBuffer* drawBuffer, Vector2 position, F32 radius, Vector4 color, I32 segments = 30);
+    void       AddCircle(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, I32 segments = 30);
+    void       AddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, I32 segments = 30);
 
     void       AddRectangle(DrawBuffer* drawBuffer, Vector2 position, Vector2 size, Vector4 color);
     void       AddRectangleLines(DrawBuffer* drawBuffer, Vector2 position, Vector2 size, Vector4 color);

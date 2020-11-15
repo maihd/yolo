@@ -315,15 +315,15 @@ namespace Window
             return 0;
 
         case WM_MOUSEMOVE:
-            Input::UpdateMouseMove((F32)GET_X_LPARAM(lparam), (F32)GET_Y_LPARAM(lparam));
+            Input::UpdateMouseMove((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
             return 0;
 
         case WM_MOUSEWHEEL:
-            Input::UpdateMouseWheel(0, (F32)GET_WHEEL_DELTA_WPARAM(wparam));
+            Input::UpdateMouseWheel(0, (float)GET_WHEEL_DELTA_WPARAM(wparam));
             return 0;
 
         case WM_MOUSEHWHEEL:
-            Input::UpdateMouseWheel((F32)GET_WHEEL_DELTA_WPARAM(wparam), 0);
+            Input::UpdateMouseWheel((float)GET_WHEEL_DELTA_WPARAM(wparam), 0);
             return 0;
 
         case WM_KEYUP:
@@ -363,7 +363,7 @@ namespace Window
         RECT rect;
         if (GetClientRect(Runtime::mainWindow, &rect))
         {
-            return { (F32)(rect.right - rect.left), (F32)(rect.bottom - rect.top) };
+            return { (float)(rect.right - rect.left), (float)(rect.bottom - rect.top) };
         }
         else
         {

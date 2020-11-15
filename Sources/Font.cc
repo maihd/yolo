@@ -13,7 +13,7 @@
 
 namespace FontOps
 {
-    Font Load(String path, F32 size)
+    Font Load(String path, float size)
     {
         constexpr I32 TEXTURE_WIDTH     = 1024;
         constexpr I32 TEXTURE_HEIGHT    = 1024;
@@ -40,25 +40,25 @@ namespace FontOps
 
             Texture texture = TextureOps::New(pixels, TEXTURE_WIDTH, TEXTURE_HEIGHT, PixelFormat::Red, PixelFormat::Red);
 
-            F32 ipw = 1.0f / TEXTURE_WIDTH, iph = 1.0f / TEXTURE_HEIGHT;
+            float ipw = 1.0f / TEXTURE_WIDTH, iph = 1.0f / TEXTURE_HEIGHT;
 
             Array<FontGlyph> glyphs = ArrayNew<FontGlyph>(GLYPHS_COUNT);
             for (I32 i = 0; i < GLYPHS_COUNT; i++)
             {
                 const stbtt_bakedchar bakedChar = bakedChars[i];
 
-                F32 xoff = bakedChar.xoff;
-                F32 yoff = bakedChar.yoff;
+                float xoff = bakedChar.xoff;
+                float yoff = bakedChar.yoff;
 
-                F32 x0 = xoff;
-                F32 y0 = yoff + bakedChar.y1 - bakedChar.y0;
-                F32 x1 = xoff + bakedChar.x1 - bakedChar.x0;
-                F32 y1 = yoff;
+                float x0 = xoff;
+                float y0 = yoff + bakedChar.y1 - bakedChar.y0;
+                float x1 = xoff + bakedChar.x1 - bakedChar.x0;
+                float y1 = yoff;
 
-                F32 s0 = bakedChar.x0 * ipw;
-                F32 t0 = bakedChar.y1 * iph;
-                F32 s1 = bakedChar.x1 * ipw;
-                F32 t1 = bakedChar.y0 * iph;
+                float s0 = bakedChar.x0 * ipw;
+                float t0 = bakedChar.y1 * iph;
+                float s1 = bakedChar.x1 * ipw;
+                float t1 = bakedChar.y0 * iph;
 
                 FontGlyph fontChar = {
                     i,

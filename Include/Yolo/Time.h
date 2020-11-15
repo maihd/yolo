@@ -8,18 +8,18 @@ namespace Time
     U64     GetFrequency(void);
     void    MicroSleep(U64 microseconds);
 
-    F32     GetFramerate(void);
+    float     GetFramerate(void);
     int     GetTotalFrames(void);
 
-    F32     GetTotalTime(void);
+    float     GetTotalTime(void);
 
-    F32     GetTimeScale(void);
-    void    SetTimeScale(F32 timeScale);
+    float     GetTimeScale(void);
+    void    SetTimeScale(float timeScale);
 
-    F32     GetDeltaTime(void);
-    F32     GetUnscaledDeltaTime(void);
+    float     GetDeltaTime(void);
+    float     GetUnscaledDeltaTime(void);
 
     void    Update(void);
-    bool    UpdateAndSleep(F32 framerate = 0);
+    bool    UpdateAndSleep(float framerate = 0);
 }
 

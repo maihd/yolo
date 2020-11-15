@@ -91,18 +91,18 @@ namespace DrawBufferOps
         }
     }
 
-    void AddCircle(DrawBuffer* drawBuffer, Vector2 position, F32 radius, Vector4 color, I32 segments)
+    void AddCircle(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, I32 segments)
     {
         assert(drawBuffer);
 
         segments = segments < 0 ? 30 : segments;
 
-        F32 step = PI * 2.0f / segments;
+        float step = PI * 2.0f / segments;
 
         for (I32 i = 0; i < segments; i++)
         {
-            F32 angle0 = step * i;
-            F32 angle1 = step * (i + 1);
+            float angle0 = step * i;
+            float angle1 = step * (i + 1);
 
             const VertexShape v0 = {
                 { position.x + cosf(angle0) * radius, position.y + sinf(angle0) * radius },
@@ -120,7 +120,7 @@ namespace DrawBufferOps
         }
     }
 
-    void AddCircleLines(DrawBuffer* drawBuffer, Vector2 position, F32 radius, Vector4 color, I32 segments)
+    void AddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, I32 segments)
     {
         assert(drawBuffer != nullptr);
 
@@ -128,11 +128,11 @@ namespace DrawBufferOps
 
         segments = segments < 0 ? 30 : segments;
 
-        F32 step = PI * 2.0f / segments;
+        float step = PI * 2.0f / segments;
 
         for (I32 i = 0; i <= segments; i++)
         {
-            F32 angle = step * i;
+            float angle = step * i;
 
             const VertexShape v = {
                 { position.x + cosf(angle) * radius, position.y + sinf(angle) * radius },

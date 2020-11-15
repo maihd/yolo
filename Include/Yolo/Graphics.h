@@ -12,7 +12,7 @@ namespace Graphics
     Vector4 GetClearColor(void);
     void    SetClearColor(Vector3 color);
     void    SetClearColor(Vector4 color);
-    void    SetClearColor(F32 r, F32 g, F32 b, F32 a = 1.0f);
+    void    SetClearColor(float r, float g, float b, float a = 1.0f);
 
     void    Present(void);
 

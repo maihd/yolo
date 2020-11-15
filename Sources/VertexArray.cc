@@ -18,8 +18,8 @@ namespace VertexArrayOps
             GL_UNSIGNED_SHORT,  // U16,
             GL_UNSIGNED_INT,    // U32,
 
-            GL_FLOAT,           // F32,
-            GL_DOUBLE,          // F64,
+            GL_FLOAT,           // float,
+            GL_DOUBLE,          // double,
 
             GL_FLOAT,           // Vector2,
             GL_FLOAT,           // Vector3,
@@ -44,8 +44,8 @@ namespace VertexArrayOps
             1,  // U16,
             1,  // U32,
 
-            1,  // F32,
-            1,  // F64,
+            1,  // float,
+            1,  // double,
 
             2,  // Vector2,
             3,  // Vector3,

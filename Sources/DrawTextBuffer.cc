@@ -94,8 +94,8 @@ void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, String text, Font f
     I32 length = StringOps::Length(text);
     if (length > 0)
     {
-        F32 advanceX = 0;
-        F32 advanceY = 0;
+        float advanceX = 0;
+        float advanceY = 0;
 
         for (I32 i = 0; i < length; i++)
         {

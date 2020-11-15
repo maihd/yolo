@@ -112,24 +112,24 @@ namespace DrawSpriteBufferOps
         }
     }
 
-    void AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, Vector2 position, F32 rotation, Vector2 scale, Vector4 color)
+    void AddText(DrawSpriteBuffer* drawSpriteBuffer, String text, Font font, Vector2 position, float rotation, Vector2 scale, Vector4 color)
     {
 
     }
 
-    void AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, Vector2 position, F32 rotation, Vector2 scale, Vector4 color)
+    void AddSprite(DrawSpriteBuffer* drawSpriteBuffer, Sprite sprite, Vector2 position, float rotation, Vector2 scale, Vector4 color)
     {
 
     }
 
-    void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, Vector2 position, F32 rotation, Vector2 scale, Vector4 color, Vector2 pivot)
+    void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, Vector2 position, float rotation, Vector2 scale, Vector4 color, Vector2 pivot)
     {
-        Matrix4 transform = Matrix4Transform2D(position, rotation, scale, pivot * Vector2{ (F32)texture.width, (F32)texture.height });
+        Matrix4 transform = Matrix4Transform2D(position, rotation, scale, pivot * Vector2{ (float)texture.width, (float)texture.height });
 
         Vector3 pos0 = mul(transform, Vector3{ 0, 0 });
-        Vector3 pos1 = mul(transform, Vector3{ 0, (F32)texture.height });
-        Vector3 pos2 = mul(transform, Vector3{ (F32)texture.width, (F32)texture.height });
-        Vector3 pos3 = mul(transform, Vector3{ (F32)texture.width, 0 });
+        Vector3 pos1 = mul(transform, Vector3{ 0, (float)texture.height });
+        Vector3 pos2 = mul(transform, Vector3{ (float)texture.width, (float)texture.height });
+        Vector3 pos3 = mul(transform, Vector3{ (float)texture.width, 0 });
 
         VertexColor v0 = {
             pos0,
@@ -178,8 +178,8 @@ namespace DrawSpriteBufferOps
         Matrix4 model = Matrix4Translation(0, 0, 0);
 
         glUseProgram(shader.handle);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (F32*)&projection);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (F32*)&model);
+        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
+        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (float*)&model);
 
         glBindVertexArray(drawSpriteBuffer->vertexArray.handle);
         glBindBuffer(GL_ARRAY_BUFFER, drawSpriteBuffer->vertexArray.vertexBuffer);

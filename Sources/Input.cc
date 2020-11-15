@@ -7,7 +7,7 @@ namespace
 {
     struct GamepadState
     {
-        F32 axis[8];
+        float axis[8];
 
         I32 buttonUpFrame[32];
         I32 buttonDownFrame[32];
@@ -28,11 +28,11 @@ namespace
     static I32      _mouseState;
     static I32      _mouseUpFrame[MOUSE_INPUT_COUNT];
     static I32      _mouseDownFrame[MOUSE_INPUT_COUNT];
-    static F32      _mouseX;
-    static F32      _mouseY;
+    static float      _mouseX;
+    static float      _mouseY;
 
-    static F32      _mouseWheelH;
-    static F32      _mouseWheelV;
+    static float      _mouseWheelH;
+    static float      _mouseWheelV;
     
     static GamepadState _gamepadStates[8];
 }
@@ -102,19 +102,19 @@ namespace Input
         }
     }
 
-    void UpdateMouseMove(F32 x, F32 y)
+    void UpdateMouseMove(float x, float y)
     {
         _mouseX = x;
         _mouseY = y;
     }
 
-    void UpdateMouseWheel(F32 h, F32 v)
+    void UpdateMouseWheel(float h, float v)
     {
         _mouseWheelV += v;
         _mouseWheelH += h;
     }
 
-    void UpdateGamepadAxis(I32 gamepadID, GamepadAxis axis, F32 value)
+    void UpdateGamepadAxis(I32 gamepadID, GamepadAxis axis, float value)
     {
         if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
         {
@@ -172,7 +172,7 @@ namespace Input
         
     }
 
-    I32  GetMouseState(F32* x, F32* y)
+    I32  GetMouseState(float* x, float* y)
     {
         if (x) *x = _mouseX;
         if (y) *y = _mouseY;
@@ -251,7 +251,7 @@ namespace Input
         return false;
     }
 
-    F32 GetAxis(I32 gamepadID, GamepadAxis axis)
+    float GetAxis(I32 gamepadID, GamepadAxis axis)
     {
         if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
         {

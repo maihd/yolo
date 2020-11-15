@@ -31,9 +31,9 @@ namespace Input
     void UpdateKey(KeyCode key, bool down);
 
     void UpdateMouse(MouseButton button, bool down);
-    void UpdateMouseMove(F32 x, F32 y);
-    void UpdateMouseWheel(F32 h, F32 v);
+    void UpdateMouseMove(float x, float y);
+    void UpdateMouseWheel(float h, float v);
 
-    void UpdateGamepadAxis(I32 gamepadID, GamepadAxis axis, F32 value);
+    void UpdateGamepadAxis(I32 gamepadID, GamepadAxis axis, float value);
     void UpdateGamepadButton(I32 gamepadID, GamepadButton button, bool down);
 }

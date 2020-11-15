@@ -29,7 +29,7 @@ struct SpriteBatch
     static void         AddTriangle(SpriteBatch* drawBuffer, VertexColor* vertices);
     static void         AddTriangle(SpriteBatch* drawBuffer, VertexColor* vertices, I32 count);
 
-    static void         AddCircle(SpriteBatch* drawBuffer, Vector2 position, F32 radius, Vector4 color, I32 segments = 30);
+    static void         AddCircle(SpriteBatch* drawBuffer, Vector2 position, float radius, Vector4 color, I32 segments = 30);
     static void         AddRectangle(SpriteBatch* drawBuffer, Vector2 position, Vector2 size, Vector4 color);
 
     static void         Clear(SpriteBatch* drawBuffer);

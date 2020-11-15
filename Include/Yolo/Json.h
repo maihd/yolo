@@ -35,7 +35,7 @@ struct Json
     JsonType type;
     union
     {
-        F64             number;
+        double             number;
         bool            boolean;
 
         String          string;

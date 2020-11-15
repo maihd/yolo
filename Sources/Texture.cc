@@ -43,7 +43,7 @@ namespace TextureOps
             handle,
             textureFormat,
 
-            (F32)width, (F32)height
+            (float)width, (float)height
         };
     }
 
