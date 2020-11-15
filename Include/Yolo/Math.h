@@ -3,72 +3,973 @@
 #include <math.h>
 #include <Yolo/Types.h>
 
-inline int min(int x, int y)
+//
+// Operators
+//
+
+inline Vector2 operator-(Vector2 v)
+{
+    return Vector2{ -v.x, -v.y };
+}
+
+inline Vector2 operator+(Vector2 v)
+{
+    return v;
+}
+
+inline Vector2& operator--(Vector2& v)
+{
+    --v.x;
+    --v.y;
+    return v;
+}
+
+inline Vector2& operator++(Vector2& v)
+{
+    ++v.x;
+    ++v.y;
+    return v;
+}
+
+inline Vector2 operator--(Vector2& v, I32)
+{
+    const Vector2 result = v;
+
+    v.x--;
+    v.y--;
+
+    return result;
+}
+
+inline Vector2 operator++(Vector2& v, I32)
+{
+    const Vector2 result = v;
+
+    v.x++;
+    v.y++;
+
+    return result;
+}
+
+inline Vector2 operator+(Vector2 a, Vector2 b)
+{
+#if MATH_ENABLE_NEON   
+    return Vector2(vadd_f32(a, b));
+#else
+    return Vector2{ a.x + b.x, a.y + b.y };
+#endif
+}
+
+inline Vector2 operator-(Vector2 a, Vector2 b)
+{
+#if MATH_ENABLE_NEON   
+    return Vector2(vsub_f32(a, b));
+#else
+    return Vector2{ a.x - b.x, a.y - b.y };
+#endif
+}
+
+inline Vector2 operator*(Vector2 a, Vector2 b)
+{
+#if MATH_ENABLE_NEON   
+    return Vector2(vmul_f32(a, b));
+#else
+    return Vector2{ a.x * b.x, a.y * b.y };
+#endif
+}
+
+inline Vector2 operator/(Vector2 a, Vector2 b)
+{
+#if MATH_ENABLE_NEON && 0 // experimental
+    Vector2 res;
+    __asm volatile(
+    "vcvt.f32.u32  q0, q0     \n\t"
+        "vrecpe.f32    q0, q0     \n\t"
+        "vmul.f32      q0, q0, q1 \n\t"
+        "vcvt.u32.f32  q0, q0     \n\t"
+        :
+    : "r"(dst), "r"()
+        :
+        );
+#else
+    return Vector2{ a.x / b.x, a.y / b.y };
+#endif
+}
+
+inline Vector2 operator+(Vector2 a, F32 b)
+{
+    return Vector2{ a.x + b, a.y + b };
+}
+
+inline Vector2 operator-(Vector2 a, F32 b)
+{
+    return Vector2{ a.x - b, a.x - b };
+}
+
+inline Vector2 operator*(Vector2 a, F32 b)
+{
+    return Vector2{ a.x * b, a.y * b };
+}
+
+inline Vector2 operator/(Vector2 a, F32 b)
+{
+    return Vector2{ a.x / b, a.y / b };
+}
+
+inline Vector2 operator+(F32 a, Vector2 b)
+{
+    return Vector2{ a + b.x, a + b.y };
+}
+
+inline Vector2 operator-(F32 a, Vector2 b)
+{
+    return Vector2{ a - b.x, a - b.y };
+}
+
+inline Vector2 operator*(F32 a, Vector2 b)
+{
+    return Vector2{ a * b.x, a * b.y };
+}
+
+inline Vector2 operator/(F32 a, Vector2 b)
+{
+    return Vector2{ a / b.x, a / b.y };
+}
+
+inline Vector2& operator+=(Vector2& a, Vector2 b)
+{
+    return (a = a + b);
+}
+
+inline Vector2& operator+=(Vector2& a, F32 b)
+{
+    return (a = a + b);
+}
+
+inline Vector2& operator-=(Vector2& a, Vector2 b)
+{
+    return (a = a - b);
+}
+
+inline Vector2& operator-=(Vector2& a, F32 b)
+{
+    return (a = a - b);
+}
+
+inline Vector2& operator*=(Vector2& a, Vector2 b)
+{
+    return (a = a * b);
+}
+
+inline Vector2& operator*=(Vector2& a, F32 b)
+{
+    return (a = a * b);
+}
+
+inline Vector2& operator/=(Vector2& a, Vector2 b)
+{
+    return (a = a / b);
+}
+
+inline Vector2& operator/=(Vector2& a, F32 b)
+{
+    return (a = a + b);
+}
+
+inline bool operator==(Vector2 a, Vector2 b)
+{
+    return a.x == b.x && a.y == b.y;
+}
+
+inline bool operator!=(Vector2 a, Vector2 b)
+{
+    return a.x != b.x || a.y != b.y;
+}
+
+inline Vector3 operator-(Vector3 v)
+{
+    return Vector3{ -v.x, -v.y, -v.z };
+}
+
+inline Vector3 operator+(Vector3 v)
+{
+    return v;
+}
+
+inline Vector3& operator--(Vector3& v)
+{
+    --v.x;
+    --v.y;
+    --v.z;
+    return v;
+}
+
+inline Vector3& operator++(Vector3& v)
+{
+    ++v.x;
+    ++v.y;
+    ++v.z;
+    return v;
+}
+
+inline Vector3 operator--(Vector3& v, I32)
+{
+    const Vector3 result = v;
+
+    v.x--;
+    v.y--;
+    v.z--;
+
+    return result;
+}
+
+inline Vector3 operator++(Vector3& v, I32)
+{
+    const Vector3 result = v;
+
+    v.x++;
+    v.y++;
+    v.z++;
+
+    return result;
+}
+
+inline Vector3 operator+(Vector3 a, Vector3 b)
+{
+    return Vector3{ a.x + b.x, a.y + b.y, a.z + b.z };
+}
+
+inline Vector3 operator-(Vector3 a, Vector3 b)
+{
+    return Vector3{ a.x - b.x, a.y - b.y, a.z - b.z };
+}
+
+inline Vector3 operator*(Vector3 a, Vector3 b)
+{
+    return Vector3{ a.x * b.x, a.y * b.y, a.z * b.z };
+}
+
+inline Vector3 operator/(Vector3 a, Vector3 b)
+{
+    return Vector3{ a.x / b.x, a.y / b.y, a.z / b.z };
+}
+
+inline Vector3 operator+(Vector3 a, F32 b)
+{
+    return Vector3{ a.x + b, a.y + b, a.z + b };
+}
+
+inline Vector3 operator-(Vector3 a, F32 b)
+{
+    return Vector3{ a.x - b, a.y - b, a.z - b };
+}
+
+inline Vector3 operator*(Vector3 a, F32 b)
+{
+    return Vector3{ a.x * b, a.y * b, a.z * b };
+}
+
+inline Vector3 operator/(Vector3 a, F32 b)
+{
+    return Vector3{ a.x / b, a.y / b, a.z / b };
+}
+
+inline Vector3 operator+(F32 a, Vector3 b)
+{
+    return Vector3{ a + b.x, a + b.y, a + b.z };
+}
+
+inline Vector3 operator-(F32 a, Vector3 b)
+{
+    return Vector3{ a - b.x, a - b.y, a - b.z };
+}
+
+inline Vector3 operator*(F32 a, Vector3 b)
+{
+    return Vector3{ a * b.x, a * b.y, a * b.z };
+}
+
+inline Vector3 operator/(F32 a, Vector3 b)
+{
+    return Vector3{ a / b.x, a / b.y, a / b.z };
+}
+
+inline Vector3& operator+=(Vector3& a, Vector3 b)
+{
+    return (a = a + b);
+}
+
+inline Vector3& operator+=(Vector3& a, F32 b)
+{
+    return (a = a + b);
+}
+
+inline Vector3& operator-=(Vector3& a, Vector3 b)
+{
+    return (a = a - b);
+}
+
+inline Vector3& operator-=(Vector3& a, F32 b)
+{
+    return (a = a - b);
+}
+
+inline Vector3& operator*=(Vector3& a, Vector3 b)
+{
+    return (a = a * b);
+}
+
+inline Vector3& operator*=(Vector3& a, F32 b)
+{
+    return (a = a * b);
+}
+
+inline Vector3& operator/=(Vector3& a, Vector3 b)
+{
+    return (a = a / b);
+}
+
+inline Vector3& operator/=(Vector3& a, F32 b)
+{
+    return (a = a + b);
+}
+
+inline bool operator==(Vector3 a, Vector3 b)
+{
+    return a.x == b.x && a.y == b.y && a.z == b.z;
+}
+
+inline bool operator!=(Vector3 a, Vector3 b)
+{
+    return a.x != b.x || a.y != b.y || a.z != b.z;
+}
+
+inline Vector4 operator-(Vector4 v)
+{
+    return Vector4{ -v.x, -v.y, -v.z, -v.w };
+}
+
+inline Vector4 operator+(Vector4 v)
+{
+    return v;
+}
+
+inline Vector4& operator--(Vector4& v)
+{
+    --v.x;
+    --v.y;
+    --v.z;
+    --v.w;
+    return v;
+}
+
+inline Vector4& operator++(Vector4& v)
+{
+    ++v.x;
+    ++v.y;
+    ++v.z;
+    ++v.w;
+    return v;
+}
+
+inline Vector4 operator--(Vector4& v, I32)
+{
+    const Vector4 result = v;
+
+    v.x--;
+    v.y--;
+    v.z--;
+    v.w--;
+
+    return result;
+}
+
+inline Vector4 operator++(Vector4& v, I32)
+{
+    const Vector4 result = v;
+
+    v.x++;
+    v.y++;
+    v.z++;
+    v.w++;
+
+    return result;
+}
+
+inline Vector4 operator+(Vector4 a, Vector4 b)
+{
+    return Vector4{ a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w };
+}
+
+inline Vector4 operator-(Vector4 a, Vector4 b)
+{
+    return Vector4{ a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w };
+}
+
+inline Vector4 operator*(Vector4 a, Vector4 b)
+{
+    return Vector4{ a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
+}
+
+inline Vector4 operator/(Vector4 a, Vector4 b)
+{
+    return Vector4{ a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w };
+}
+
+inline Vector4 operator+(Vector4 a, F32 b)
+{
+    return Vector4{ a.x + b, a.y + b, a.z + b, a.w + b };
+}
+
+inline Vector4 operator-(Vector4 a, F32 b)
+{
+    return Vector4{ a.x - b, a.y - b, a.z - b, a.w - b };
+}
+
+inline Vector4 operator*(Vector4 a, F32 b)
+{
+    return Vector4{ a.x * b, a.y * b, a.z * b, a.w * b };
+}
+
+inline Vector4 operator/(Vector4 a, F32 b)
+{
+    return Vector4{ a.x / b, a.y / b, a.z / b, a.w / b };
+}
+
+inline Vector4 operator+(F32 a, Vector4 b)
+{
+    return Vector4{ a + b.x, a + b.y, a + b.z, a + b.w };
+}
+
+inline Vector4 operator-(F32 a, Vector4 b)
+{
+    return Vector4{ a - b.x, a - b.y, a - b.z, a - b.w };
+}
+
+inline Vector4 operator*(F32 a, Vector4 b)
+{
+    return Vector4{ a * b.x, a * b.y, a * b.z, a * b.w };
+}
+
+inline Vector4 operator/(F32 a, Vector4 b)
+{
+    return Vector4{ a / b.x, a / b.y, a / b.z, a / b.w };
+}
+
+inline Vector4& operator+=(Vector4& a, Vector4 b)
+{
+    return (a = a + b);
+}
+
+inline Vector4& operator+=(Vector4& a, F32 b)
+{
+    return (a = a + b);
+}
+
+inline Vector4& operator-=(Vector4& a, Vector4 b)
+{
+    return (a = a - b);
+}
+
+inline Vector4& operator-=(Vector4& a, F32 b)
+{
+    return (a = a - b);
+}
+
+inline Vector4& operator*=(Vector4& a, Vector4 b)
+{
+    return (a = a * b);
+}
+
+inline Vector4& operator*=(Vector4& a, F32 b)
+{
+    return (a = a * b);
+}
+
+inline Vector4& operator/=(Vector4& a, Vector4 b)
+{
+    return (a = a / b);
+}
+
+inline Vector4& operator/=(Vector4& a, F32 b)
+{
+    return (a = a + b);
+}
+
+inline bool operator==(Vector4 a, Vector4 b)
+{
+    return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
+}
+
+inline bool operator!=(Vector4 a, Vector4 b)
+{
+    return a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w;
+}
+inline Quaternion operator-(Quaternion v)
+{
+    return Quaternion{ -v.x, -v.y, -v.z, -v.w };
+}
+
+inline Quaternion operator+(Quaternion v)
+{
+    return v;
+}
+
+inline Quaternion& operator--(Quaternion& v)
+{
+    --v.x;
+    --v.y;
+    --v.z;
+    --v.w;
+    return v;
+}
+
+inline Quaternion& operator++(Quaternion& v)
+{
+    ++v.x;
+    ++v.y;
+    ++v.z;
+    ++v.w;
+    return v;
+}
+
+inline Quaternion operator--(Quaternion& v, I32)
+{
+    const Quaternion result = v;
+
+    v.x--;
+    v.y--;
+    v.z--;
+    v.w--;
+
+    return result;
+}
+
+inline Quaternion operator++(Quaternion& v, I32)
+{
+    const Quaternion result = v;
+
+    v.x++;
+    v.y++;
+    v.z++;
+    v.w++;
+
+    return result;
+}
+
+inline Quaternion operator+(Quaternion a, Quaternion b)
+{
+    return Quaternion{ a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w };
+}
+
+inline Quaternion operator-(Quaternion a, Quaternion b)
+{
+    return Quaternion{ a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w };
+}
+
+inline Quaternion operator*(Quaternion a, Quaternion b)
+{
+    return Quaternion{ a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
+}
+
+inline Quaternion operator/(Quaternion a, Quaternion b)
+{
+    return Quaternion{ a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w };
+}
+
+inline Quaternion operator+(Quaternion a, F32 b)
+{
+    return Quaternion{ a.x + b, a.y + b, a.z + b, a.w + b };
+}
+
+inline Quaternion operator-(Quaternion a, F32 b)
+{
+    return Quaternion{ a.x - b, a.y - b, a.z - b, a.w - b };
+}
+
+inline Quaternion operator*(Quaternion a, F32 b)
+{
+    return Quaternion{ a.x * b, a.y * b, a.z * b, a.w * b };
+}
+
+inline Quaternion operator/(Quaternion a, F32 b)
+{
+    return Quaternion{ a.x / b, a.y / b, a.z / b, a.w / b };
+}
+
+inline Quaternion operator+(F32 a, Quaternion b)
+{
+    return Quaternion{ a + b.x, a + b.y, a + b.z, a + b.w };
+}
+
+inline Quaternion operator-(F32 a, Quaternion b)
+{
+    return Quaternion{ a - b.x, a - b.y, a - b.z, a - b.w };
+}
+
+inline Quaternion operator*(F32 a, Quaternion b)
+{
+    return Quaternion{ a * b.x, a * b.y, a * b.z, a * b.w };
+}
+
+inline Quaternion operator/(F32 a, Quaternion b)
+{
+    return Quaternion{ a / b.x, a / b.y, a / b.z, a / b.w };
+}
+
+inline Quaternion& operator+=(Quaternion& a, Quaternion b)
+{
+    return (a = a + b);
+}
+
+inline Quaternion& operator+=(Quaternion& a, F32 b)
+{
+    return (a = a + b);
+}
+
+inline Quaternion& operator-=(Quaternion& a, Quaternion b)
+{
+    return (a = a - b);
+}
+
+inline Quaternion& operator-=(Quaternion& a, F32 b)
+{
+    return (a = a - b);
+}
+
+inline Quaternion& operator*=(Quaternion& a, Quaternion b)
+{
+    return (a = a * b);
+}
+
+inline Quaternion& operator*=(Quaternion& a, F32 b)
+{
+    return (a = a * b);
+}
+
+inline Quaternion& operator/=(Quaternion& a, Quaternion b)
+{
+    return (a = a / b);
+}
+
+inline Quaternion& operator/=(Quaternion& a, F32 b)
+{
+    return (a = a + b);
+}
+
+inline bool operator==(Quaternion a, Quaternion b)
+{
+    return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
+}
+
+inline bool operator!=(Quaternion a, Quaternion b)
+{
+    return a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w;
+}
+
+inline bool operator==(Matrix4 a, Matrix4 b)
+{
+    return a.data[0][0] == b.data[0][0] && a.data[0][1] == b.data[0][1] && a.data[0][2] == b.data[0][2] && a.data[0][3] == b.data[0][3]
+        && a.data[1][0] == b.data[1][0] && a.data[1][1] == b.data[1][1] && a.data[1][2] == b.data[1][2] && a.data[1][3] == b.data[0][3]
+        && a.data[2][0] == b.data[2][0] && a.data[2][1] == b.data[2][1] && a.data[2][2] == b.data[2][2] && a.data[2][3] == b.data[0][3]
+        && a.data[3][0] == b.data[3][0] && a.data[3][1] == b.data[3][1] && a.data[3][2] == b.data[3][2] && a.data[3][3] == b.data[0][3];
+}
+
+inline bool operator!=(Matrix4 a, Matrix4 b)
+{
+    return a.data[0][0] == b.data[0][0] || a.data[0][1] == b.data[0][1] || a.data[0][2] == b.data[0][2] || a.data[0][3] == b.data[0][3]
+        || a.data[1][0] == b.data[1][0] || a.data[1][1] == b.data[1][1] || a.data[1][2] == b.data[1][2] || a.data[1][3] == b.data[0][3]
+        || a.data[2][0] == b.data[2][0] || a.data[2][1] == b.data[2][1] || a.data[2][2] == b.data[2][2] || a.data[2][3] == b.data[0][3]
+        || a.data[3][0] == b.data[3][0] || a.data[3][1] == b.data[3][1] || a.data[3][2] == b.data[3][2] || a.data[3][3] == b.data[0][3];
+}
+
+inline Matrix4 operator-(Matrix4 m)
+{
+    return Matrix4{
+        -m.data[0][0], -m.data[0][1], -m.data[0][2], -m.data[0][3],
+        -m.data[1][0], -m.data[1][1], -m.data[1][2], -m.data[1][3],
+        -m.data[2][0], -m.data[2][1], -m.data[2][2], -m.data[2][3],
+        -m.data[3][0], -m.data[3][1], -m.data[3][2], -m.data[3][3],
+    };
+}
+
+inline Matrix4 operator+(Matrix4 m)
+{
+    return m;
+}
+
+inline Matrix4& operator--(Matrix4& m)
+{
+    --m.data[0][0]; --m.data[0][1]; --m.data[0][2]; --m.data[0][3];
+    --m.data[1][0]; --m.data[1][1]; --m.data[1][2]; --m.data[1][3];
+    --m.data[2][0]; --m.data[2][1]; --m.data[2][2]; --m.data[2][3];
+    --m.data[3][0]; --m.data[3][1]; --m.data[3][2]; --m.data[3][3];
+    return m;
+}
+
+inline Matrix4& operator++(Matrix4& m)
+{
+    ++m.data[0][0]; ++m.data[0][1]; ++m.data[0][2]; ++m.data[0][3];
+    ++m.data[1][0]; ++m.data[1][1]; ++m.data[1][2]; ++m.data[1][3];
+    ++m.data[2][0]; ++m.data[2][1]; ++m.data[2][2]; ++m.data[2][3];
+    ++m.data[3][0]; ++m.data[3][1]; ++m.data[3][2]; ++m.data[3][3];
+    return m;
+}
+
+inline Matrix4 operator--(Matrix4& m, I32)
+{
+    const Matrix4 old = m;
+
+    m.data[0][0]--; m.data[0][1]--; m.data[0][2]--; m.data[0][3]--;
+    m.data[1][0]--; m.data[1][1]--; m.data[1][2]--; m.data[1][3]--;
+    m.data[2][0]--; m.data[2][1]--; m.data[2][2]--; m.data[2][3]--;
+    m.data[3][0]--; m.data[3][1]--; m.data[3][2]--; m.data[3][3]--;
+
+    return old;
+}
+
+inline Matrix4 operator++(Matrix4& m, I32)
+{
+    const Matrix4 old = m;
+
+    m.data[0][0]++; m.data[0][1]++; m.data[0][2]++; m.data[0][3]++;
+    m.data[1][0]++; m.data[1][1]++; m.data[1][2]++; m.data[1][3]++;
+    m.data[2][0]++; m.data[2][1]++; m.data[2][2]++; m.data[2][3]++;
+    m.data[3][0]++; m.data[3][1]++; m.data[3][2]++; m.data[3][3]++;
+
+    return old;
+}
+
+inline Matrix4 operator+(Matrix4 a, Matrix4 b)
+{
+    return Matrix4{
+        a.data[0][0] + b.data[0][0], a.data[0][1] + b.data[0][1], a.data[0][2] + b.data[0][2], a.data[0][3] + b.data[0][3],
+        a.data[1][0] + b.data[1][0], a.data[1][1] + b.data[1][1], a.data[1][2] + b.data[1][2], a.data[1][3] + b.data[0][3],
+        a.data[2][0] + b.data[2][0], a.data[2][1] + b.data[2][1], a.data[2][2] + b.data[2][2], a.data[2][3] + b.data[0][3],
+        a.data[3][0] + b.data[3][0], a.data[3][1] + b.data[3][1], a.data[3][2] + b.data[3][2], a.data[3][3] + b.data[0][3],
+    };
+}
+
+inline Matrix4 operator+(Matrix4 a, F32 b)
+{
+    return Matrix4{
+        a.data[0][0] + b, a.data[0][1] + b, a.data[0][2] + b, a.data[0][3] + b,
+        a.data[1][0] + b, a.data[1][1] + b, a.data[1][2] + b, a.data[1][3] + b,
+        a.data[2][0] + b, a.data[2][1] + b, a.data[2][2] + b, a.data[2][3] + b,
+        a.data[3][0] + b, a.data[3][1] + b, a.data[3][2] + b, a.data[3][3] + b,
+    };
+}
+
+inline Matrix4 operator+(F32 a, Matrix4 b)
+{
+    return Matrix4{
+        a + b.data[0][0], a + b.data[0][1], a + b.data[0][2], a + b.data[0][3],
+        a + b.data[1][0], a + b.data[1][1], a + b.data[1][2], a + b.data[0][3],
+        a + b.data[2][0], a + b.data[2][1], a + b.data[2][2], a + b.data[0][3],
+        a + b.data[3][0], a + b.data[3][1], a + b.data[3][2], a + b.data[0][3],
+    };
+}
+
+inline Matrix4 operator-(Matrix4 a, Matrix4 b)
+{
+    return Matrix4{
+        a.data[0][0] - b.data[0][0], a.data[0][1] - b.data[0][1], a.data[0][2] - b.data[0][2], a.data[0][3] - b.data[0][3],
+        a.data[1][0] - b.data[1][0], a.data[1][1] - b.data[1][1], a.data[1][2] - b.data[1][2], a.data[1][3] - b.data[0][3],
+        a.data[2][0] - b.data[2][0], a.data[2][1] - b.data[2][1], a.data[2][2] - b.data[2][2], a.data[2][3] - b.data[0][3],
+        a.data[3][0] - b.data[3][0], a.data[3][1] - b.data[3][1], a.data[3][2] - b.data[3][2], a.data[3][3] - b.data[0][3],
+    };
+}
+
+inline Matrix4 operator-(Matrix4 a, F32 b)
+{
+    return Matrix4{
+        a.data[0][0] - b, a.data[0][1] - b, a.data[0][2] - b, a.data[0][3] - b,
+        a.data[1][0] - b, a.data[1][1] - b, a.data[1][2] - b, a.data[1][3] - b,
+        a.data[2][0] - b, a.data[2][1] - b, a.data[2][2] - b, a.data[2][3] - b,
+        a.data[3][0] - b, a.data[3][1] - b, a.data[3][2] - b, a.data[3][3] - b,
+    };
+}
+
+inline Matrix4 operator-(F32 a, Matrix4 b)
+{
+    return Matrix4{
+        a - b.data[0][0], a - b.data[0][1], a - b.data[0][2], a - b.data[0][3],
+        a - b.data[1][0], a - b.data[1][1], a - b.data[1][2], a - b.data[0][3],
+        a - b.data[2][0], a - b.data[2][1], a - b.data[2][2], a - b.data[0][3],
+        a - b.data[3][0], a - b.data[3][1], a - b.data[3][2], a - b.data[0][3],
+    };
+}
+
+inline Matrix4 operator*(Matrix4 a, Matrix4 b)
+{
+    return Matrix4{
+        a.data[0][0] * b.data[0][0], a.data[0][1] * b.data[0][1], a.data[0][2] * b.data[0][2], a.data[0][3] * b.data[0][3],
+        a.data[1][0] * b.data[1][0], a.data[1][1] * b.data[1][1], a.data[1][2] * b.data[1][2], a.data[1][3] * b.data[0][3],
+        a.data[2][0] * b.data[2][0], a.data[2][1] * b.data[2][1], a.data[2][2] * b.data[2][2], a.data[2][3] * b.data[0][3],
+        a.data[3][0] * b.data[3][0], a.data[3][1] * b.data[3][1], a.data[3][2] * b.data[3][2], a.data[3][3] * b.data[0][3],
+    };
+}
+
+inline Matrix4 operator*(Matrix4 a, F32 b)
+{
+    return Matrix4{
+        a.data[0][0] * b, a.data[0][1] * b, a.data[0][2] * b, a.data[0][3] * b,
+        a.data[1][0] * b, a.data[1][1] * b, a.data[1][2] * b, a.data[1][3] * b,
+        a.data[2][0] * b, a.data[2][1] * b, a.data[2][2] * b, a.data[2][3] * b,
+        a.data[3][0] * b, a.data[3][1] * b, a.data[3][2] * b, a.data[3][3] * b,
+    };
+}
+
+inline Matrix4 operator*(F32 a, Matrix4 b)
+{
+    return Matrix4{
+        a * b.data[0][0], a * b.data[0][1], a * b.data[0][2], a * b.data[0][3],
+        a * b.data[1][0], a * b.data[1][1], a * b.data[1][2], a * b.data[0][3],
+        a * b.data[2][0], a * b.data[2][1], a * b.data[2][2], a * b.data[0][3],
+        a * b.data[3][0], a * b.data[3][1], a * b.data[3][2], a * b.data[0][3],
+    };
+}
+
+inline Matrix4 operator/(Matrix4 a, Matrix4 b)
+{
+    return Matrix4{
+        a.data[0][0] / b.data[0][0], a.data[0][1] / b.data[0][1], a.data[0][2] / b.data[0][2], a.data[0][3] / b.data[0][3],
+        a.data[1][0] / b.data[1][0], a.data[1][1] / b.data[1][1], a.data[1][2] / b.data[1][2], a.data[1][3] / b.data[0][3],
+        a.data[2][0] / b.data[2][0], a.data[2][1] / b.data[2][1], a.data[2][2] / b.data[2][2], a.data[2][3] / b.data[0][3],
+        a.data[3][0] / b.data[3][0], a.data[3][1] / b.data[3][1], a.data[3][2] / b.data[3][2], a.data[3][3] / b.data[0][3],
+    };
+}
+
+inline Matrix4 operator/(Matrix4 a, F32 b)
+{
+    return Matrix4{
+        a.data[0][0] / b, a.data[0][1] / b, a.data[0][2] / b, a.data[0][3] / b,
+        a.data[1][0] / b, a.data[1][1] / b, a.data[1][2] / b, a.data[1][3] / b,
+        a.data[2][0] / b, a.data[2][1] / b, a.data[2][2] / b, a.data[2][3] / b,
+        a.data[3][0] / b, a.data[3][1] / b, a.data[3][2] / b, a.data[3][3] / b,
+    };
+}
+
+inline Matrix4 operator/(F32 a, Matrix4 b)
+{
+    return Matrix4{
+        a / b.data[0][0], a / b.data[0][1], a / b.data[0][2], a / b.data[0][3],
+        a / b.data[1][0], a / b.data[1][1], a / b.data[1][2], a / b.data[0][3],
+        a / b.data[2][0], a / b.data[2][1], a / b.data[2][2], a / b.data[0][3],
+        a / b.data[3][0], a / b.data[3][1], a / b.data[3][2], a / b.data[0][3],
+    };
+}
+
+inline Matrix4& operator+=(Matrix4& a, Matrix4 b)
+{
+    return (a = a + b);
+}
+
+inline Matrix4& operator+=(Matrix4& a, F32 b)
+{
+    return (a = a + b);
+}
+
+inline Matrix4& operator-=(Matrix4& a, Matrix4 b)
+{
+    return (a = a - b);
+}
+
+inline Matrix4& operator-=(Matrix4& a, F32 b)
+{
+    return (a = a - b);
+}
+
+inline Matrix4& operator*=(Matrix4& a, Matrix4 b)
+{
+    return (a = a * b);
+}
+
+inline Matrix4& operator*=(Matrix4& a, F32 b)
+{
+    return (a = a * b);
+}
+
+inline Matrix4& operator/=(Matrix4& a, Matrix4 b)
+{
+    return (a = a / b);
+}
+
+inline Matrix4& operator/=(Matrix4& a, F32 b)
+{
+    return (a = a + b);
+}
+
+//
+// Functions
+//
+
+inline I32 min(I32 x, I32 y)
 {
     return x < y ? x : y;
 }
 
-inline int max(int x, int y)
+inline I32 max(I32 x, I32 y)
 {
     return x < y ? x : y;
 }
 
-inline int clamp(int x, int min, int max)
+inline I32 clamp(I32 x, I32 min, I32 max)
 {
     return x < min ? min : (x > max ? max : x);
 }
 
 // Computes sign of 'x'
-inline float signf(float x)
+inline F32 signf(F32 x)
 {
-    return x < 0.0f ? -1.0f : x == 0.0f ? 0 : 1.0f;
+    return x < 0.0f ? -1.0f : x == 0.0f ? 0.0f : 1.0f;
 }
 
 /* Get the fractal part of floating point
 */
-inline float fracf(float x)
+inline F32 fracf(F32 x)
 {
-    return modff(x, 0);
+    return modff(x, (F32*)0);
 }
 
 /* Get the smaller value
  */
-inline float minf(float x, float y)
+inline F32 minf(F32 x, F32 y)
 {
     return x < y ? x : y;
 }
 
 /* Get the larger value
  */
-inline float maxf(float x, float y)
+inline F32 maxf(F32 x, F32 y)
 {
     return x > y ? x : y;
 }
 
 /* Clamps the 'x' value to the [min, max].
  */
-inline float clampf(float x, float min, float max)
+inline F32 clampf(F32 x, F32 min, F32 max)
 {
     return x < min ? min : (x > max ? max : x);
 }
 
 /* Clamps the specified value within the range of 0 to 1
  */
-inline float saturatef(float x)
+inline F32 saturatef(F32 x)
 {
     return clampf(x, 0.0f, 1.0f);
 }
 
 /* Compares two values, returning 0 or 1 based on which value is greater.
  */
-inline float stepf(float y, float x)
+inline F32 stepf(F32 y, F32 x)
 {
     return x >= y;
 }
 
 /* Performs a linear interpolation.
  */
-inline float lerpf(float x, float y, float s)
+inline F32 lerpf(F32 x, F32 y, F32 s)
 {
     return x + (y - x) * s;
 }
@@ -78,26 +979,26 @@ inline float lerpf(float x, float y, float s)
  *          1 if x >= max
  *          (0, 1) otherwise
  */
-inline float smoothstepf(float min, float max, float x)
+inline F32 smoothstepf(F32 min, F32 max, F32 x)
 {
     return (clampf(x, min, max) - min) / (max - min);
 }
 
 /* Computes inverse square root of 'x'.
  */
-inline float rsqrtf(float x)
+inline F32 rsqrtf(F32 x)
 {
     return 1.0f / sqrtf(x);
 }
 
 /* Computes fast inverse square root of 'x'.
  */
-inline float frsqrtf(float x)
+inline F32 frsqrtf(F32 x)
 {
     union
     {
-        float f;
-        int   i;
+        F32 f;
+        I32   i;
     } cvt;
 
     cvt.f = x;
@@ -108,260 +1009,260 @@ inline float frsqrtf(float x)
 
 /* Computes fast inverse square root of 'x'.
  */
-inline float fsqrtf(float x)
+inline F32 fsqrtf(F32 x)
 {
     return x == 0.0f ? 0.0f : 1.0f / frsqrtf(x);
 }
 
 // Computes sign of 'x'
-inline vec2 sign(vec2 v)
+inline Vector2 sign(Vector2 v)
 {
-    return vec2{ signf(v.x), signf(v.y) };
+    return Vector2{ signf(v.x), signf(v.y) };
 }
 
 /* Computes absolute value
  */
-inline vec2 abs(vec2 v)
+inline Vector2 abs(Vector2 v)
 {
-    return vec2{ fabsf(v.x), fabsf(v.y) };
+    return Vector2{ fabsf(v.x), fabsf(v.y) };
 }
 
 /* Computes cosine
  */
-inline vec2 cos(vec2 v)
+inline Vector2 cos(Vector2 v)
 {
-    return vec2{ cosf(v.x), cosf(v.y) };
+    return Vector2{ cosf(v.x), cosf(v.y) };
 }
 
 /* Computes sine
  */
-inline vec2 sin(vec2 v)
+inline Vector2 sin(Vector2 v)
 {
-    return vec2{ sinf(v.x), sinf(v.y) };
+    return Vector2{ sinf(v.x), sinf(v.y) };
 }
 
 /* Computes tangent
  */
-inline vec2 tan(vec2 v)
+inline Vector2 tan(Vector2 v)
 {
-    return vec2{ tanf(v.x), tanf(v.y) };
+    return Vector2{ tanf(v.x), tanf(v.y) };
 }
 
 /* Computes hyperbolic cosine
  */
-inline vec2 cosh(vec2 v)
+inline Vector2 cosh(Vector2 v)
 {
-    return vec2{ coshf(v.x), coshf(v.y) };
+    return Vector2{ coshf(v.x), coshf(v.y) };
 }
 
 /* Computes hyperbolic sine
  */
-inline vec2 sinh(vec2 v)
+inline Vector2 sinh(Vector2 v)
 {
-    return vec2{ sinhf(v.x), sinhf(v.y) };
+    return Vector2{ sinhf(v.x), sinhf(v.y) };
 }
 
 /* Computes hyperbolic tangent
  */
-inline vec2 tanh(vec2 v)
+inline Vector2 tanh(Vector2 v)
 {
-    return vec2{ tanhf(v.x), tanhf(v.y) };
+    return Vector2{ tanhf(v.x), tanhf(v.y) };
 }
 
 /* Computes inverse cosine
  */
-inline vec2 acos(vec2 v)
+inline Vector2 acos(Vector2 v)
 {
-    return vec2{ acosf(v.x), acosf(v.y) };
+    return Vector2{ acosf(v.x), acosf(v.y) };
 }
 
 /* Computes inverse sine
  */
-inline vec2 asin(vec2 v)
+inline Vector2 asin(Vector2 v)
 {
-    return vec2{ asinf(v.x), asinf(v.y) };
+    return Vector2{ asinf(v.x), asinf(v.y) };
 }
 
 /* Computes inverse tangent
  */
-inline vec2 atan(vec2 v)
+inline Vector2 atan(Vector2 v)
 {
-    return vec2{ atanf(v.x), atanf(v.y) };
+    return Vector2{ atanf(v.x), atanf(v.y) };
 }
 
 /* Computes inverse tangent with 2 args
  */
-inline vec2 atan2(vec2 a, vec2 b)
+inline Vector2 atan2(Vector2 a, Vector2 b)
 {
-    return vec2{ atan2f(a.x, b.x), atan2f(a.y, b.y) };
+    return Vector2{ atan2f(a.x, b.x), atan2f(a.y, b.y) };
 }
 
 /* Computes Euler number raised to the power 'x'
  */
-inline vec2 exp(vec2 v)
+inline Vector2 exp(Vector2 v)
 {
-    return vec2{ expf(v.x), expf(v.y) };
+    return Vector2{ expf(v.x), expf(v.y) };
 }
 
 /* Computes 2 raised to the power 'x'
  */
-inline vec2 exp2(vec2 v)
+inline Vector2 exp2(Vector2 v)
 {
-    return vec2{ exp2f(v.x), exp2f(v.y) };
+    return Vector2{ exp2f(v.x), exp2f(v.y) };
 }
 
 /* Computes the base Euler number logarithm
  */
-inline vec2 log(vec2 v)
+inline Vector2 log(Vector2 v)
 {
-    return vec2{ logf(v.x), logf(v.y) };
+    return Vector2{ logf(v.x), logf(v.y) };
 }
 
 /* Computes the base 2 logarithm
  */
-inline vec2 log2(vec2 v)
+inline Vector2 log2(Vector2 v)
 {
-    return vec2{ log2f(v.x), log2f(v.y) };
+    return Vector2{ log2f(v.x), log2f(v.y) };
 }
 
 /* Computes the base 10 logarithm
  */
-inline vec2 log10(vec2 v)
+inline Vector2 log10(Vector2 v)
 {
-    return vec2{ log10f(v.x), log10f(v.y) };
+    return Vector2{ log10f(v.x), log10f(v.y) };
 }
 
 /* Computes the value of base raised to the power exponent
  */
-inline vec2 pow(vec2 a, vec2 b)
+inline Vector2 pow(Vector2 a, Vector2 b)
 {
-    return vec2{ powf(a.x, b.x), powf(a.y, b.y) };
+    return Vector2{ powf(a.x, b.x), powf(a.y, b.y) };
 }
 
 /* Get the fractal part of floating point
  */
-inline vec2 frac(vec2 v)
+inline Vector2 frac(Vector2 v)
 {
-    return vec2{ fracf(v.x), fracf(v.y) };
+    return Vector2{ fracf(v.x), fracf(v.y) };
 }
 
 /* Computes the floating-point remainder of the division operation x/y
  */
-inline vec2 fmod(vec2 a, vec2 b)
+inline Vector2 fmod(Vector2 a, Vector2 b)
 {
-    return vec2{ fmodf(a.x, b.x), fmodf(a.y, b.y) };
+    return Vector2{ fmodf(a.x, b.x), fmodf(a.y, b.y) };
 }
 
 /* Computes the smallest integer value not less than 'x'
  */
-inline vec2 ceil(vec2 v)
+inline Vector2 ceil(Vector2 v)
 {
-    return vec2{ ceilf(v.x), ceilf(v.y) };
+    return Vector2{ ceilf(v.x), ceilf(v.y) };
 }
 
 /* Computes the largest integer value not greater than 'x'
  */
-inline vec2 floor(vec2 v)
+inline Vector2 floor(Vector2 v)
 {
-    return vec2{ floorf(v.x), floorf(v.y) };
+    return Vector2{ floorf(v.x), floorf(v.y) };
 }
 
 /* Computes the nearest integer value
  */
-inline vec2 round(vec2 v)
+inline Vector2 round(Vector2 v)
 {
-    return vec2{ roundf(v.x), roundf(v.y) };
+    return Vector2{ roundf(v.x), roundf(v.y) };
 }
 
 /* Computes the nearest integer not greater in magnitude than 'x'
  */
-inline vec2 trunc(vec2 v)
+inline Vector2 trunc(Vector2 v)
 {
-    return vec2{ truncf(v.x), truncf(v.y) };
+    return Vector2{ truncf(v.x), truncf(v.y) };
 }
 
 /* Get the smaller value
  */
-inline vec2 min(vec2 a, vec2 b)
+inline Vector2 min(Vector2 a, Vector2 b)
 {
-    return vec2{ minf(a.x, b.x), minf(a.y, b.y) };
+    return Vector2{ minf(a.x, b.x), minf(a.y, b.y) };
 }
 
 /* Get the larger value
  */
-inline vec2 max(vec2 a, vec2 b)
+inline Vector2 max(Vector2 a, Vector2 b)
 {
-    return vec2{ maxf(a.x, b.x), maxf(a.y, b.y) };
+    return Vector2{ maxf(a.x, b.x), maxf(a.y, b.y) };
 }
 
 /* Clamps the 'x' value to the [min, max].
  */
-inline vec2 clamp(vec2 v, vec2 min, vec2 max)
+inline Vector2 clamp(Vector2 v, Vector2 min, Vector2 max)
 {
-    return vec2{ clampf(v.x, min.x, max.x), clampf(v.y, min.y, max.y) };
+    return Vector2{ clampf(v.x, min.x, max.x), clampf(v.y, min.y, max.y) };
 }
 
 /* Clamps the specified value within the range of 0 to 1
  */
-inline vec2 saturate(vec2 v)
+inline Vector2 saturate(Vector2 v)
 {
-    return vec2{ saturatef(v.x), saturatef(v.y) };
+    return Vector2{ saturatef(v.x), saturatef(v.y) };
 }
 
 /* Compares two values, returning 0 or 1 based on which value is greater.
  */
-inline vec2 step(vec2 a, vec2 b)
+inline Vector2 step(Vector2 a, Vector2 b)
 {
-    return vec2{ stepf(a.x, b.x), stepf(a.y, b.y) };
+    return Vector2{ stepf(a.x, b.x), stepf(a.y, b.y) };
 }
 
 /* Performs a linear interpolation.
  */
-inline vec2 lerp(vec2 a, vec2 b, vec2 t)
+inline Vector2 lerp(Vector2 a, Vector2 b, Vector2 t)
 {
-    return vec2{ lerpf(a.x, b.x, t.x), lerpf(a.y, b.y, t.y) };
+    return Vector2{ lerpf(a.x, b.x, t.x), lerpf(a.y, b.y, t.y) };
 }
 
 /* Performs a linear interpolation.
  */
-inline vec2 lerp(vec2 a, vec2 b, float t)
+inline Vector2 lerp(Vector2 a, Vector2 b, F32 t)
 {
-    return vec2{ lerpf(a.x, b.x, t), lerpf(a.y, b.y, t) };
+    return Vector2{ lerpf(a.x, b.x, t), lerpf(a.y, b.y, t) };
 }
 
 /* Compute a smooth Hermite interpolation
  */
-inline vec2 smoothstep(vec2 a, vec2 b, vec2 t)
+inline Vector2 smoothstep(Vector2 a, Vector2 b, Vector2 t)
 {
-    return vec2{ smoothstepf(a.x, b.x, t.x), smoothstepf(a.y, b.y, t.y) };
+    return Vector2{ smoothstepf(a.x, b.x, t.x), smoothstepf(a.y, b.y, t.y) };
 }
 
 /* Computes square root of 'x'.
  */
-inline vec2 sqrt(vec2 v)
+inline Vector2 sqrt(Vector2 v)
 {
-    return vec2{ sqrtf(v.x), sqrtf(v.y) };
+    return Vector2{ sqrtf(v.x), sqrtf(v.y) };
 }
 
 /* Computes inverse square root of 'x'.
  */
-inline vec2 rsqrt(vec2 v)
+inline Vector2 rsqrt(Vector2 v)
 {
-    return vec2{ rsqrtf(v.x), rsqrtf(v.y) };
+    return Vector2{ rsqrtf(v.x), rsqrtf(v.y) };
 }
 
 /* Computes fast inverse square root of 'x'.
  */
-inline vec2 fsqrt(vec2 v)
+inline Vector2 fsqrt(Vector2 v)
 {
-    return vec2{ fsqrtf(v.x), fsqrtf(v.y) };
+    return Vector2{ fsqrtf(v.x), fsqrtf(v.y) };
 }
 
 /* Computes fast inverse square root of 'x'.
  */
-inline vec2 frsqrt(vec2 v)
+inline Vector2 frsqrt(Vector2 v)
 {
-    return vec2{ frsqrtf(v.x), frsqrtf(v.y) };
+    return Vector2{ frsqrtf(v.x), frsqrtf(v.y) };
 }
 
 //
@@ -370,48 +1271,48 @@ inline vec2 frsqrt(vec2 v)
 
 /* Compute dot product of two vectors
  */
-inline float dot(vec2 a, vec2 b)
+inline F32 dot(Vector2 a, Vector2 b)
 {
     return a.x * b.x + a.y * b.y;
 }
 
 /* Compute squared length of vector
  */
-inline float lensqr(vec2 v)
+inline F32 lensqr(Vector2 v)
 {
     return dot(v, v);
 }
 
 /* Compute length of vector
  */
-inline float length(vec2 v)
+inline F32 length(Vector2 v)
 {
     return sqrtf(lensqr(v));
 }
 
 /* Compute distance from 'a' to b
  */
-inline float distance(vec2 a, vec2 b)
+inline F32 distance(Vector2 a, Vector2 b)
 {
     return length(a - b);
 }
 
 /* Compute squared distance from 'a' to b
  */
-inline float distsqr(vec2 a, vec2 b)
+inline F32 distsqr(Vector2 a, Vector2 b)
 {
     return lensqr(a - b);
 }
 
 /* Compute normalized vector
  */
-inline vec2 normalize(vec2 v)
+inline Vector2 normalize(Vector2 v)
 {
-    const float lsqr = lensqr(v);
+    const F32 lsqr = lensqr(v);
     if (lsqr > 0.0f)
     {
-        const float f = rsqrtf(lsqr);
-        return vec2{ v.x * f, v.y * f };
+        const F32 f = rsqrtf(lsqr);
+        return Vector2{ v.x * f, v.y * f };
     }
     else
     {
@@ -421,102 +1322,102 @@ inline vec2 normalize(vec2 v)
 
 /* Compute reflection vector
  */
-inline vec2 reflect(vec2 v, vec2 n)
+inline Vector2 reflect(Vector2 v, Vector2 n)
 {
     return v - 2.0f * dot(v, n) * n;
 }
 
 /* Compute refraction vector
  */
-inline vec2 refract(vec2 v, vec2 n, float eta)
+inline Vector2 refract(Vector2 v, Vector2 n, F32 eta)
 {
-    const float k = 1.0f - eta * eta * (1.0f - dot(v, n) * dot(v, n));
+    const F32 k = 1.0f - eta * eta * (1.0f - dot(v, n) * dot(v, n));
     return k < 0.0f
-        ? vec2{ 0.0f, 0.0f }
+        ? Vector2{ 0.0f, 0.0f }
     : eta * v - (eta * dot(v, n) + sqrtf(k)) * v;
 }
 
 /* Compute faceforward vector
  */
-inline vec2 faceforward(vec2 n, vec2 i, vec2 nref)
+inline Vector2 faceforward(Vector2 n, Vector2 i, Vector2 nref)
 {
     return dot(i, nref) < 0.0f ? n : -n;
 }
 /* Computes sign of 'x'
 */
-inline vec3 sign(vec3 v)
+inline Vector3 sign(Vector3 v)
 {
-    return vec3{ signf(v.x), signf(v.y), signf(v.z) };
+    return Vector3{ signf(v.x), signf(v.y), signf(v.z) };
 }
 
 /* Computes absolute value
  */
-inline vec3 abs(vec3 v)
+inline Vector3 abs(Vector3 v)
 {
-    return vec3{ fabsf(v.x), fabsf(v.y), fabsf(v.z) };
+    return Vector3{ fabsf(v.x), fabsf(v.y), fabsf(v.z) };
 }
 
 /* Computes cosine
  */
-inline vec3 cos(vec3 v)
+inline Vector3 cos(Vector3 v)
 {
-    return vec3{ cosf(v.x), cosf(v.y), cosf(v.z) };
+    return Vector3{ cosf(v.x), cosf(v.y), cosf(v.z) };
 }
 
 /* Computes sine
  */
-inline vec3 sin(vec3 v)
+inline Vector3 sin(Vector3 v)
 {
-    return vec3{ sinf(v.x), sinf(v.y), sinf(v.z) };
+    return Vector3{ sinf(v.x), sinf(v.y), sinf(v.z) };
 }
 
 /* Computes tangent
  */
-inline vec3 tan(vec3 v)
+inline Vector3 tan(Vector3 v)
 {
-    return vec3{ tanf(v.x), tanf(v.y), tanf(v.z) };
+    return Vector3{ tanf(v.x), tanf(v.y), tanf(v.z) };
 }
 
 /* Computes hyperbolic cosine
  */
-inline vec3 cosh(vec3 v)
+inline Vector3 cosh(Vector3 v)
 {
-    return vec3{ coshf(v.x), coshf(v.y), coshf(v.z) };
+    return Vector3{ coshf(v.x), coshf(v.y), coshf(v.z) };
 }
 
 /* Computes hyperbolic sine
  */
-inline vec3 sinh(vec3 v)
+inline Vector3 sinh(Vector3 v)
 {
-    return vec3{ sinhf(v.x), sinhf(v.y), sinhf(v.z) };
+    return Vector3{ sinhf(v.x), sinhf(v.y), sinhf(v.z) };
 }
 
 /* Computes hyperbolic tangent
  */
-inline vec3 tanh(vec3 v)
+inline Vector3 tanh(Vector3 v)
 {
-    return vec3{ tanhf(v.x), tanhf(v.y), tanhf(v.z) };
+    return Vector3{ tanhf(v.x), tanhf(v.y), tanhf(v.z) };
 }
 
 /* Computes inverse cosine
  */
-inline vec3 acos(vec3 v)
+inline Vector3 acos(Vector3 v)
 {
-    return vec3{ acosf(v.x), acosf(v.y), acosf(v.z) };
+    return Vector3{ acosf(v.x), acosf(v.y), acosf(v.z) };
 }
 
 /* Computes inverse sine
  */
-inline vec3 asin(vec3 v)
+inline Vector3 asin(Vector3 v)
 {
-    return vec3{ asinf(v.x), asinf(v.y), asinf(v.z) };
+    return Vector3{ asinf(v.x), asinf(v.y), asinf(v.z) };
 }
 
 /* Computes inverse tangent
  */
-inline vec3 atan(vec3 v)
+inline Vector3 atan(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         atanf(v.x),
         atanf(v.y),
         asinf(v.z)
@@ -525,9 +1426,9 @@ inline vec3 atan(vec3 v)
 
 /* Computes inverse tangent with 2 args
  */
-inline vec3 atan2(vec3 a, vec3 b)
+inline Vector3 atan2(Vector3 a, Vector3 b)
 {
-    return vec3{
+    return Vector3{
         atan2f(a.x, b.x),
         atan2f(a.y, b.y),
         atan2f(a.z, b.z)
@@ -536,9 +1437,9 @@ inline vec3 atan2(vec3 a, vec3 b)
 
 /* Computes Euler number raised to the power 'x'
  */
-inline vec3 exp(vec3 v)
+inline Vector3 exp(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         expf(v.x),
         expf(v.y),
         expf(v.z)
@@ -547,9 +1448,9 @@ inline vec3 exp(vec3 v)
 
 /* Computes 2 raised to the power 'x'
  */
-inline vec3 exp2(vec3 v)
+inline Vector3 exp2(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         exp2f(v.x),
         exp2f(v.y),
         exp2f(v.z)
@@ -558,9 +1459,9 @@ inline vec3 exp2(vec3 v)
 
 /* Computes the base Euler number logarithm
  */
-inline vec3 log(vec3 v)
+inline Vector3 log(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         logf(v.x),
         logf(v.y),
         logf(v.z)
@@ -569,9 +1470,9 @@ inline vec3 log(vec3 v)
 
 /* Computes the base 2 logarithm
  */
-inline vec3 log2(vec3 v)
+inline Vector3 log2(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         log2f(v.x),
         log2f(v.y),
         log2f(v.z)
@@ -580,9 +1481,9 @@ inline vec3 log2(vec3 v)
 
 /* Computes the base 10 logarithm
  */
-inline vec3 log10(vec3 v)
+inline Vector3 log10(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         log10f(v.x),
         log10f(v.y),
         log10f(v.z)
@@ -591,9 +1492,9 @@ inline vec3 log10(vec3 v)
 
 /* Computes the value of base raised to the power exponent
  */
-inline vec3 pow(vec3 a, vec3 b)
+inline Vector3 pow(Vector3 a, Vector3 b)
 {
-    return vec3{
+    return Vector3{
         powf(a.x, b.x),
         powf(a.y, b.y),
         powf(a.z, b.z)
@@ -602,9 +1503,9 @@ inline vec3 pow(vec3 a, vec3 b)
 
 /* Get the fractal part of floating point
  */
-inline vec3 frac(vec3 v)
+inline Vector3 frac(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         fracf(v.x),
         fracf(v.y),
         fracf(v.z)
@@ -613,9 +1514,9 @@ inline vec3 frac(vec3 v)
 
 /* Computes the floating-point remainder of the division operation x/y
  */
-inline vec3 fmod(vec3 a, vec3 b)
+inline Vector3 fmod(Vector3 a, Vector3 b)
 {
-    return vec3{
+    return Vector3{
         fmodf(a.x, b.x),
         fmodf(a.y, b.y),
         fmodf(a.z, b.z)
@@ -624,9 +1525,9 @@ inline vec3 fmod(vec3 a, vec3 b)
 
 /* Computes the smallest integer value not less than 'x'
  */
-inline vec3 ceil(vec3 v)
+inline Vector3 ceil(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         ceilf(v.x),
         ceilf(v.y),
         ceilf(v.z)
@@ -635,9 +1536,9 @@ inline vec3 ceil(vec3 v)
 
 /* Computes the largest integer value not greater than 'x'
  */
-inline vec3 floor(vec3 v)
+inline Vector3 floor(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         floorf(v.x),
         floorf(v.y),
         floorf(v.z)
@@ -646,9 +1547,9 @@ inline vec3 floor(vec3 v)
 
 /* Computes the nearest integer value
  */
-inline vec3 round(vec3 v)
+inline Vector3 round(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         roundf(v.x),
         roundf(v.y),
         roundf(v.z)
@@ -657,9 +1558,9 @@ inline vec3 round(vec3 v)
 
 /* Computes the nearest integer not greater in magnitude than 'x'
  */
-inline vec3 trunc(vec3 v)
+inline Vector3 trunc(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         truncf(v.x),
         truncf(v.y),
         truncf(v.z)
@@ -668,9 +1569,9 @@ inline vec3 trunc(vec3 v)
 
 /* Get the smaller value
  */
-inline vec3 min(vec3 a, vec3 b)
+inline Vector3 min(Vector3 a, Vector3 b)
 {
-    return vec3{
+    return Vector3{
         minf(a.x, b.x),
         minf(a.y, b.y),
         minf(a.z, b.z)
@@ -679,9 +1580,9 @@ inline vec3 min(vec3 a, vec3 b)
 
 /* Get the larger value
  */
-inline vec3 max(vec3 a, vec3 b)
+inline Vector3 max(Vector3 a, Vector3 b)
 {
-    return vec3{
+    return Vector3{
         maxf(a.x, b.x),
         maxf(a.y, b.y),
         maxf(a.z, b.z)
@@ -690,9 +1591,9 @@ inline vec3 max(vec3 a, vec3 b)
 
 /* Clamps the 'x' value to the [min, max].
  */
-inline vec3 clamp(vec3 v, vec3 min, vec3 max)
+inline Vector3 clamp(Vector3 v, Vector3 min, Vector3 max)
 {
-    return vec3{
+    return Vector3{
         clampf(v.x, min.x, max.x),
         clampf(v.y, min.y, max.y),
         clampf(v.z, min.z, max.z)
@@ -701,9 +1602,9 @@ inline vec3 clamp(vec3 v, vec3 min, vec3 max)
 
 /* Clamps the specified value within the range of 0 to 1
  */
-inline vec3 saturate(vec3 v)
+inline Vector3 saturate(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         saturatef(v.x),
         saturatef(v.y),
         saturatef(v.z)
@@ -712,9 +1613,9 @@ inline vec3 saturate(vec3 v)
 
 /* Compares two values, returning 0 or 1 based on which value is greater.
  */
-inline vec3 step(vec3 a, vec3 b)
+inline Vector3 step(Vector3 a, Vector3 b)
 {
-    return vec3{
+    return Vector3{
         stepf(a.x, b.x),
         stepf(a.y, b.y),
         stepf(a.z, b.z)
@@ -723,9 +1624,9 @@ inline vec3 step(vec3 a, vec3 b)
 
 /* Performs a linear interpolation.
  */
-inline vec3 lerp(vec3 a, vec3 b, vec3 t)
+inline Vector3 lerp(Vector3 a, Vector3 b, Vector3 t)
 {
-    return vec3{
+    return Vector3{
         lerpf(a.x, b.x, t.x),
         lerpf(a.y, b.y, t.y),
         lerpf(a.z, b.z, t.z)
@@ -734,9 +1635,9 @@ inline vec3 lerp(vec3 a, vec3 b, vec3 t)
 
 /* Performs a linear interpolation.
  */
-inline vec3 lerp(vec3 a, vec3 b, float t)
+inline Vector3 lerp(Vector3 a, Vector3 b, F32 t)
 {
-    return vec3{
+    return Vector3{
         lerpf(a.x, b.x, t),
         lerpf(a.y, b.y, t),
         lerpf(a.z, b.z, t)
@@ -745,9 +1646,9 @@ inline vec3 lerp(vec3 a, vec3 b, float t)
 
 /* Compute a smooth Hermite interpolation
  */
-inline vec3 smoothstep(vec3 a, vec3 b, vec3 t)
+inline Vector3 smoothstep(Vector3 a, Vector3 b, Vector3 t)
 {
-    return vec3{
+    return Vector3{
         smoothstepf(a.x, b.x, t.x),
         smoothstepf(a.y, b.y, t.y),
         smoothstepf(a.z, b.z, t.z)
@@ -756,9 +1657,9 @@ inline vec3 smoothstep(vec3 a, vec3 b, vec3 t)
 
 /* Computes square root of 'x'.
  */
-inline vec3 sqrt(vec3 v)
+inline Vector3 sqrt(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         sqrtf(v.x),
         sqrtf(v.y),
         sqrtf(v.z)
@@ -767,9 +1668,9 @@ inline vec3 sqrt(vec3 v)
 
 /* Computes inverse square root of 'x'.
  */
-inline vec3 rsqrt(vec3 v)
+inline Vector3 rsqrt(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         rsqrtf(v.x),
         rsqrtf(v.y),
         rsqrtf(v.z)
@@ -778,9 +1679,9 @@ inline vec3 rsqrt(vec3 v)
 
 /* Computes fast inverse square root of 'x'.
  */
-inline vec3 fsqrt(vec3 v)
+inline Vector3 fsqrt(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         fsqrtf(v.x),
         fsqrtf(v.y),
         fsqrtf(v.z)
@@ -789,9 +1690,9 @@ inline vec3 fsqrt(vec3 v)
 
 /* Computes fast inverse square root of 'x'.
  */
-inline vec3 frsqrt(vec3 v)
+inline Vector3 frsqrt(Vector3 v)
 {
-    return vec3{
+    return Vector3{
         frsqrtf(v.x),
         frsqrtf(v.y),
         frsqrtf(v.z)
@@ -804,9 +1705,9 @@ inline vec3 frsqrt(vec3 v)
 
 /* Compute cross product of two vectors
  */
-inline vec3 cross(vec3 a, vec3 b)
+inline Vector3 cross(Vector3 a, Vector3 b)
 {
-    return vec3{
+    return Vector3{
         a.y * b.z - a.z * b.y,
         a.z * b.x - a.x * b.z,
         a.x * b.y - a.y * b.x
@@ -815,48 +1716,48 @@ inline vec3 cross(vec3 a, vec3 b)
 
 /* Compute dot product of two vectors
  */
-inline float dot(vec3 a, vec3 b)
+inline F32 dot(Vector3 a, Vector3 b)
 {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 /* Compute squared length of vector
  */
-inline float lensqr(vec3 v)
+inline F32 lensqr(Vector3 v)
 {
     return dot(v, v);
 }
 
 /* Compute length of vector
  */
-inline float length(vec3 v)
+inline F32 length(Vector3 v)
 {
     return sqrtf(lensqr(v));
 }
 
 /* Compute distance from 'a' to b
  */
-inline float distance(vec3 a, vec3 b)
+inline F32 distance(Vector3 a, Vector3 b)
 {
     return length(a - b);
 }
 
 /* Compute squared distance from 'a' to b
  */
-inline float distsqr(vec3 a, vec3 b)
+inline F32 distsqr(Vector3 a, Vector3 b)
 {
     return lensqr(a - b);
 }
 
 /* Compute normalized vector
  */
-inline vec3 normalize(vec3 v)
+inline Vector3 normalize(Vector3 v)
 {
-    const float lsqr = lensqr(v);
+    const F32 lsqr = lensqr(v);
     if (lsqr > 0.0f)
     {
-        const float f = rsqrtf(lsqr);
-        return vec3{ v.x * f, v.y * f, v.z * f };
+        const F32 f = rsqrtf(lsqr);
+        return Vector3{ v.x * f, v.y * f, v.z * f };
     }
     else
     {
@@ -866,33 +1767,33 @@ inline vec3 normalize(vec3 v)
 
 /* Compute reflection vector
  */
-inline vec3 reflect(vec3 v, vec3 n)
+inline Vector3 reflect(Vector3 v, Vector3 n)
 {
     return v - 2.0f * dot(v, n) * n;
 }
 
 /* Compute refraction vector
  */
-inline vec3 refract(vec3 v, vec3 n, float eta)
+inline Vector3 refract(Vector3 v, Vector3 n, F32 eta)
 {
-    const float k = 1.0f - eta * eta * (1.0f - dot(v, n) * dot(v, n));
+    const F32 k = 1.0f - eta * eta * (1.0f - dot(v, n) * dot(v, n));
     return k < 0.0f
-        ? vec3{ 0.0f, 0.0f, 0.0f }
+        ? Vector3{ 0.0f, 0.0f, 0.0f }
     : eta * v - (eta * dot(v, n) + sqrtf(k)) * n;
 }
 
 /* Compute faceforward vector
  */
-inline vec3 faceforward(vec3 n, vec3 i, vec3 nref)
+inline Vector3 faceforward(Vector3 n, Vector3 i, Vector3 nref)
 {
     return dot(i, nref) < 0.0f ? n : -n;
 }
 
 /* Computes sign of 'x'
 */
-inline vec4 sign(vec4 v)
+inline Vector4 sign(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         signf(v.x),
         signf(v.y),
         signf(v.z),
@@ -902,9 +1803,9 @@ inline vec4 sign(vec4 v)
 
 /* Computes absolute value
  */
-inline vec4 abs(vec4 v)
+inline Vector4 abs(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         fabsf(v.x),
         fabsf(v.y),
         fabsf(v.z),
@@ -914,9 +1815,9 @@ inline vec4 abs(vec4 v)
 
 /* Computes cosine
  */
-inline vec4 cos(vec4 v)
+inline Vector4 cos(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         cosf(v.x),
         cosf(v.y),
         cosf(v.z),
@@ -926,9 +1827,9 @@ inline vec4 cos(vec4 v)
 
 /* Computes sine
  */
-inline vec4 sin(vec4 v)
+inline Vector4 sin(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         sinf(v.x),
         sinf(v.y),
         sinf(v.z),
@@ -938,9 +1839,9 @@ inline vec4 sin(vec4 v)
 
 /* Computes tangent
  */
-inline vec4 tan(vec4 v)
+inline Vector4 tan(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         tanf(v.x),
         tanf(v.y),
         tanf(v.z),
@@ -950,9 +1851,9 @@ inline vec4 tan(vec4 v)
 
 /* Computes hyperbolic cosine
  */
-inline vec4 cosh(vec4 v)
+inline Vector4 cosh(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         coshf(v.x),
         coshf(v.y),
         coshf(v.z),
@@ -962,9 +1863,9 @@ inline vec4 cosh(vec4 v)
 
 /* Computes hyperbolic sine
  */
-inline vec4 sinh(vec4 v)
+inline Vector4 sinh(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         sinhf(v.x),
         sinhf(v.y),
         sinhf(v.z),
@@ -974,9 +1875,9 @@ inline vec4 sinh(vec4 v)
 
 /* Computes hyperbolic tangent
  */
-inline vec4 tanh(vec4 v)
+inline Vector4 tanh(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         tanhf(v.x),
         tanhf(v.y),
         tanhf(v.z),
@@ -986,9 +1887,9 @@ inline vec4 tanh(vec4 v)
 
 /* Computes inverse cosine
  */
-inline vec4 acos(vec4 v)
+inline Vector4 acos(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         acosf(v.x),
         acosf(v.y),
         acosf(v.z),
@@ -998,9 +1899,9 @@ inline vec4 acos(vec4 v)
 
 /* Computes inverse sine
  */
-inline vec4 asin(vec4 v)
+inline Vector4 asin(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         asinf(v.x),
         asinf(v.y),
         asinf(v.z),
@@ -1010,9 +1911,9 @@ inline vec4 asin(vec4 v)
 
 /* Computes inverse tangent
  */
-inline vec4 atan(vec4 v)
+inline Vector4 atan(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         atanf(v.x),
         atanf(v.y),
         atanf(v.z),
@@ -1022,51 +1923,51 @@ inline vec4 atan(vec4 v)
 
 /* Computes inverse tangent with 2 args
  */
-inline vec4 atan2(vec4 a, vec4 b)
+inline Vector4 atan2(Vector4 a, Vector4 b)
 {
-    return vec4{ atan2f(a.x, b.x), atan2f(a.y, b.y), atan2f(a.z, b.z), atan2f(a.w, b.w) };
+    return Vector4{ atan2f(a.x, b.x), atan2f(a.y, b.y), atan2f(a.z, b.z), atan2f(a.w, b.w) };
 }
 
 /* Computes Euler number raised to the power 'x'
  */
-inline vec4 exp(vec4 v)
+inline Vector4 exp(Vector4 v)
 {
-    return vec4{ expf(v.x), expf(v.y), expf(v.z), expf(v.w) };
+    return Vector4{ expf(v.x), expf(v.y), expf(v.z), expf(v.w) };
 }
 
 /* Computes 2 raised to the power 'x'
  */
-inline vec4 exp2(vec4 v)
+inline Vector4 exp2(Vector4 v)
 {
-    return vec4{ exp2f(v.x), exp2f(v.y), exp2f(v.z), exp2f(v.w) };
+    return Vector4{ exp2f(v.x), exp2f(v.y), exp2f(v.z), exp2f(v.w) };
 }
 
 /* Computes the base Euler number logarithm
  */
-inline vec4 log(vec4 v)
+inline Vector4 log(Vector4 v)
 {
-    return vec4{ logf(v.x), logf(v.y), logf(v.z), logf(v.w) };
+    return Vector4{ logf(v.x), logf(v.y), logf(v.z), logf(v.w) };
 }
 
 /* Computes the base 2 logarithm
  */
-inline vec4 log2(vec4 v)
+inline Vector4 log2(Vector4 v)
 {
-    return vec4{ log2f(v.x), log2f(v.y), log2f(v.z), log2f(v.w) };
+    return Vector4{ log2f(v.x), log2f(v.y), log2f(v.z), log2f(v.w) };
 }
 
 /* Computes the base 10 logarithm
  */
-inline vec4 log10(vec4 v)
+inline Vector4 log10(Vector4 v)
 {
-    return vec4{ log10f(v.x), log10f(v.y), log10f(v.z), log10f(v.w) };
+    return Vector4{ log10f(v.x), log10f(v.y), log10f(v.z), log10f(v.w) };
 }
 
 /* Computes the value of base raised to the power exponent
  */
-inline vec4 pow(vec4 a, vec4 b)
+inline Vector4 pow(Vector4 a, Vector4 b)
 {
-    return vec4{
+    return Vector4{
         powf(a.x, b.x),
         powf(a.y, b.y),
         powf(a.z, b.z),
@@ -1076,9 +1977,9 @@ inline vec4 pow(vec4 a, vec4 b)
 
 /* Get the fractal part of floating point
  */
-inline vec4 frac(vec4 v)
+inline Vector4 frac(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         fracf(v.x),
         fracf(v.y),
         fracf(v.z),
@@ -1088,9 +1989,9 @@ inline vec4 frac(vec4 v)
 
 /* Computes the floating-point remainder of the division operation x/y
  */
-inline vec4 fmod(vec4 a, vec4 b)
+inline Vector4 fmod(Vector4 a, Vector4 b)
 {
-    return vec4{
+    return Vector4{
         fmodf(a.x, b.x),
         fmodf(a.y, b.y),
         fmodf(a.z, b.z),
@@ -1100,9 +2001,9 @@ inline vec4 fmod(vec4 a, vec4 b)
 
 /* Computes the smallest integer value not less than 'x'
  */
-inline vec4 ceil(vec4 v)
+inline Vector4 ceil(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         ceilf(v.x),
         ceilf(v.y),
         ceilf(v.z),
@@ -1112,9 +2013,9 @@ inline vec4 ceil(vec4 v)
 
 /* Computes the largest integer value not greater than 'x'
  */
-inline vec4 floor(vec4 v)
+inline Vector4 floor(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         floorf(v.x),
         floorf(v.y),
         floorf(v.z),
@@ -1124,9 +2025,9 @@ inline vec4 floor(vec4 v)
 
 /* Computes the nearest integer value
  */
-inline vec4 round(vec4 v)
+inline Vector4 round(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         roundf(v.x),
         roundf(v.y),
         roundf(v.z),
@@ -1136,9 +2037,9 @@ inline vec4 round(vec4 v)
 
 /* Computes the nearest integer not greater in magnitude than 'x'
  */
-inline vec4 trunc(vec4 v)
+inline Vector4 trunc(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         truncf(v.x),
         truncf(v.y),
         truncf(v.z),
@@ -1148,9 +2049,9 @@ inline vec4 trunc(vec4 v)
 
 /* Get the smaller value
  */
-inline vec4 min(vec4 a, vec4 b)
+inline Vector4 min(Vector4 a, Vector4 b)
 {
-    return vec4{
+    return Vector4{
         minf(a.x, b.x),
         minf(a.y, b.y),
         minf(a.z, b.z),
@@ -1160,9 +2061,9 @@ inline vec4 min(vec4 a, vec4 b)
 
 /* Get the larger value
  */
-inline vec4 max(vec4 a, vec4 b)
+inline Vector4 max(Vector4 a, Vector4 b)
 {
-    return vec4{
+    return Vector4{
         maxf(a.x, b.x),
         maxf(a.y, b.y),
         maxf(a.z, b.z),
@@ -1172,9 +2073,9 @@ inline vec4 max(vec4 a, vec4 b)
 
 /* Clamps the 'x' value to the [min, max].
  */
-inline vec4 clamp(vec4 v, vec4 min, vec4 max)
+inline Vector4 clamp(Vector4 v, Vector4 min, Vector4 max)
 {
-    return vec4{
+    return Vector4{
         clampf(v.x, min.x, max.x),
         clampf(v.y, min.y, max.y),
         clampf(v.z, min.z, max.z),
@@ -1184,9 +2085,9 @@ inline vec4 clamp(vec4 v, vec4 min, vec4 max)
 
 /* Clamps the specified value within the range of 0 to 1
  */
-inline vec4 saturate(vec4 v)
+inline Vector4 saturate(Vector4 v)
 {
-    return vec4{
+    return Vector4{
         saturatef(v.x),
         saturatef(v.y),
         saturatef(v.z),
@@ -1196,9 +2097,9 @@ inline vec4 saturate(vec4 v)
 
 /* Compares two values, returning 0 or 1 based on which value is greater.
  */
-inline vec4 step(vec4 a, vec4 b)
+inline Vector4 step(Vector4 a, Vector4 b)
 {
-    return vec4{
+    return Vector4{
         stepf(a.x, b.x),
         stepf(a.y, b.y),
         stepf(a.z, b.z),
@@ -1208,9 +2109,9 @@ inline vec4 step(vec4 a, vec4 b)
 
 /* Performs a linear interpolation.
  */
-inline vec4 lerp(vec4 a, vec4 b, vec4 t)
+inline Vector4 lerp(Vector4 a, Vector4 b, Vector4 t)
 {
-    return vec4{
+    return Vector4{
         lerpf(a.x, b.x, t.x),
         lerpf(a.y, b.y, t.y),
         lerpf(a.z, b.z, t.z),
@@ -1220,9 +2121,9 @@ inline vec4 lerp(vec4 a, vec4 b, vec4 t)
 
 /* Performs a linear interpolation.
  */
-inline vec4 lerp(vec4 a, vec4 b, float t)
+inline Vector4 lerp(Vector4 a, Vector4 b, F32 t)
 {
-    return vec4{
+    return Vector4{
         lerpf(a.x, b.x, t),
         lerpf(a.y, b.y, t),
         lerpf(a.z, b.z, t),
@@ -1232,9 +2133,9 @@ inline vec4 lerp(vec4 a, vec4 b, float t)
 
 /* Compute a smooth Hermite interpolation
  */
-inline vec4 smoothstep(vec4 a, vec4 b, vec4 t)
+inline Vector4 smoothstep(Vector4 a, Vector4 b, Vector4 t)
 {
-    return vec4{
+    return Vector4{
         smoothstepf(a.x, b.x, t.x),
         smoothstepf(a.y, b.y, t.y),
         smoothstepf(a.z, b.z, t.z),
@@ -1244,30 +2145,30 @@ inline vec4 smoothstep(vec4 a, vec4 b, vec4 t)
 
 /* Computes square root of 'x'.
  */
-inline vec4 sqrt(vec4 v)
+inline Vector4 sqrt(Vector4 v)
 {
-    return vec4{ sqrtf(v.x), sqrtf(v.y), sqrtf(v.z), sqrtf(v.w) };
+    return Vector4{ sqrtf(v.x), sqrtf(v.y), sqrtf(v.z), sqrtf(v.w) };
 }
 
 /* Computes inverse square root of 'x'.
  */
-inline vec4 rsqrt(vec4 v)
+inline Vector4 rsqrt(Vector4 v)
 {
-    return vec4{ rsqrtf(v.x), rsqrtf(v.y), rsqrtf(v.z), rsqrtf(v.w) };
+    return Vector4{ rsqrtf(v.x), rsqrtf(v.y), rsqrtf(v.z), rsqrtf(v.w) };
 }
 
 /* Computes fast inverse square root of 'x'.
  */
-inline vec4 fsqrt(vec4 v)
+inline Vector4 fsqrt(Vector4 v)
 {
-    return vec4{ fsqrtf(v.x), fsqrtf(v.y), fsqrtf(v.z), fsqrtf(v.w) };
+    return Vector4{ fsqrtf(v.x), fsqrtf(v.y), fsqrtf(v.z), fsqrtf(v.w) };
 }
 
 /* Computes fast inverse square root of 'x'.
  */
-inline vec4 frsqrt(vec4 v)
+inline Vector4 frsqrt(Vector4 v)
 {
-    return vec4{ frsqrtf(v.x), frsqrtf(v.y), frsqrtf(v.z), frsqrtf(v.w) };
+    return Vector4{ frsqrtf(v.x), frsqrtf(v.y), frsqrtf(v.z), frsqrtf(v.w) };
 }
 
 //
@@ -1276,48 +2177,48 @@ inline vec4 frsqrt(vec4 v)
 
 /* Compute dot product of two vectors
  */
-inline float dot(vec4 a, vec4 b)
+inline F32 dot(Vector4 a, Vector4 b)
 {
     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
 /* Compute squared length of vector
  */
-inline float lensqr(vec4 v)
+inline F32 lensqr(Vector4 v)
 {
     return dot(v, v);
 }
 
 /* Compute length of vector
  */
-inline float length(vec4 v)
+inline F32 length(Vector4 v)
 {
     return sqrtf(lensqr(v));
 }
 
 /* Compute distance from 'a' to b
  */
-inline float distance(vec4 a, vec4 b)
+inline F32 distance(Vector4 a, Vector4 b)
 {
     return length(a - b);
 }
 
 /* Compute squared distance from 'a' to b
  */
-inline float distsqr(vec4 a, vec4 b)
+inline F32 distsqr(Vector4 a, Vector4 b)
 {
     return lensqr(a - b);
 }
 
 /* Compute normalized vector
  */
-inline vec4 normalize(vec4 v)
+inline Vector4 normalize(Vector4 v)
 {
-    const float lsqr = lensqr(v);
+    const F32 lsqr = lensqr(v);
     if (lsqr > 0.0f)
     {
-        const float f = rsqrtf(lsqr);
-        return vec4{ v.x * f, v.y * f, v.z * f, v.w * f };
+        const F32 f = rsqrtf(lsqr);
+        return Vector4{ v.x * f, v.y * f, v.z * f, v.w * f };
     }
     else
     {
@@ -1327,24 +2228,24 @@ inline vec4 normalize(vec4 v)
 
 /* Compute reflection vector
  */
-inline vec4 reflect(vec4 v, vec4 n)
+inline Vector4 reflect(Vector4 v, Vector4 n)
 {
     return v - 2.0f * dot(v, n) * n;
 }
 
 /* Compute refraction vector
  */
-inline vec4 refract(vec4 v, vec4 n, float eta)
+inline Vector4 refract(Vector4 v, Vector4 n, F32 eta)
 {
-    const float k = 1.0f - eta * eta * (1.0f - dot(v, n) * dot(v, n));
+    const F32 k = 1.0f - eta * eta * (1.0f - dot(v, n) * dot(v, n));
     return k < 0.0f
-        ? vec4{ 0.0f, 0.0f, 0.0f, 0.0f }
+        ? Vector4{ 0.0f, 0.0f, 0.0f, 0.0f }
     : eta * v - (eta * dot(v, n) + sqrtf(k)) * n;
 }
 
 /* Compute faceforward vector
  */
-inline vec4 faceforward(vec4 n, vec4 i, vec4 nref)
+inline Vector4 faceforward(Vector4 n, Vector4 i, Vector4 nref)
 {
     return dot(i, nref) < 0.0f ? n : -n;
 }
@@ -1355,38 +2256,38 @@ inline vec4 faceforward(vec4 n, vec4 i, vec4 nref)
 
 /* Quaternion multiplication
  */
-inline quat mul(quat a, quat b)
+inline Quaternion mul(Quaternion a, Quaternion b)
 {
-    const vec3 a3 = vec3{ a.x, a.y, a.z };
-    const vec3 b3 = vec3{ b.x, b.y, b.z };
+    const Vector3 a3 = Vector3{ a.x, a.y, a.z };
+    const Vector3 b3 = Vector3{ b.x, b.y, b.z };
 
-    vec3 v = a3 * b.w + b3 * a.w + cross(a3, b3);
-    float  w = a.w * b.w - dot(a3, b3);
-    return quat{ v.x, v.y, v.z, w };
+    Vector3 v = a3 * b.w + b3 * a.w + cross(a3, b3);
+    F32  w = a.w * b.w - dot(a3, b3);
+    return Quaternion{ v.x, v.y, v.z, w };
 }
 
-inline quat inverse(quat q)
+inline Quaternion inverse(Quaternion q)
 {
-    return quat{ q.x, q.y, q.z, -q.w };
+    return Quaternion{ q.x, q.y, q.z, -q.w };
 }
 
-inline quat conj(quat q)
+inline Quaternion conj(Quaternion q)
 {
-    return quat{ -q.x, -q.y, -q.z, q.w };
+    return Quaternion{ -q.x, -q.y, -q.z, q.w };
 }
 
 //
 // @region: Quaternion
 //
 
-inline vec4 mul(mat4 a, vec4 b)
+inline Vector4 mul(Matrix4 a, Vector4 b)
 {
-    const vec4 c0 = vec4{ a.data[0][0], a.data[1][0], a.data[2][0], a.data[3][0] };
-    const vec4 c1 = vec4{ a.data[0][1], a.data[1][1], a.data[2][1], a.data[3][1] };
-    const vec4 c2 = vec4{ a.data[0][2], a.data[1][2], a.data[2][2], a.data[3][2] };
-    const vec4 c3 = vec4{ a.data[0][3], a.data[1][3], a.data[2][3], a.data[3][3] };
+    const Vector4 c0 = Vector4{ a.data[0][0], a.data[1][0], a.data[2][0], a.data[3][0] };
+    const Vector4 c1 = Vector4{ a.data[0][1], a.data[1][1], a.data[2][1], a.data[3][1] };
+    const Vector4 c2 = Vector4{ a.data[0][2], a.data[1][2], a.data[2][2], a.data[3][2] };
+    const Vector4 c3 = Vector4{ a.data[0][3], a.data[1][3], a.data[2][3], a.data[3][3] };
 
-    return vec4{
+    return Vector4{
         dot(c0, b),
         dot(c1, b),
         dot(c2, b),
@@ -1394,14 +2295,14 @@ inline vec4 mul(mat4 a, vec4 b)
     };
 }
 
-inline vec4 mul(vec4 a, mat4 b)
+inline Vector4 mul(Vector4 a, Matrix4 b)
 {
-    const vec4 c0 = vec4{ b.data[0][0], b.data[0][1], b.data[0][2], b.data[0][3] };
-    const vec4 c1 = vec4{ b.data[1][0], b.data[1][1], b.data[1][2], b.data[1][3] };
-    const vec4 c2 = vec4{ b.data[2][0], b.data[2][1], b.data[2][2], b.data[2][3] };
-    const vec4 c3 = vec4{ b.data[3][0], b.data[3][1], b.data[3][2], b.data[3][3] };
+    const Vector4 c0 = Vector4{ b.data[0][0], b.data[0][1], b.data[0][2], b.data[0][3] };
+    const Vector4 c1 = Vector4{ b.data[1][0], b.data[1][1], b.data[1][2], b.data[1][3] };
+    const Vector4 c2 = Vector4{ b.data[2][0], b.data[2][1], b.data[2][2], b.data[2][3] };
+    const Vector4 c3 = Vector4{ b.data[3][0], b.data[3][1], b.data[3][2], b.data[3][3] };
 
-    return vec4{
+    return Vector4{
         dot(a, c0),
         dot(a, c1),
         dot(a, c2),
@@ -1409,37 +2310,37 @@ inline vec4 mul(vec4 a, mat4 b)
     };
 }
 
-inline vec3 mul(mat4 a, vec3 b)
+inline Vector3 mul(Matrix4 a, Vector3 b)
 {
-    const vec4 b0 = vec4{ b.x, b.y, b.z, 1.0f };
-    const vec4 b1 = mul(a, b0);
+    const Vector4 b0 = Vector4{ b.x, b.y, b.z, 1.0f };
+    const Vector4 b1 = mul(a, b0);
 
-    const float iw = 1.0f / b1.w;
-    return vec3{ b1.x * iw, b1.y * iw, b1.z * iw };
+    const F32 iw = 1.0f / b1.w;
+    return Vector3{ b1.x * iw, b1.y * iw, b1.z * iw };
 }
 
-inline vec3 mul(vec3 a, mat4 b)
+inline Vector3 mul(Vector3 a, Matrix4 b)
 {
-    const vec4 a0 = vec4{ a.x, a.y, a.z, 1.0f };
-    const vec4 a1 = mul(a0, b);
+    const Vector4 a0 = Vector4{ a.x, a.y, a.z, 1.0f };
+    const Vector4 a1 = mul(a0, b);
 
-    const float iw = 1.0f / a1.w;
-    return vec3{ a1.x * iw, a1.y * iw, a1.z * iw };
+    const F32 iw = 1.0f / a1.w;
+    return Vector3{ a1.x * iw, a1.y * iw, a1.z * iw };
 }
 
-inline mat4 mul(mat4 a, mat4 b)
+inline Matrix4 mul(Matrix4 a, Matrix4 b)
 {
-    const vec4 c0 = vec4{ b.data[0][0], b.data[0][1], b.data[0][2], b.data[0][3] };
-    const vec4 c1 = vec4{ b.data[1][0], b.data[1][1], b.data[1][2], b.data[1][3] };
-    const vec4 c2 = vec4{ b.data[2][0], b.data[2][1], b.data[2][2], b.data[2][3] };
-    const vec4 c3 = vec4{ b.data[3][0], b.data[3][1], b.data[3][2], b.data[3][3] };
+    const Vector4 c0 = Vector4{ b.data[0][0], b.data[0][1], b.data[0][2], b.data[0][3] };
+    const Vector4 c1 = Vector4{ b.data[1][0], b.data[1][1], b.data[1][2], b.data[1][3] };
+    const Vector4 c2 = Vector4{ b.data[2][0], b.data[2][1], b.data[2][2], b.data[2][3] };
+    const Vector4 c3 = Vector4{ b.data[3][0], b.data[3][1], b.data[3][2], b.data[3][3] };
 
-    const vec4 v0 = mul(a, c0);
-    const vec4 v1 = mul(a, c1);
-    const vec4 v2 = mul(a, c2);
-    const vec4 v3 = mul(a, c3);
+    const Vector4 v0 = mul(a, c0);
+    const Vector4 v1 = mul(a, c1);
+    const Vector4 v2 = mul(a, c2);
+    const Vector4 v3 = mul(a, c3);
 
-    return mat4{
+    return Matrix4{
         v0.x, v0.y, v0.z, v0.w,
         v1.x, v1.y, v1.z, v1.w,
         v2.x, v2.y, v2.z, v2.w,
@@ -1449,32 +2350,32 @@ inline mat4 mul(mat4 a, mat4 b)
 
 namespace Math
 {
-    inline vec4 ToAxisAngle(quat q)
+    inline Vector4 ToAxisAngle(Quaternion q)
     {
-        const float ilen = 1.0f / sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
-        const vec4 c = q.w != 0.0f
-            ? vec4{ q.x * ilen, q.y * ilen, q.z * ilen, q.w * ilen }
-        : vec4{ q.x, q.y, q.z, q.w };
+        const F32 ilen = 1.0f / sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+        const Vector4 c = q.w != 0.0f
+            ? Vector4{ q.x * ilen, q.y * ilen, q.z * ilen, q.w * ilen }
+        : Vector4{ q.x, q.y, q.z, q.w };
 
-        const float den = sqrtf(1.0f - q.w * q.w);
-        const vec3 axis = (den > 0.0001f)
-            ? vec3{ c.x / den, c.y / den, c.z / den }
-        : vec3{ 1, 0, 0 };
+        const F32 den = sqrtf(1.0f - q.w * q.w);
+        const Vector3 axis = (den > 0.0001f)
+            ? Vector3{ c.x / den, c.y / den, c.z / den }
+        : Vector3{ 1, 0, 0 };
 
-        float angle = 2.0f * cosf(c.w);
-        return vec4{ axis.x, axis.y, axis.z, angle };
+        F32 angle = 2.0f * cosf(c.w);
+        return Vector4{ axis.x, axis.y, axis.z, angle };
     }
 
-    inline quat FromAxisAngle(vec3 axis, float angle)
+    inline Quaternion FromAxisAngle(Vector3 axis, F32 angle)
     {
-        return quat{};
+        return Quaternion{};
     }
 
-    inline mat4 Ortho(float l, float r, float b, float t, float n, float f)
+    inline Matrix4 Ortho(F32 l, F32 r, F32 b, F32 t, F32 n, F32 f)
     {
-        const float x = 1.0f / (r - l);
-        const float y = 1.0f / (t - b);
-        const float z = 1.0f / (f - n);
+        const F32 x = 1.0f / (r - l);
+        const F32 y = 1.0f / (t - b);
+        const F32 z = 1.0f / (f - n);
 
         return {
             2.0f * x, 0, 0, 0,
@@ -1484,11 +2385,11 @@ namespace Math
         };
     }
 
-    inline mat4 Frustum(float l, float r, float b, float t, float n, float f)
+    inline Matrix4 Frustum(F32 l, F32 r, F32 b, F32 t, F32 n, F32 f)
     {
-        const float x = 1.0f / (r - l);
-        const float y = 1.0f / (t - b);
-        const float z = 1.0f / (f - n);
+        const F32 x = 1.0f / (r - l);
+        const F32 y = 1.0f / (t - b);
+        const F32 z = 1.0f / (f - n);
 
         return {
             2.0f * x, 0, 0, 0,
@@ -1498,10 +2399,10 @@ namespace Math
         };
     }
 
-    inline mat4 Perspective(float fov, float aspect, float znear, float zfar)
+    inline Matrix4 Perspective(F32 fov, F32 aspect, F32 znear, F32 zfar)
     {
-        const float a = 1.0f / tanf(fov * 0.5f);
-        const float b = zfar / (znear - zfar);
+        const F32 a = 1.0f / tanf(fov * 0.5f);
+        const F32 b = zfar / (znear - zfar);
 
         return {
             a / aspect, 0, 0, 0,
@@ -1511,7 +2412,7 @@ namespace Math
         };
     }
 
-    inline mat4 Scalation(float x, float y, float z = 1.0f)
+    inline Matrix4 Scalation(F32 x, F32 y, F32 z = 1.0f)
     {
         return {
             x, 0, 0, 0,
@@ -1521,22 +2422,22 @@ namespace Math
         };
     }
 
-    inline mat4 Scalation(float s)
+    inline Matrix4 Scalation(F32 s)
     {
         return Scalation(s, s, s);
     }
 
-    inline mat4 Scalation(vec2 v)
+    inline Matrix4 Scalation(Vector2 v)
     {
         return Scalation(v.x, v.y, 0);
     }
 
-    inline mat4 Scalation(vec3 v)
+    inline Matrix4 Scalation(Vector3 v)
     {
         return Scalation(v.x, v.y, v.z);
     }
 
-    inline mat4 Translation(float x, float y, float z = 0.0f)
+    inline Matrix4 Translation(F32 x, F32 y, F32 z = 0.0f)
     {
         return {
             1, 0, 0, 0,
@@ -1546,21 +2447,21 @@ namespace Math
         };
     }
 
-    inline mat4 Translation(vec2 v)
+    inline Matrix4 Translation(Vector2 v)
     {
         return Translation(v.x, v.y, 0);
     }
 
-    inline mat4 Translation(vec3 v)
+    inline Matrix4 Translation(Vector3 v)
     {
         return Translation(v.x, v.y, v.z);
     }
 
-    inline mat4 Rotation(float x, float y, float z, float angle)
+    inline Matrix4 Rotation(F32 x, F32 y, F32 z, F32 angle)
     {
-        const float c = cosf(-angle);
-        const float s = sinf(-angle);
-        const float t = 1.0f - c;
+        const F32 c = cosf(-angle);
+        const F32 s = sinf(-angle);
+        const F32 t = 1.0f - c;
 
         return {
             /* Row 1 */
@@ -1586,15 +2487,15 @@ namespace Math
         };
     }
 
-    inline mat4 Rotation(vec3 axis, float angle)
+    inline Matrix4 Rotation(Vector3 axis, F32 angle)
     {
         return Rotation(axis.x, axis.y, axis.z, angle);
     }
 
-    inline mat4 RotationX(float angle)
+    inline Matrix4 RotationX(F32 angle)
     {
-        const float s = sinf(angle);
-        const float c = cosf(angle);
+        const F32 s = sinf(angle);
+        const F32 c = cosf(angle);
 
         return {
             1,  0, 0, 0,
@@ -1604,10 +2505,10 @@ namespace Math
         };
     }
 
-    inline mat4 RotationY(float angle)
+    inline Matrix4 RotationY(F32 angle)
     {
-        const float s = sinf(angle);
-        const float c = cosf(angle);
+        const F32 s = sinf(angle);
+        const F32 c = cosf(angle);
 
         return {
              c, 0, s, 0,
@@ -1617,10 +2518,10 @@ namespace Math
         };
     }
 
-    inline mat4 RotationZ(float angle)
+    inline Matrix4 RotationZ(F32 angle)
     {
-        const float s = sinf(angle);
-        const float c = cosf(angle);
+        const F32 s = sinf(angle);
+        const F32 c = cosf(angle);
 
         return {
              c, s, 0, 0,
@@ -1630,27 +2531,27 @@ namespace Math
         };
     }
 
-    inline mat4 Rotation(quat quaternion)
+    inline Matrix4 Rotation(Quaternion quaternion)
     {
-        vec4 axisangle = ToAxisAngle(quaternion);
+        Vector4 axisangle = ToAxisAngle(quaternion);
         return Rotation(axisangle.x, axisangle.y, axisangle.z, axisangle.w);
     }
 
-    inline mat4 Transform(vec2 position, float rotation, vec2 scale)
+    inline Matrix4 Transform(Vector2 position, F32 rotation, Vector2 scale)
     {
         return mul(mul(Math::Translation(position), Math::RotationZ(rotation)), Math::Scalation(scale));
     }
 
-    inline mat4 Transform(vec3 position, quat rotation, vec3 scale)
+    inline Matrix4 Transform(Vector3 position, Quaternion rotation, Vector3 scale)
     {
         return mul(mul(Math::Translation(position), Math::Rotation(rotation)), Math::Scalation(scale));
     }
 
-    inline mat4 Transform2D(vec2 position, float rotation, vec2 scale, vec2 pivot)
+    inline Matrix4 Transform2D(Vector2 position, F32 rotation, Vector2 scale, Vector2 pivot)
     {
-        mat4 translation = Translation(position - pivot);
-        mat4 rotationMat4 = mul(mul(Translation(pivot.x, pivot.y), RotationZ(rotation)), Translation(-pivot.x, -pivot.y));
-        mat4 scalation = Scalation(scale);
+        Matrix4 translation = Translation(position - pivot);
+        Matrix4 rotationMat4 = mul(mul(Translation(pivot.x, pivot.y), RotationZ(rotation)), Translation(-pivot.x, -pivot.y));
+        Matrix4 scalation = Scalation(scale);
 
         return mul(mul(translation, rotationMat4), scalation);
     }

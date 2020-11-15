@@ -35,7 +35,7 @@ struct Json
     JsonType type;
     union
     {
-        double          number;
+        F64             number;
         bool            boolean;
 
         String          string;
@@ -49,7 +49,7 @@ struct Json
 namespace JsonOps
 {
     Json*       Parse(String content);
-    Json*       Parse(String content, int contentLength);
+    Json*       Parse(String content, I32 contentLength);
 
     void        Release(Json* rootValue);
 
@@ -59,5 +59,5 @@ namespace JsonOps
     bool        Equals(Json a, Json b);
 
     Json        Find(Json x, String name);
-    Json        Find(Json x, uint64 hash);
+    Json        Find(Json x, U64 hash);
 }

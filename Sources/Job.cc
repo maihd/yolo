@@ -17,14 +17,14 @@ namespace JobOps
 
     void UpdateJobs(void)
     {
-        int n = jobs.length;
+        int n = jobs.count;
         for (int i = 0; i < n; i++)
         {
             Job job = jobs.elements[i];
             job.executor();
         }
 
-        if (n == jobs.length)
+        if (n == jobs.count)
         {
             ArrayOps::Clear(&jobs);
         }

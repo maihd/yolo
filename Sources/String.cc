@@ -20,12 +20,12 @@ namespace StringOps
 
     String Intern(String source)
     {
-        uint64 hash = CalcHash64(source);
+        U64 hash = CalcHash64(source);
 
         return Intern(hash, source);
     }
 
-    String Intern(uint64 hash, String source)
+    String Intern(U64 hash, String source)
     {
         if (Length(source) == 0)
         {
@@ -45,7 +45,7 @@ namespace StringOps
         }
     }
 
-    String InternNoAllocation(uint64 hash, String source)
+    String InternNoAllocation(U64 hash, String source)
     {
         if (Length(source) == 0)
         {
@@ -64,7 +64,7 @@ namespace StringOps
         }
     }
 
-    int Length(String target)
+    I32 Length(String target)
     {
         if (!target || target == "")
         {
@@ -72,7 +72,7 @@ namespace StringOps
         }
         else
         {
-            return (int)strlen(target);
+            return (I32)strlen(target);
         }
     }
 
@@ -81,12 +81,12 @@ namespace StringOps
         return StringOps::Length(target) == 0;
     }
 
-    int Compare(String str0, String str1)
+    I32 Compare(String str0, String str1)
     {
         return strcmp(str0, str1);
     }
 
-    String Format(int bufferSize, String format, ...)
+    String Format(I32 bufferSize, String format, ...)
     {
         ArgList argv;
         ArgListBegin(argv, format);
@@ -95,13 +95,13 @@ namespace StringOps
         return result;
     }
 
-    String FormatArgv(int bufferSize, String format, ArgList argv)
+    String FormatArgv(I32 bufferSize, String format, ArgList argv)
     {
         void* buffer = malloc(bufferSize);
         return FormatArgv(buffer, bufferSize, format, argv);
     }
 
-    String Format(void* buffer, int bufferSize, String format, ...)
+    String Format(void* buffer, I32 bufferSize, String format, ...)
     {
         ArgList argv;
         ArgListBegin(argv, format);
@@ -110,26 +110,26 @@ namespace StringOps
         return result;
     }
 
-    String FormatArgv(void* buffer, int bufferSize, String format, ArgList argv)
+    String FormatArgv(void* buffer, I32 bufferSize, String format, ArgList argv)
     {
         vsprintf((char*)buffer, format, argv);
         return (char*)buffer;
     }
 
-    char CharAt(String target, int index)
+    char CharAt(String target, I32 index)
     {
         return target[index];
     }
 
-    int CharCodeAt(String target, int index)
+    I32 CharCodeAt(String target, I32 index)
     {
         return target[index];
     }
 
-    int IndexOf(String target, int charCode)
+    I32 IndexOf(String target, I32 charCode)
     {
-        int length = StringOps::Length(target);
-        for (int i = 0; i < length; i++)
+        I32 length = StringOps::Length(target);
+        for (I32 i = 0; i < length; i++)
         {
             if (StringOps::CharCodeAt(target, i) == charCode)
             {
@@ -140,10 +140,10 @@ namespace StringOps
         return -1;
     }
 
-    int IndexOf(String target, String substring)
+    I32 IndexOf(String target, String substring)
     {
-        int substringLength = StringOps::Length(substring);
-        for (int i = 0, n = StringOps::Length(target) - substringLength; i < n; i++)
+        I32 substringLength = StringOps::Length(substring);
+        for (I32 i = 0, n = StringOps::Length(target) - substringLength; i < n; i++)
         {
             if (strncmp(target + i, substring, (size_t)substringLength) == 0)
             {
@@ -154,10 +154,10 @@ namespace StringOps
         return -1;
     }
 
-    int LastIndexOf(String target, int charCode)
+    I32 LastIndexOf(String target, I32 charCode)
     {
-        int length = StringOps::Length(target);
-        for (int i = length - 1; i > -1; i--)
+        I32 length = StringOps::Length(target);
+        for (I32 i = length - 1; i > -1; i--)
         {
             if (StringOps::CharCodeAt(target, i) == charCode)
             {
@@ -168,10 +168,10 @@ namespace StringOps
         return -1;
     }
 
-    int LastIndexOf(String target, String substring)
+    I32 LastIndexOf(String target, String substring)
     {
-        int substringLength = StringOps::Length(substring);
-        for (int i = StringOps::Length(target) - substringLength - 1; i > -1; i--)
+        I32 substringLength = StringOps::Length(substring);
+        for (I32 i = StringOps::Length(target) - substringLength - 1; i > -1; i--)
         {
             if (strncmp(target + i, substring, (size_t)substringLength) == 0)
             {
@@ -182,7 +182,7 @@ namespace StringOps
         return -1;
     }
 
-    String SubString(String source, int start, int end)
+    String SubString(String source, I32 start, I32 end)
     {
         if (start < 0)
         {
@@ -195,7 +195,7 @@ namespace StringOps
         }
         else
         {
-            int substringLength = end - start;
+            I32 substringLength = end - start;
             if (substringLength <= 0)
             {
                 return "";

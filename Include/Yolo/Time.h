@@ -4,22 +4,22 @@
 
 namespace Time
 {
-    uint64  GetCounter(void);
-    uint64  GetFrequency(void);
-    void    MicroSleep(uint64 microseconds);
+    U64     GetCounter(void);
+    U64     GetFrequency(void);
+    void    MicroSleep(U64 microseconds);
 
-    float   GetFramerate(void);
+    F32     GetFramerate(void);
     int     GetTotalFrames(void);
 
-    float   GetTotalTime(void);
+    F32     GetTotalTime(void);
 
-    float   GetTimeScale(void);
-    void    SetTimeScale(float timeScale);
+    F32     GetTimeScale(void);
+    void    SetTimeScale(F32 timeScale);
 
-    float   GetDeltaTime(void);
-    float   GetUnscaledDeltaTime(void);
+    F32     GetDeltaTime(void);
+    F32     GetUnscaledDeltaTime(void);
 
     void    Update(void);
-    bool    UpdateAndSleep(float framerate = 0);
+    bool    UpdateAndSleep(F32 framerate = 0);
 }
 

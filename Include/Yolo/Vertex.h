@@ -4,37 +4,37 @@
 
 struct Vertex
 {
-    vec3    position;
-    vec2    uv;
+    Vector3     position;
+    Vector2     uv;
 };
 
 struct VertexColor
 {
-    vec3    position;
-    vec2    uv;
-    vec4    color;
+    Vector3     position;
+    Vector2     uv;
+    Vector4     color;
 };
 
 struct VertexColorU32
 {
-    vec3    position;
-    vec2    uv;
-    uint32  color;
+    Vector3     position;
+    Vector2     uv;
+    U32         color;
 };
 
 struct VertexShape
 {
-    vec3    position;
+    Vector3     position;
 };
 
 struct VertexShapeColor
 {
-    vec3    position;
-    vec4    color;
+    Vector3     position;
+    Vector4     color;
 };
 
 struct VertexShapeColorU32
 {
-    vec3    position;
-    uint32  color;
+    Vector3     position;
+    U32         color;
 };

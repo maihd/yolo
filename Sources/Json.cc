@@ -117,7 +117,7 @@ namespace JsonOps
             switch (value->type)
             {
             case JsonType::Array:
-                for (i = 0, n = value->array.length; i < n; i++)
+                for (i = 0, n = value->array.count; i < n; i++)
                 {
                     Json_ReleaseMemory(&value->array.elements[i]);
                 }
@@ -412,7 +412,7 @@ namespace JsonOps
             Array<Json> values = {};
             while (Json_SkipSpace(state) > 0 && Json_PeekChar(state) != ']')
             {
-                if (values.length > 0)
+                if (values.count > 0)
                 {
                     Json_MatchChar(state, JsonType::Array, ',');
                 }
@@ -804,7 +804,7 @@ namespace JsonOps
             return a.boolean == b.boolean;
 
         case JsonType::Array:
-            if ((n = a.array.length) == b.array.length)
+            if ((n = a.array.count) == b.array.count)
             {
                 for (i = 0; i < n; i++)
                 {
@@ -846,7 +846,7 @@ namespace JsonOps
         return Find(obj, CalcHash64(name));
     }
 
-    Json Find(Json obj, uint64 hash)
+    Json Find(Json obj, U64 hash)
     {
         if (obj.type == JsonType::Object)
         {

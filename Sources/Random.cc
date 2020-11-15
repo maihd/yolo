@@ -2,9 +2,9 @@
 
 namespace Random
 {
-    int32 NextI32(int32 seed)
+    I32 NextI32(I32 seed)
     {
-        int32 result = seed;
+        I32 result = seed;
 
         result ^= (result >> 12);
         result ^= (result << 17);
@@ -13,9 +13,9 @@ namespace Random
         return result;
     }
 
-    int64 NextI64(int64 seed)
+    I64 NextI64(I64 seed)
     {
-        int64 result = seed;
+        I64 result = seed;
 
         result ^= (result >> 12);
         result ^= (result << 17);
@@ -27,9 +27,9 @@ namespace Random
         return result;
     }
 
-    uint32 NextU32(uint32 seed)
+    U32 NextU32(U32 seed)
     {
-        uint32 result = seed;
+        U32 result = seed;
 
         result ^= (result >> 12);
         result ^= (result << 17);
@@ -38,9 +38,9 @@ namespace Random
         return result;
     }
 
-    uint64 NextU64(uint64 seed)
+    U64 NextU64(U64 seed)
     {
-        uint64 result = seed;
+        U64 result = seed;
 
         result ^= (result >> 12);
         result ^= (result << 17);

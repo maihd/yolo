@@ -31,7 +31,7 @@ namespace
 
 namespace AudioBufferOps
 {
-    AudioBuffer New(const void* data, int size, int frequency, AudioFormat format)
+    AudioBuffer New(const void* data, I32 size, I32 frequency, AudioFormat format)
     {
         AudioBuffer buffer;
         alGenBuffers(1, &buffer.handle);
@@ -69,12 +69,12 @@ namespace AudioSourceOps
         source->handle = 0;
     }
 
-    void SetGain(AudioSource source, float value)
+    void SetGain(AudioSource source, F32 value)
     {
         alSourcef(source.handle, AL_GAIN, value);
     }
 
-    void SetPitch(AudioSource source, float value)
+    void SetPitch(AudioSource source, F32 value)
     {
         alSourcef(source.handle, AL_PITCH, value);
     }
@@ -84,12 +84,12 @@ namespace AudioSourceOps
         alSourcei(source.handle, AL_LOOPING, value);
     }
 
-    void SetPosition(AudioSource source, float x, float y, float z)
+    void SetPosition(AudioSource source, F32 x, F32 y, F32 z)
     {
         alSource3f(source.handle, AL_POSITION, x, y, z);
     }
 
-    void SetVelocity(AudioSource source, float x, float y, float z)
+    void SetVelocity(AudioSource source, F32 x, F32 y, F32 z)
     {
         alSource3f(source.handle, AL_VELOCITY, x, y, z);
     }
@@ -128,23 +128,23 @@ namespace AudioSourceOps
 
 namespace AudioListener
 {
-    void SetPosition(float x, float y, float z)
+    void SetPosition(F32 x, F32 y, F32 z)
     {
         alListener3f(AL_POSITION, x, y, z);
     }
 
-    void SetVelocity(float x, float y, float z)
+    void SetVelocity(F32 x, F32 y, F32 z)
     {
         alListener3f(AL_VELOCITY, x, y, z);
     }
 
-    void SetOrientation(float x0, float y0, float x1, float y1)
+    void SetOrientation(F32 x0, F32 y0, F32 x1, F32 y1)
     {
         ALfloat listenerOri[] = { x0, y0, 0.0f, x1, y1, 0.0f };
         alListenerfv(AL_ORIENTATION, listenerOri);
     }
 
-    void SetOrientation(float x0, float y0, float z0, float x1, float y1, float z1)
+    void SetOrientation(F32 x0, F32 y0, F32 z0, F32 x1, F32 y1, F32 z1)
     {
         ALfloat listenerOri[] = { x0, y0, z1, x1, y1, z1 };
         alListenerfv(AL_ORIENTATION, listenerOri);

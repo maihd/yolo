@@ -1,12 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <stdio.h>
-#include <Windows.h>
-#include <Shlwapi.h>
-
 #include <Yolo/File.h>
 #include <Yolo/Array.h>
 #include <Yolo/String.h>
+
+#include <stdio.h>
+#include <Windows.h>
+#include <Shlwapi.h>
 
 #undef  RemoveDirectory
 #pragma comment(lib, "Shlwapi.lib")
@@ -38,7 +38,7 @@ namespace FileOps
                 if (!Exists(path, false))
                 {
                     String originPath = path;
-                    for (int i = 0, n = searchPaths.length; i < n; i++)
+                    for (I32 i = 0, n = searchPaths.count; i < n; i++)
                     {
                         String searchPath = searchPaths.elements[i];
 
@@ -68,7 +68,7 @@ namespace FileOps
             if (!Exists(path, false))
             {
                 String originPath = path;
-                for (int i = 0, n = searchPaths.length; i < n; i++)
+                for (I32 i = 0, n = searchPaths.count; i < n; i++)
                 {
                     String searchPath = searchPaths.elements[i];
 
@@ -88,7 +88,7 @@ namespace FileOps
         }
     }
 
-    File Open(String path, int mode)
+    File Open(String path, FileMode mode)
     {
         String fullPath = GetFullPath(path);
         if (fullPath == "")
@@ -101,13 +101,13 @@ namespace FileOps
         DWORD disposition   = 0;
         DWORD attributes    = 0;
 
-        switch (mode & (FileModes::ReadWrite))
+        switch (mode & (FileMode::ReadWrite))
         {
-        case FileModes::Read:
+        case FileMode::Read:
             access |= FILE_GENERIC_READ;
             break;
 
-        case FileModes::Write:
+        case FileMode::Write:
             access |= FILE_GENERIC_WRITE;
             break;
 
@@ -115,7 +115,7 @@ namespace FileOps
             return 0;
         }
 
-        if (mode & FileModes::Append)
+        if (mode & FileMode::Append)
         {
             access &= ~FILE_WRITE_DATA;
             access |= FILE_APPEND_DATA;
@@ -123,28 +123,28 @@ namespace FileOps
 
         shared = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
 
-        switch (mode & (FileModes::Create | FileModes::Existing | FileModes::Truncate))
+        switch (mode & (FileMode::Create | FileMode::Existing | FileMode::Truncate))
         {
         case 0:
-        case FileModes::Existing:
+        case FileMode::Existing:
             disposition = OPEN_EXISTING;
             break;
         
-        case FileModes::Create:
+        case FileMode::Create:
             disposition = OPEN_ALWAYS;
             break;
         
-        case FileModes::Create | FileModes::Existing:
-        case FileModes::Create | FileModes::Truncate | FileModes::Existing:
+        case FileMode::Create | FileMode::Existing:
+        case FileMode::Create | FileMode::Truncate | FileMode::Existing:
             disposition = CREATE_NEW;
             break;
         
-        case FileModes::Truncate:
-        case FileModes::Truncate | FileModes::Existing:
+        case FileMode::Truncate:
+        case FileMode::Truncate | FileMode::Existing:
             disposition = TRUNCATE_EXISTING;
             break;
         
-        case FileModes::Create | FileModes::Truncate:
+        case FileMode::Create | FileMode::Truncate:
             disposition = CREATE_ALWAYS;
             break;
         
@@ -153,35 +153,35 @@ namespace FileOps
         }
 
         attributes |= FILE_ATTRIBUTE_NORMAL;
-        if (mode & FileModes::Create)
+        if (mode & FileMode::Create)
         {
-            if (!(mode & FileModes::Write))
+            if (!(mode & FileMode::Write))
             {
                 attributes |= FILE_ATTRIBUTE_READONLY;
             }
         }
 
-        if (mode & FileModes::Temporary)
+        if (mode & FileMode::Temporary)
         {
             attributes |= FILE_FLAG_DELETE_ON_CLOSE | FILE_ATTRIBUTE_TEMPORARY;
             access |= DELETE;
         }
 
-        if (mode & FileModes::ShortLive)
+        if (mode & FileMode::ShortLive)
         {
             attributes |= FILE_ATTRIBUTE_TEMPORARY;
         }
 
-        switch (mode & (FileModes::Sequence | FileModes::Random))
+        switch (mode & (FileMode::Sequence | FileMode::Random))
         {
         case 0:
             break;
         
-        case FileModes::Sequence:
+        case FileMode::Sequence:
             attributes |= FILE_FLAG_SEQUENTIAL_SCAN;
             break;
         
-        case FileModes::Random:
+        case FileMode::Random:
             attributes |= FILE_FLAG_RANDOM_ACCESS;
             break;
         
@@ -189,7 +189,7 @@ namespace FileOps
             return {};
         }
 
-        if (mode & FileModes::Direct)
+        if (mode & FileMode::Direct)
         {
             /*
              * FILE_APPEND_DATA and FILE_FLAG_NO_BUFFERING are mutually exclusive.
@@ -225,13 +225,13 @@ namespace FileOps
             attributes |= FILE_FLAG_NO_BUFFERING;
         }
 
-        switch (mode & (FileModes::DataSync | FileModes::Sync))
+        switch (mode & (FileMode::DataSync | FileMode::Sync))
         {
         case 0:
             break;
         
-        case FileModes::Sync:
-        case FileModes::DataSync:
+        case FileMode::Sync:
+        case FileMode::DataSync:
             attributes |= FILE_FLAG_WRITE_THROUGH;
             break;
         
@@ -240,13 +240,13 @@ namespace FileOps
         }
 
         /* Setting this flag makes it possible to open a directory. */
-        if (mode & FileModes::Directory)
+        if (mode & FileMode::Directory)
         {
             attributes |= FILE_FLAG_BACKUP_SEMANTICS;
         }
         
         // Async read and write file
-        if (mode & FileModes::NonBlock)
+        if (mode & FileMode::NonBlock)
         {
             //attributes |= FILE_FLAG_OVERLAPPED;
         }
@@ -262,7 +262,7 @@ namespace FileOps
         if (handle == INVALID_HANDLE_VALUE)
         {
             DWORD error = GetLastError();
-            if (error == ERROR_FILE_EXISTS && (mode & FileModes::Create) && !(mode & FileModes::Existing))
+            if (error == ERROR_FILE_EXISTS && (mode & FileMode::Create) && !(mode & FileMode::Existing))
             {
                 /* Special case: when ERROR_FILE_EXISTS happens and UV_FS_O_CREAT was
                  * specified, it means the path referred to a directory. */
@@ -287,21 +287,21 @@ namespace FileOps
         CloseHandle((HANDLE)file);
     }
 
-    int GetSize(File file)
+    I32 GetSize(File file)
     {
-        return (int)::GetFileSize((HANDLE)file, 0);
+        return (I32)::GetFileSize((HANDLE)file, 0);
     }
 
-    int GetSize(String path)
+    I32 GetSize(String path)
     {
-        File file = Open(path, FileModes::Read);
-        int  size = GetSize(file);
+        File file = Open(path, FileMode::Read);
+        I32  size = GetSize(file);
         Close(file);
 
         return size;
     }
 
-    int64 GetSize64(File file)
+    I64 GetSize64(File file)
     {
         LARGE_INTEGER size;
         if (::GetFileSizeEx((HANDLE)file, &size))
@@ -314,16 +314,16 @@ namespace FileOps
         }
     }
 
-    int64 GetSize64(String path)
+    I64 GetSize64(String path)
     {
-        File  file = Open(path, FileModes::Read);
-        int64 size = GetSize64(file);
+        File  file = Open(path, FileMode::Read);
+        I64 size = GetSize64(file);
         Close(file);
 
         return size;
     }
 
-    int Read(File file, void* buffer, int length)
+    I32 Read(File file, void* buffer, I32 length)
     {
         if (length <= 0)
         {
@@ -333,7 +333,7 @@ namespace FileOps
         DWORD readBytes;
         if (::ReadFile((HANDLE)file, buffer, (DWORD)length, &readBytes, 0))
         {
-            return (int)readBytes;
+            return (I32)readBytes;
         }
         else
         {
@@ -341,7 +341,7 @@ namespace FileOps
         }
     }
 
-    int Write(File file, const void* buffer, int length)
+    I32 Write(File file, const void* buffer, I32 length)
     {
         if (length <= 0)
         {
@@ -351,7 +351,7 @@ namespace FileOps
         DWORD writeBytes;
         if (::WriteFile((HANDLE)file, buffer, (DWORD)length, &writeBytes, 0))
         {
-            return (int)writeBytes;
+            return (I32)writeBytes;
         }
         else
         {

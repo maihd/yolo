@@ -10,15 +10,18 @@ namespace FileOps
     bool    Exists(String path, bool useSearchPath = true);
     String  GetFullPath(String expectPath);
 
-    File    Open(String path, int mode);
+    File    Open(String path, FileMode mode);
     void    Close(File file);
 
-    int     GetSize(File file);
-    int     GetSize(String path);
+    I32     GetSize(File file);
+    I32     GetSize(String path);
 
-    int64   GetSize64(File file);
-    int64   GetSize64(String path);
+    I64     GetSize64(File file);
+    I64     GetSize64(String path);
 
-    int     Read(File file, void* buffer, int length);
-    int     Write(File file, const void* buffer, int length);
+    I32     Read(File file, void* buffer, I32 length);
+    I32     Write(File file, const void* buffer, I32 length);
+
+    I32     Read64(File file, void* buffer, I64 length);
+    I32     Write64(File file, const void* buffer, I64 length);
 }

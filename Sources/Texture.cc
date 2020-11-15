@@ -19,10 +19,10 @@ namespace TextureOps
     {
         const GLenum enums[] = { GL_NONE, GL_RGB, GL_RGBA, GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA };
 
-        return enums[(int)value];
+        return enums[(I32)value];
     }
 
-    Texture New(const void* pixels, int width, int height, PixelFormat pixelsFormat, PixelFormat textureFormat)
+    Texture New(const void* pixels, I32 width, I32 height, PixelFormat pixelsFormat, PixelFormat textureFormat)
     {
         GLuint handle = 0;
         glGenTextures(1, &handle);
@@ -43,7 +43,7 @@ namespace TextureOps
             handle,
             textureFormat,
 
-            width, height
+            (F32)width, (F32)height
         };
     }
 
@@ -55,7 +55,7 @@ namespace TextureOps
             return {};
         }
 
-        uint64 textureHash = CalcHash64(fullPath);
+        U64 textureHash = CalcHash64(fullPath);
 
         Texture cachedTexture;
         if (HashTableOps::TryGetValue(loadedTextures, textureHash, &cachedTexture))
@@ -63,7 +63,7 @@ namespace TextureOps
             return cachedTexture;
         }
 
-        int width, height, channel;
+        I32 width, height, channel;
         void* pixels = stbi_load(fullPath, &width, &height, &channel, 0);
         if (!pixels)
         {

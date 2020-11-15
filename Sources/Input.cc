@@ -7,32 +7,32 @@ namespace
 {
     struct GamepadState
     {
-        float   axis[8];
+        F32 axis[8];
 
-        int     buttonUpFrame[32];
-        int     buttonDownFrame[32];
+        I32 buttonUpFrame[32];
+        I32 buttonDownFrame[32];
     };
 
-    constexpr int   KEY_INPUT_COUNT = 1024;
-    constexpr int   MOUSE_INPUT_COUNT = 8;
+    constexpr I32   KEY_INPUT_COUNT = 1024;
+    constexpr I32   MOUSE_INPUT_COUNT = 8;
 
-    static int      _currentFrame;
+    static I32      _currentFrame;
 
-    static int      _inputTextLength;
+    static I32      _inputTextLength;
     static char     _inputText[1024];
 
     static bool     _keyState[KEY_INPUT_COUNT];
-    static int      _keyUpFrame[KEY_INPUT_COUNT];
-    static int      _keyDownFrame[KEY_INPUT_COUNT];
+    static I32      _keyUpFrame[KEY_INPUT_COUNT];
+    static I32      _keyDownFrame[KEY_INPUT_COUNT];
                     
-    static int      _mouseState;
-    static int      _mouseUpFrame[MOUSE_INPUT_COUNT];
-    static int      _mouseDownFrame[MOUSE_INPUT_COUNT];
-    static float    _mouseX;
-    static float    _mouseY;
+    static I32      _mouseState;
+    static I32      _mouseUpFrame[MOUSE_INPUT_COUNT];
+    static I32      _mouseDownFrame[MOUSE_INPUT_COUNT];
+    static F32      _mouseX;
+    static F32      _mouseY;
 
-    static float    _mouseWheelH;
-    static float    _mouseWheelV;
+    static F32      _mouseWheelH;
+    static F32      _mouseWheelV;
     
     static GamepadState _gamepadStates[8];
 }
@@ -55,7 +55,7 @@ namespace Input
         _inputText[_inputTextLength] = 0;
     }
 
-    void UpdateCharInput(int character)
+    void UpdateCharInput(I32 character)
     {
         _inputText[_inputTextLength++] = (char)character;
     }
@@ -68,7 +68,7 @@ namespace Input
 
     void UpdateKey(KeyCode key, bool down)
     {
-        int index = (int)key;
+        I32 index = (I32)key;
         if (index > -1 && index < KEY_INPUT_COUNT)
         {
             _keyState[index] = down;
@@ -86,7 +86,7 @@ namespace Input
 
     void UpdateMouse(MouseButton button, bool down)
     {
-        int index = (int)button;
+        I32 index = (I32)button;
         if (index > -1 && index < MOUSE_INPUT_COUNT)
         {
             if (down)
@@ -102,25 +102,25 @@ namespace Input
         }
     }
 
-    void UpdateMouseMove(float x, float y)
+    void UpdateMouseMove(F32 x, F32 y)
     {
         _mouseX = x;
         _mouseY = y;
     }
 
-    void UpdateMouseWheel(float h, float v)
+    void UpdateMouseWheel(F32 h, F32 v)
     {
         _mouseWheelV += v;
         _mouseWheelH += h;
     }
 
-    void UpdateGamepadAxis(int gamepadID, GamepadAxis axis, float value)
+    void UpdateGamepadAxis(I32 gamepadID, GamepadAxis axis, F32 value)
     {
         if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
         {
             GamepadState& state = _gamepadStates[gamepadID];
             
-            int index = (int)axis;
+            I32 index = (I32)axis;
             if (index > -1 && index < CountOf(state.axis))
             {
                 state.axis[index] = value;
@@ -128,13 +128,13 @@ namespace Input
         }
     }
 
-    void UpdateGamepadButton(int gamepadID, GamepadButton button, bool down)
+    void UpdateGamepadButton(I32 gamepadID, GamepadButton button, bool down)
     {
         if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
         {
             GamepadState& state = _gamepadStates[gamepadID];
 
-            int index = (int)button;
+            I32 index = (I32)button;
             if (down)
             {
                 if (index > -1 && index < CountOf(state.buttonDownFrame))
@@ -172,7 +172,7 @@ namespace Input
         
     }
 
-    int  GetMouseState(float* x, float* y)
+    I32  GetMouseState(F32* x, F32* y)
     {
         if (x) *x = _mouseX;
         if (y) *y = _mouseY;
@@ -180,14 +180,14 @@ namespace Input
         return _mouseState;
     }
     
-    vec2 GetMousePosition(void)
+    Vector2 GetMousePosition(void)
     {
-        return vec2{ _mouseX, _mouseY };
+        return Vector2{ _mouseX, _mouseY };
     }
 
     bool GetMouseButton(MouseButton button)
     {
-        int index = (int)button;
+        I32 index = (I32)button;
         if (index > -1 && index < CountOf(_mouseDownFrame) && index < CountOf(_mouseUpFrame))
         {
             return _mouseDownFrame[index] > _mouseUpFrame[index];
@@ -198,7 +198,7 @@ namespace Input
 
     bool GetMouseButtonUp(MouseButton button)
     {
-        int index = (int)button;
+        I32 index = (I32)button;
         if (index > -1 && index < CountOf(_mouseUpFrame))
         {
             return _mouseUpFrame[index] == _currentFrame;
@@ -209,7 +209,7 @@ namespace Input
 
     bool GetMouseButtonDown(MouseButton button)
     {
-        int index = (int)button;
+        I32 index = (I32)button;
         if (index > -1 && index < CountOf(_mouseDownFrame))
         {
             return _mouseDownFrame[index] == _currentFrame;
@@ -220,7 +220,7 @@ namespace Input
 
     bool GetKey(KeyCode key)
     {
-        int index = (int)key;
+        I32 index = (I32)key;
         if (index > -1 && index < KEY_INPUT_COUNT)
         {
             return _keyState[index];
@@ -231,7 +231,7 @@ namespace Input
 
     bool GetKeyUp(KeyCode key)
     {
-        int index = (int)key;
+        I32 index = (I32)key;
         if (index > -1 && index < KEY_INPUT_COUNT)
         {
             return _keyUpFrame[index] == _currentFrame;
@@ -242,7 +242,7 @@ namespace Input
 
     bool GetKeyDown(KeyCode key)
     {
-        int index = (int)key;
+        I32 index = (I32)key;
         if (index > -1 && index < KEY_INPUT_COUNT)
         {
             return _keyDownFrame[index] == _currentFrame;
@@ -251,13 +251,13 @@ namespace Input
         return false;
     }
 
-    float GetAxis(int gamepadID, GamepadAxis axis)
+    F32 GetAxis(I32 gamepadID, GamepadAxis axis)
     {
         if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
         {
             GamepadState& state = _gamepadStates[gamepadID];
 
-            int index = (int)axis;
+            I32 index = (I32)axis;
             if (index > -1 && index < CountOf(state.axis))
             {
                 return state.axis[index];
@@ -267,13 +267,13 @@ namespace Input
         return 0.0f;
     }
 
-    bool  GetButton(int gamepadID, GamepadButton button)
+    bool  GetButton(I32 gamepadID, GamepadButton button)
     {
         if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
         {
             GamepadState& state = _gamepadStates[gamepadID];
 
-            int index = (int)button;
+            I32 index = (I32)button;
             if (index > -1 && index < CountOf(state.buttonDownFrame) && index < CountOf(state.buttonUpFrame))
             {
                 return state.buttonDownFrame[index] > state.buttonUpFrame[index];
@@ -283,13 +283,13 @@ namespace Input
         return false;
     }
 
-    bool  GetButtonUp(int gamepadID, GamepadButton button)
+    bool  GetButtonUp(I32 gamepadID, GamepadButton button)
     {
         if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
         {
             GamepadState& state = _gamepadStates[gamepadID];
 
-            int index = (int)button;
+            I32 index = (I32)button;
             if (index > -1 && index < CountOf(state.buttonUpFrame))
             {
                 return state.buttonUpFrame[index] == _currentFrame;
@@ -299,13 +299,13 @@ namespace Input
         return false;
     }
 
-    bool  GetButtonDown(int gamepadID, GamepadButton button)
+    bool  GetButtonDown(I32 gamepadID, GamepadButton button)
     {
         if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
         {
             GamepadState& state = _gamepadStates[gamepadID];
 
-            int index = (int)button;
+            I32 index = (I32)button;
             if (index > -1 && index < CountOf(state.buttonDownFrame))
             {
                 return state.buttonDownFrame[index] == _currentFrame;

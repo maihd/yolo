@@ -25,15 +25,15 @@ namespace Input
     void NewFrame(void);
     void EndFrame(void);
 
-    void UpdateCharInput(int character);
+    void UpdateCharInput(I32 character);
     void UpdateCharInput(String string);
 
     void UpdateKey(KeyCode key, bool down);
 
     void UpdateMouse(MouseButton button, bool down);
-    void UpdateMouseMove(float x, float y);
-    void UpdateMouseWheel(float h, float v);
+    void UpdateMouseMove(F32 x, F32 y);
+    void UpdateMouseWheel(F32 h, F32 v);
 
-    void UpdateGamepadAxis(int gamepadID, GamepadAxis axis, float value);
-    void UpdateGamepadButton(int gamepadID, GamepadButton button, bool down);
+    void UpdateGamepadAxis(I32 gamepadID, GamepadAxis axis, F32 value);
+    void UpdateGamepadButton(I32 gamepadID, GamepadButton button, bool down);
 }

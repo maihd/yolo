@@ -70,7 +70,7 @@ int main(void)
 
         //Graphics::DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
         Graphics::DrawTexture(texture, { width * 0.5f, height * 0.5f }, Time::GetTotalTime());
-        Graphics::DrawTexture(texture, { width * 0.25f, height * 0.25f }, Time::GetTotalTime() * 0.5f, vec2{ 1, 1 }, vec4{ 0.5f, 0.5f, 0.5f, 1.0f }, vec2{ 1.0f, 1.0f });
+        Graphics::DrawTexture(texture, { width * 0.25f, height * 0.25f }, Time::GetTotalTime() * 0.5f, Vector2{ 1, 1 }, Vector4{ 0.5f, 0.5f, 0.5f, 1.0f }, Vector2{ 1.0f, 1.0f });
         Graphics::DrawFramerate(font, { 0.0f, (float)height - font.size });
 
         Graphics::Present();

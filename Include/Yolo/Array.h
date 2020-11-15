@@ -8,10 +8,10 @@
 
 namespace ArrayOps
 {
-    constexpr int MIN_CAPACITY = 16;
+    constexpr I32 MIN_CAPACITY = 16;
 
     template <typename T>
-    inline Array<T> New(int capacity = 0)
+    inline Array<T> New(I32 capacity = 0)
     {
         if (capacity <= 0)
         {
@@ -24,17 +24,17 @@ namespace ArrayOps
     }
 
     template <typename T>
-    inline Array<T> From(const T* buffer, int length)
+    inline Array<T> From(const T* buffer, I32 count)
     {
-        if (!buffer || length <= 0)
+        if (!buffer || count <= 0)
         {
             return {};
         }
 
         Array<T> result = {};
-        if (Resize(&result, length))
+        if (Resize(&result, count))
         {
-            memcpy(result, buffer, sizeof(T) * length);
+            memcpy(result, buffer, sizeof(T) * count);
         }
         return result;
     }
@@ -42,14 +42,13 @@ namespace ArrayOps
     template <typename T>
     inline T* From(const Array<T> array)
     {
-        int length = Length(array);
-        if (length == 0)
+        if (array.count == 0)
         {
             return {};
         }
 
         Array<T> result = {};
-        if (Resize(&result, length))
+        if (Resize(&result, array.count))
         {
             memcpy(result, buffer, sizeof(T) * length);
         }
@@ -57,12 +56,12 @@ namespace ArrayOps
     }
 
     template <typename T>
-    inline Array<T> Fill(int capacity, T value)
+    inline Array<T> Fill(I32 capacity, T value)
     {
         T* array = Empty();
         if (Ensure(&array, capacity))
         {
-            for (int i = 0; i < capacity; i++)
+            for (I32 i = 0; i < capacity; i++)
             {
                 Push(&array, value);
             }
@@ -78,25 +77,25 @@ namespace ArrayOps
 
         free(array->elements);
 
-        array->length   = 0;
+        array->count    = 0;
         array->capacity = 0;
         array->elements = 0;
     }
 
     template <typename T>
-    inline int SizeOf(const Array<T> array) 
+    inline I32 SizeOf(const Array<T> array)
     {
-        return array.length * sizeof(T);
+        return array.count * sizeof(T);
     }
 
     template <typename T>
     inline bool IsEmpty(const Array<T> array)
     {
-        return array.length == 0;
+        return array.count == 0;
     }
 
     template <typename T>
-    inline bool Resize(Array<T>* array, int capacity)
+    inline bool Resize(Array<T>* array, I32 capacity)
     {
         assert(array);
 
@@ -105,8 +104,8 @@ namespace ArrayOps
             return true;
         }
 
-        int oldCapacity = array->capacity;
-        int newCapacity = capacity < MIN_CAPACITY ? MIN_CAPACITY : NextPOT(capacity);
+        I32 oldCapacity = array->capacity;
+        I32 newCapacity = capacity < MIN_CAPACITY ? MIN_CAPACITY : NextPOT(capacity);
 
         T* elements = (T*)realloc(array->elements, newCapacity * sizeof(T));
         if (elements)
@@ -123,7 +122,7 @@ namespace ArrayOps
     }
 
     template <typename T>
-    inline bool Ensure(Array<T>* array, int capacity)
+    inline bool Ensure(Array<T>* array, I32 capacity)
     {
         assert(array != NULL);
 
@@ -131,19 +130,19 @@ namespace ArrayOps
     }
 
     template <typename T>
-    inline bool Ensure(const Array<T> array, int capacity)
+    inline bool Ensure(const Array<T> array, I32 capacity)
     {
         return (array.capacity >= capacity);
     }
 
     template <typename T>
-    inline int Push(Array<T>* array, T element)
+    inline I32 Push(Array<T>* array, T element)
     {
         assert(array != NULL);
-        
-        if (Ensure(array, array->length + 1))
+
+        if (Ensure(array, array->count + 1))
         {
-            int index = array->length++;
+            I32 index = array->count++;
             array->elements[index] = element;
 
             return index;
@@ -156,23 +155,23 @@ namespace ArrayOps
     inline T Pop(Array<T>* array)
     {
         assert(array != NULL);
-        assert(array->length > 0);
+        assert(array->count > 0);
 
-        return array->elements[--array->length];
+        return array->elements[--array->count];
     }
 
     template <typename T>
     inline void Clear(Array<T>* array)
     {
         assert(array);
-        
-        array->length = 0;
+
+        array->count = 0;
     }
 
     template <typename T>
-    inline int IndexOf(Array<T> array, T value)
+    inline I32 IndexOf(Array<T> array, T value)
     {
-        for (int i = 0, n = array.length; i < n; i++)
+        for (I32 i = 0, n = array.count; i < n; i++)
         {
             if (array.elements[i] == value)
             {
@@ -184,10 +183,10 @@ namespace ArrayOps
     }
 
     template <typename T>
-    inline int LastIndexOf(Array<T> array, T value)
+    inline I32 LastIndexOf(Array<T> array, T value)
     {
-        int index = -1;
-        for (int i = 0, n = array.length; i < n; i++)
+        I32 index = -1;
+        for (I32 i = 0, n = array.length; i < n; i++)
         {
             if (elements[i] == value)
             {
@@ -199,18 +198,18 @@ namespace ArrayOps
     }
 
     template <typename T>
-    inline bool Erase(Array<T>* array, int index)
+    inline bool Erase(Array<T>* array, I32 index)
     {
-        if (index < 0 || index >= array->length)
+        if (index < 0 || index >= array->count)
         {
             return false;
         }
         else
         {
-            array->length--;
-            if (index < array->length)
+            array->count--;
+            if (index < array->count)
             {
-                memcpy(&array->elements[index], &array->elements[index + 1], (array->length - index - 1) * sizeof(T));
+                memcpy(&array->elements[index], &array->elements[index + 1], (array->count - index - 1) * sizeof(T));
             }
 
             return true;
@@ -218,41 +217,41 @@ namespace ArrayOps
     }
 
     template <typename T>
-    inline bool Erase(Array<T>* array, int start, int end)
+    inline bool Erase(Array<T>* array, I32 start, I32 end)
     {
-        start   = start > -1 ? start : 0;
-        end     = end > array->length ? array->length : end;
+        start = start > -1 ? start : 0;
+        end = end > array->count ? array->count : end;
 
-        int eraseCount = (end - start);
+        I32 eraseCount = (end - start);
         if (eraseCount <= 0)
         {
             return false;
         }
         else
         {
-            if (array->length - end > 0)
+            if (array->count - end > 0)
             {
-                memcpy(&array->elements[start], &array->elements[end - 1], (array->length - end) * sizeof(T));
+                memcpy(&array->elements[start], &array->elements[end - 1], (array->count - end) * sizeof(T));
             }
-            array->length = array->length - eraseCount;
+            array->count = array->count - eraseCount;
 
             return true;
         }
     }
 
     template <typename T>
-    inline bool UnorderedErase(Array<T>* array, int index)
+    inline bool UnorderedErase(Array<T>* array, I32 index)
     {
-        if (index < 0 || index >= array->length)
+        if (index < 0 || index >= array->count)
         {
             return false;
         }
         else
         {
-            array->length--;
-            if (index < array->length)
+            array->count--;
+            if (index < array->count)
             {
-                array->elements[index] = array->elements[array->length];
+                array->elements[index] = array->elements[array->count];
             }
 
             return true;

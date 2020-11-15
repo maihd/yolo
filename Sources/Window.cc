@@ -8,7 +8,7 @@
 namespace Window
 {
     static KeyCode s_keyCodeMap[2048];
-    static KeyCode ConvertKeyCode(int nativeKey)
+    static KeyCode ConvertKeyCode(I32 nativeKey)
     {
         static bool s_loaded;
         if (s_loaded)
@@ -183,7 +183,7 @@ namespace Window
         return true;
     }
 
-    bool Init(String title, int width, int height)
+    bool Init(String title, I32 width, I32 height)
     {
         if (!RegisterWindowClass())
         {
@@ -222,17 +222,17 @@ namespace Window
         GetWindowRect(window, &windowRect);
         GetClientRect(window, &clientRect);
 
-        int screenWidth     = GetSystemMetrics(SM_CXSCREEN);
-        int screenHeight    = GetSystemMetrics(SM_CYSCREEN);
+        I32 screenWidth     = GetSystemMetrics(SM_CXSCREEN);
+        I32 screenHeight    = GetSystemMetrics(SM_CYSCREEN);
 
-        int borderWidth     = (int)((windowRect.right - windowRect.left) - (clientRect.right - clientRect.left));
-        int borderHeight    = (int)((windowRect.bottom - windowRect.top) - (clientRect.bottom - clientRect.top));
+        I32 borderWidth     = (I32)((windowRect.right - windowRect.left) - (clientRect.right - clientRect.left));
+        I32 borderHeight    = (I32)((windowRect.bottom - windowRect.top) - (clientRect.bottom - clientRect.top));
 
-        int resultWidth     = width + borderWidth;
-        int resultHeight    = height + borderHeight;
+        I32 resultWidth     = width + borderWidth;
+        I32 resultHeight    = height + borderHeight;
 
-        int centerX         = (screenWidth - resultWidth) >> 1;
-        int centerY         = (screenHeight - resultHeight) >> 1;
+        I32 centerX         = (screenWidth - resultWidth) >> 1;
+        I32 centerY         = (screenHeight - resultHeight) >> 1;
 
         SetWindowPos(window, HWND_TOP, centerX, centerY, resultWidth, resultHeight, SWP_NOZORDER);
 
@@ -315,28 +315,28 @@ namespace Window
             return 0;
 
         case WM_MOUSEMOVE:
-            Input::UpdateMouseMove((float)GET_X_LPARAM(lparam), (float)GET_Y_LPARAM(lparam));
+            Input::UpdateMouseMove((F32)GET_X_LPARAM(lparam), (F32)GET_Y_LPARAM(lparam));
             return 0;
 
         case WM_MOUSEWHEEL:
-            Input::UpdateMouseWheel(0, (float)GET_WHEEL_DELTA_WPARAM(wparam));
+            Input::UpdateMouseWheel(0, (F32)GET_WHEEL_DELTA_WPARAM(wparam));
             return 0;
 
         case WM_MOUSEHWHEEL:
-            Input::UpdateMouseWheel((float)GET_WHEEL_DELTA_WPARAM(wparam), 0);
+            Input::UpdateMouseWheel((F32)GET_WHEEL_DELTA_WPARAM(wparam), 0);
             return 0;
 
         case WM_KEYUP:
-            Input::UpdateKey(ConvertKeyCode((int)wparam), false);
+            Input::UpdateKey(ConvertKeyCode((I32)wparam), false);
             return 0;
 
         case WM_KEYDOWN:
-            Input::UpdateKey(ConvertKeyCode((int)wparam), true);
+            Input::UpdateKey(ConvertKeyCode((I32)wparam), true);
             return 0;
 
         case WM_CHAR:
         case WM_UNICHAR:
-            Input::UpdateCharInput((int)wparam);
+            Input::UpdateCharInput((I32)wparam);
             return 0;
 
         case WM_DESTROY:
@@ -358,12 +358,12 @@ namespace Window
         return Runtime::shouldQuit;
     }
 
-    vec2 GetSize(void)
+    Vector2 GetSize(void)
     {
         RECT rect;
         if (GetClientRect(Runtime::mainWindow, &rect))
         {
-            return { (float)(rect.right - rect.left), (float)(rect.bottom - rect.top) };
+            return { (F32)(rect.right - rect.left), (F32)(rect.bottom - rect.top) };
         }
         else
         {
@@ -371,12 +371,12 @@ namespace Window
         }
     }
 
-    int GetWidth(void)
+    I32 GetWidth(void)
     {
         RECT rect;
         if (GetClientRect(Runtime::mainWindow, &rect))
         {
-            return (int)(rect.right - rect.left);
+            return (I32)(rect.right - rect.left);
         }
         else
         {
@@ -384,12 +384,12 @@ namespace Window
         }
     }
 
-    int GetHeight(void)
+    I32 GetHeight(void)
     {
         RECT rect;
         if (GetClientRect(Runtime::mainWindow, &rect))
         {
-            return (int)(rect.bottom - rect.top);
+            return (I32)(rect.bottom - rect.top);
         }
         else
         {
@@ -399,6 +399,6 @@ namespace Window
 
     Handle GetHandle(void)
     {
-        return (Handle)(uint64)Runtime::mainWindow;
+        return (Handle)(U64)Runtime::mainWindow;
     }
 }
