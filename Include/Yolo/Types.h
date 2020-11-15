@@ -1,6 +1,14 @@
 #pragma once
 
+// ----------------------
+// System info
+// ----------------------
+
+#define CPU_LITTLE_ENDIAN 1
+
+// ----------------------
 // Primitive types
+// ----------------------
 
 using I8        = signed char;
 using I16       = signed short;
@@ -16,7 +24,9 @@ using String    = const char*;
 using Handle    = unsigned int;
 using NullPtr   = decltype(nullptr);
 
+// ----------------------
 // Arguments
+// ----------------------
 
 #include <stdarg.h>
 using ArgList = va_list;
@@ -24,6 +34,10 @@ using ArgList = va_list;
 #define ArgListEnd      va_end
 #define ArgListGet      va_arg
 #define ArgListCopy     va_copy
+
+// ----------------------
+// Math types
+// ----------------------
 
 #ifndef MATH_TYPES_DEFINED
 #define MATH_TYPES_DEFINED
@@ -53,6 +67,10 @@ struct Matrix4
 };
 #endif
 
+// ----------------------
+// Common types
+// ----------------------
+
 struct Rectangle
 {
     float x;
@@ -61,7 +79,9 @@ struct Rectangle
     float height;
 };
 
+// ----------------------
 // Container types
+// ----------------------
 
 template <typename T>
 struct Array
@@ -95,7 +115,9 @@ struct OrderedTable
     TValue*     values;
 };
 
+// ----------------------
 // Function types
+// ----------------------
 
 template <typename T>
 struct Function;
@@ -177,14 +199,18 @@ inline bool operator!=(NullPtr, Function<R(Args...)> b)
     return b.executor != nullptr;
 }
 
+// ----------------------
 // Runtime
+// ----------------------
 
 struct Job
 {
     Function<void(void)> executor;
 };
 
+// ----------------------
 // IO types
+// ----------------------
 
 namespace _FileMode
 {
@@ -219,7 +245,9 @@ namespace _FileMode
 using FileMode = _FileMode::Type;
 using File = Handle;
 
-// Graphics
+// ----------------------
+// Graphics Types
+// ----------------------
 
 enum struct PixelFormat
 {
@@ -322,7 +350,9 @@ struct Sprite
     float         height;
 };
 
-// Audios
+// ----------------------
+// Audios types
+// ----------------------
 
 enum struct AudioFormat
 {
@@ -342,11 +372,15 @@ struct AudioSource
     Handle handle;
 };
 
+// ----------------------
 // Constants
+// ----------------------
 
 constexpr const float PI = 3.141592653589f;
 
+// ----------------------
 // Utils work on types
+// ----------------------
 
 #include <stddef.h>
 
@@ -390,10 +424,54 @@ inline I64 NextPOT(I64 x)
     return result + 1;
 }
 
+U32 CalcHash32(const void* buffer, I32 length, U32 seed = 0);
 U64 CalcHash64(const void* buffer, I32 length, U64 seed = 0);
 
+template <U32 length>
+constexpr U32 ConstHash32(const char(&buffer)[length], U32 seed = 0)
+{
+    U8* target = (U8*)buffer;
+
+    U64 h = seed;
+
+    const U32 l = length - 1;
+    const U32 n = (l >> 3) << 3;
+
+    for (U32 i = 0; i < n; i += 4)
+    {
+        U32 b0 = target[i + 0];
+        U32 b1 = target[i + 1];
+        U32 b2 = target[i + 2];
+        U32 b3 = target[i + 3];
+#if CPU_LITTLE_ENDIAN
+        U32 k = (b3 << 24) | (b2 << 16) | (b1 << 8) | (b0 << 0);
+#else
+        U32 k = (b0 << 24) | (b1 << 16) | (b2 << 8) | (b3 << 0);
+#endif
+
+        k ^= (k << 12);
+        k ^= (k >> 24);
+        k ^= (k << 15);
+
+        h ^= k;
+    }
+
+    switch (l & 7)
+    {
+    case 3: h ^= (U32)((target + n)[2]) << 16;   /* fall through */
+    case 2: h ^= (U32)((target + n)[1]) << 8;   /* fall through */
+    case 1: h ^= (U32)((target + n)[0]) << 0;   /* fall through */
+    };
+
+    h ^= (h << 12);
+    h ^= (h >> 24);
+    h ^= (h << 15);
+
+    return h;
+}
+
 template <U64 length>
-constexpr U64 CalcHash64(const char (&buffer)[length], U64 seed = 0)
+constexpr U64 ConstHash64(const char (&buffer)[length], U64 seed = 0)
 {
     U8* target = (U8*)buffer;
 
@@ -442,4 +520,3 @@ constexpr U64 CalcHash64(const char (&buffer)[length], U64 seed = 0)
 
     return h;
 }
-

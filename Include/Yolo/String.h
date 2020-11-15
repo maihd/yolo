@@ -38,7 +38,7 @@ namespace StringOps
             return "";
         }
 
-        U64 hash = CalcHash64<length>(source);
+        U64 hash = ConstHash64<length>(source);
         return InternNoAllocation(hash, source);
     }
 }
