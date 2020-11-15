@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 
+#include <Yolo/Math.h>
 #include <Yolo/String.h>
 #include <Yolo/Random.h>
 #include <Yolo/HashTable.h>
@@ -15,7 +16,14 @@ namespace StringOps
 
     String SaveString(String source)
     {
-        return _strdup(source);
+        if (source.isStatic)
+        {
+            return source;
+        }
+        else
+        {
+            return String(_strdup(source.buffer), source.length, true);
+        }
     }
 
     String Intern(String source)
@@ -66,24 +74,17 @@ namespace StringOps
 
     I32 Length(String target)
     {
-        if (!target || target == "")
-        {
-            return 0;
-        }
-        else
-        {
-            return (I32)strlen(target);
-        }
+        return target.length;
     }
 
     bool IsEmpty(String target)
     {
-        return StringOps::Length(target) == 0;
+        return target.length == 0;
     }
 
     I32 Compare(String str0, String str1)
     {
-        return strcmp(str0, str1);
+        return strncmp(str0.buffer, str1.buffer, min(str0.length, str1.length));
     }
 
     String Format(I32 bufferSize, String format, ...)
@@ -112,18 +113,18 @@ namespace StringOps
 
     String FormatArgv(void* buffer, I32 bufferSize, String format, ArgList argv)
     {
-        vsprintf((char*)buffer, format, argv);
-        return (char*)buffer;
+        vsnprintf((char*)buffer, bufferSize, format.buffer, argv);
+        return String((char*)buffer, strlen((char*)buffer), false);
     }
 
     char CharAt(String target, I32 index)
     {
-        return target[index];
+        return target.buffer[index];
     }
 
     I32 CharCodeAt(String target, I32 index)
     {
-        return target[index];
+        return target.buffer[index];
     }
 
     I32 IndexOf(String target, I32 charCode)
@@ -142,10 +143,10 @@ namespace StringOps
 
     I32 IndexOf(String target, String substring)
     {
-        I32 substringLength = StringOps::Length(substring);
-        for (I32 i = 0, n = StringOps::Length(target) - substringLength; i < n; i++)
+        I32 substringLength = substring.length;
+        for (I32 i = 0, n = target.length - substringLength; i < n; i++)
         {
-            if (strncmp(target + i, substring, (size_t)substringLength) == 0)
+            if (strncmp(target.buffer + i, substring.buffer, (size_t)substringLength) == 0)
             {
                 return i;
             }
@@ -170,10 +171,10 @@ namespace StringOps
 
     I32 LastIndexOf(String target, String substring)
     {
-        I32 substringLength = StringOps::Length(substring);
+        I32 substringLength = substring.length;
         for (I32 i = StringOps::Length(target) - substringLength - 1; i > -1; i--)
         {
-            if (strncmp(target + i, substring, (size_t)substringLength) == 0)
+            if (strncmp(target.buffer + i, substring.buffer, (size_t)substringLength) == 0)
             {
                 return i;
             }
@@ -186,27 +187,27 @@ namespace StringOps
     {
         if (start < 0)
         {
-            return "";
+            return String();
         }
 
         if (end < 0)
         {
-            return source + start;
+            return String(source.buffer + start, source.length - start, source.isOwned, source.isStatic);
         }
         else
         {
             I32 substringLength = end - start;
             if (substringLength <= 0)
             {
-                return "";
+                return String();
             }
 
             char* content = (char*)malloc(substringLength + 1);
 
-            strncpy(content, source, substringLength);
+            strncpy(content, source.buffer, substringLength);
             content[substringLength] = 0;
 
-            return content;
+            return String(content, substringLength, true);
         }
     }
 }

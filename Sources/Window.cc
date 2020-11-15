@@ -192,7 +192,7 @@ namespace Window
 
 #if UNICODE
         TCHAR unicodeTitle[1024];
-        ::MultiByteToWideChar(CP_UTF8, 0, title, -1, unicodeTitle, sizeof(unicodeTitle));
+        ::MultiByteToWideChar(CP_UTF8, 0, title.buffer, -1, unicodeTitle, sizeof(unicodeTitle));
 #else
         TCHAR* unicodeTitle = title;
 #endif

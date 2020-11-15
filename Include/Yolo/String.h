@@ -43,8 +43,22 @@ namespace StringOps
     }
 }
 
-inline U64 CalcHash64(String x, U64 seed = 0)
+inline U32 CalcHash32(String string, U32 seed = 0)
 {
-    return CalcHash64(x, StringOps::Length(x), seed);
+    return CalcHash32(string.buffer, string.length, seed);
 }
 
+inline U64 CalcHash64(String string, U64 seed = 0)
+{
+    return CalcHash64(string.buffer, string.length, seed);
+}
+
+inline bool operator==(String a, String b)
+{
+    return StringOps::Compare(a, b) == 0;
+}
+
+inline bool operator!=(String a, String b)
+{
+    return StringOps::Compare(a, b) != 0;
+}

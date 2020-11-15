@@ -30,7 +30,7 @@ namespace FileOps
 
     bool Exists(String path, bool useSearchPath)
     {
-        if (!::PathFileExistsA(path))
+        if (!::PathFileExistsA(path.buffer))
         {
             if (useSearchPath)
             {
@@ -42,7 +42,7 @@ namespace FileOps
                     {
                         String searchPath = searchPaths.elements[i];
 
-                        ::sprintf(pathBuffer, "%s/%s", searchPath, originPath);
+                        ::sprintf(pathBuffer, "%s/%s", searchPath.buffer, originPath.buffer);
                         if (Exists(pathBuffer, false))
                         {
                             return true;
@@ -63,7 +63,7 @@ namespace FileOps
     {
         thread_local char pathBuffer[2048];
 
-        if (!PathFileExistsA(path))
+        if (!PathFileExistsA(path.buffer))
         {
             if (!Exists(path, false))
             {
@@ -72,7 +72,7 @@ namespace FileOps
                 {
                     String searchPath = searchPaths.elements[i];
 
-                    sprintf(pathBuffer, "%s/%s", searchPath, originPath);
+                    sprintf(pathBuffer, "%s/%s", searchPath.buffer, originPath.buffer);
                     if (Exists(pathBuffer, false))
                     {
                         return pathBuffer;
@@ -91,7 +91,7 @@ namespace FileOps
     File Open(String path, FileMode mode)
     {
         String fullPath = GetFullPath(path);
-        if (fullPath == "")
+        if (fullPath.length == 0)
         {
             return 0;
         }
@@ -251,7 +251,7 @@ namespace FileOps
             //attributes |= FILE_FLAG_OVERLAPPED;
         }
 
-        HANDLE handle = CreateFileA(path,
+        HANDLE handle = CreateFileA(path.buffer,
             access,
             shared,
             NULL,

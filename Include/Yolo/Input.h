@@ -163,28 +163,28 @@ enum struct KeyCode
 
 namespace Input
 {
-    void    ShowMouseCursor(void);
-    void    HideMouseCursor(void);
+    void            ShowMouseCursor(void);
+    void            HideMouseCursor(void);
 
-    bool    IsMouseCursorVisibled(void);
-    void    SetMouseCursorVisible(bool visible);
+    bool            IsMouseCursorVisibled(void);
+    void            SetMouseCursorVisible(bool visible);
 
-    I32     GetMouseState(float* x, float* y);
-    Vector2 GetMousePosition(void);
+    I32             GetMouseState(float* x, float* y);
+    Vector2         GetMousePosition(void);
 
-    bool    GetMouseButton(MouseButton button);
-    bool    GetMouseButtonUp(MouseButton button);
-    bool    GetMouseButtonDown(MouseButton button);
+    bool            GetMouseButton(MouseButton button);
+    bool            GetMouseButtonUp(MouseButton button);
+    bool            GetMouseButtonDown(MouseButton button);
 
-    String  GetTextInput(void);
+    const char*     GetTextInput(void);
     
-    bool    GetKey(KeyCode button);
-    bool    GetKeyUp(KeyCode button);
-    bool    GetKeyDown(KeyCode button);
+    bool            GetKey(KeyCode button);
+    bool            GetKeyUp(KeyCode button);
+    bool            GetKeyDown(KeyCode button);
 
-    bool    IsGamepadAttached(I32 gamepadID);
-    float   GetAxis(I32 gamepadID, GamepadAxis axis);
-    bool    GetButton(I32 gamepadID, GamepadButton button);
-    bool    GetButtonUp(I32 gamepadID, GamepadButton button);
-    bool    GetButtonDown(I32 gamepadID, GamepadButton button);
+    bool            IsGamepadAttached(I32 gamepadID);
+    float           GetAxis(I32 gamepadID, GamepadAxis axis);
+    bool            GetButton(I32 gamepadID, GamepadButton button);
+    bool            GetButtonUp(I32 gamepadID, GamepadButton button);
+    bool            GetButtonDown(I32 gamepadID, GamepadButton button);
 }

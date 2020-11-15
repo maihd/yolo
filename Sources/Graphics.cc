@@ -16,7 +16,7 @@ namespace Graphics
 {
     static HGLRC            glContext;
     
-    static float              lineWidth;
+    static float            lineWidth;
     static Vector4          clearColor;
 
     static Matrix4          projection;
@@ -554,7 +554,7 @@ namespace Graphics
     void DrawFramerate(Font font, Vector2 position)
     {
         char buffer[1024];
-        float framerate = Time::GetFramerate();
+        float framerate = GetFramerate();
         String text = StringOps::Format(buffer, sizeof(buffer), "FPS: %.2f", framerate);
         DrawText(text, font, position);
     }

@@ -156,25 +156,25 @@ namespace WorldOps
         world.lock                  = false;
         world.gameOverTimer         = 0.0f;
 
-        ArrayOps::Ensure(&world.bullets, 256);
-        ArrayOps::Ensure(&world.seekers, 256);
-        ArrayOps::Ensure(&world.wanderers, 256);
-        ArrayOps::Ensure(&world.blackHoles, 256);
+        ArrayEnsure(&world.bullets, 256);
+        ArrayEnsure(&world.seekers, 256);
+        ArrayEnsure(&world.wanderers, 256);
+        ArrayEnsure(&world.blackHoles, 256);
 
         return world;
     }
     
     void Free(World* world)
     {
-        ArrayOps::Free(&world->bullets);
-        ArrayOps::Free(&world->seekers);
-        ArrayOps::Free(&world->wanderers);
-        ArrayOps::Free(&world->blackHoles);
+        ArrayFree(&world->bullets);
+        ArrayFree(&world->seekers);
+        ArrayFree(&world->wanderers);
+        ArrayFree(&world->blackHoles);
 
-        ArrayOps::Free(&world->freeBullets);
-        ArrayOps::Free(&world->freeSeekers);
-        ArrayOps::Free(&world->freeWanderers);
-        ArrayOps::Free(&world->freeBlackHoles);
+        ArrayFree(&world->freeBullets);
+        ArrayFree(&world->freeSeekers);
+        ArrayFree(&world->freeWanderers);
+        ArrayFree(&world->freeBlackHoles);
 
         world = {};
     }
@@ -198,12 +198,12 @@ namespace WorldOps
 
         if (world->freeBullets.count > 0)
         {
-            int index = ArrayOps::Pop(&world->freeBullets);
+            int index = ArrayPop(&world->freeBullets);
             world->bullets.elements[index] = entity;
         }
         else
         {
-            ArrayOps::Push(&world->bullets, entity);
+            ArrayPush(&world->bullets, entity);
         }
     }
 
@@ -270,12 +270,12 @@ namespace WorldOps
 
         if (world->freeSeekers.count > 0)
         {
-            int index = ArrayOps::Pop(&world->freeSeekers);
+            int index = ArrayPop(&world->freeSeekers);
             world->seekers.elements[index] = entity;
         }
         else
         {
-            ArrayOps::Push(&world->seekers, entity);
+            ArrayPush(&world->seekers, entity);
         }
     }
 
@@ -305,12 +305,12 @@ namespace WorldOps
 
         if (world->freeWanderers.count > 0)
         {
-            int index = ArrayOps::Pop(&world->freeWanderers);
+            int index = ArrayPop(&world->freeWanderers);
             world->wanderers.elements[index] = entity;
         }
         else
         {
-            ArrayOps::Push(&world->wanderers, entity);
+            ArrayPush(&world->wanderers, entity);
         }
     }
 
@@ -340,19 +340,19 @@ namespace WorldOps
 
         if (world->freeBlackHoles.count > 0)
         {
-            int index = ArrayOps::Pop(&world->freeBlackHoles);
+            int index = ArrayPop(&world->freeBlackHoles);
             world->blackHoles.elements[index] = entity;
         }
         else
         {
-            ArrayOps::Push(&world->blackHoles, entity);
+            ArrayPush(&world->blackHoles, entity);
         }
     }
 
     void DestroyBullet(World* world, int index, bool explosion = false)
     {
         world->bullets.elements[index].active = false;
-        ArrayOps::Push(&world->freeBullets, index);
+        ArrayPush(&world->freeBullets, index);
 
         if (explosion)
         {
@@ -376,7 +376,7 @@ namespace WorldOps
         //GameAudio::PlayExplosion();
 
         world->seekers.elements[index].active = false;
-        ArrayOps::Push(&world->freeSeekers, index);
+        ArrayPush(&world->freeSeekers, index);
 
         Texture texture = TextureOps::Load("Art/Laser.png");
 
@@ -401,7 +401,7 @@ namespace WorldOps
         //GameAudio::PlayExplosion();
 
         world->wanderers.elements[index].active = false;
-        ArrayOps::Push(&world->freeWanderers, index);
+        ArrayPush(&world->freeWanderers, index);
 
         Texture texture = TextureOps::Load("Art/Laser.png");
 
@@ -426,7 +426,7 @@ namespace WorldOps
         //GameAudio::PlayExplosion();
 
         world->blackHoles.elements[index].active = false;
-        ArrayOps::Push(&world->freeBlackHoles, index);
+        ArrayPush(&world->freeBlackHoles, index);
 
         Texture texture = TextureOps::Load("Art/Laser.png");
 
@@ -450,14 +450,14 @@ namespace WorldOps
     {
         //GameAudio::PlayExplosion();
 
-        ArrayOps::Clear(&world->bullets);
-        ArrayOps::Clear(&world->seekers);
-        ArrayOps::Clear(&world->wanderers);
-        ArrayOps::Clear(&world->blackHoles);
-        ArrayOps::Clear(&world->freeBullets);
-        ArrayOps::Clear(&world->freeSeekers);
-        ArrayOps::Clear(&world->freeWanderers);
-        ArrayOps::Clear(&world->freeBlackHoles);
+        ArrayClear(&world->bullets);
+        ArrayClear(&world->seekers);
+        ArrayClear(&world->wanderers);
+        ArrayClear(&world->blackHoles);
+        ArrayClear(&world->freeBullets);
+        ArrayClear(&world->freeSeekers);
+        ArrayClear(&world->freeWanderers);
+        ArrayClear(&world->freeBlackHoles);
 
         world->gameOverTimer = 3.0f;
         Texture texture = TextureOps::Load("Art/Laser.png");
@@ -703,10 +703,10 @@ namespace WorldOps
                 Vector4 color1 = Vector4{ 0.3f, 0.8f, 0.4f, 1.0f };
                 Vector4 color2 = Vector4{ 0.5f, 1.0f, 0.7f, 1.0f };
 
-                if (Time::GetTotalFrames() % 3 == 0)
+                if (GetTotalFrames() % 3 == 0)
                 {
                     float speed = 16.0f * s->radius * (0.8f + (rand() % 101 / 100.0f) * 0.2f);
-                    float angle = rand() % 101 / 100.0f * Time::GetTotalTime();
+                    float angle = rand() % 101 / 100.0f * GetTotalTime();
                     Vector2  vel   = Vector2{ cosf(angle) * speed, sinf(angle) * speed };
                     Vector2  pos   = s->position + 0.4f * Vector2{vel.y, -vel.x } + (4.0f + rand() % 101 / 100.0f * 4.0f);
 
@@ -715,7 +715,7 @@ namespace WorldOps
                     //ParticleSystem::SpawnParticle(line_tex, pos, color, 4.0f, float2(1.0f, 1.0f), 0.0f, vel);
                 }
 
-                if (Time::GetTotalFrames() % 60 == 0)
+                if (GetTotalFrames() % 60 == 0)
                 {
                     Texture texture = TextureOps::Load("Art/Laser.png");
 

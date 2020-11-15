@@ -12,7 +12,7 @@ namespace ShaderOps
             return 0;
         }
 
-        glShaderSource(shader, 1, &source, 0);
+        glShaderSource(shader, 1, &source.buffer, 0);
         glCompileShader(shader);
 
         int status = 0;

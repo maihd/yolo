@@ -18,12 +18,12 @@
 int main(void)
 {
     String string1 = StringOps::Static("Hello world");
-    printf("string 1: %s\n", string1);
+    printf("string 1: %s\n", string1.buffer);
 
     String string2 = StringOps::Intern(string1);
-    printf("string 2: %s\n", string2);
+    printf("string 2: %s\n", string2.buffer);
 
-    if (string1 == string2)
+    if (string1.buffer == string2.buffer)
     {
         printf("string1 and string2 is equal!\n");
     }
@@ -69,15 +69,15 @@ int main(void)
         //Graphics::DrawCircle(DrawMode::Line, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
 
         //Graphics::DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
-        Graphics::DrawTexture(texture, { width * 0.5f, height * 0.5f }, Time::GetTotalTime());
-        Graphics::DrawTexture(texture, { width * 0.25f, height * 0.25f }, Time::GetTotalTime() * 0.5f, Vector2{ 1, 1 }, Vector4{ 0.5f, 0.5f, 0.5f, 1.0f }, Vector2{ 1.0f, 1.0f });
+        Graphics::DrawTexture(texture, { width * 0.5f, height * 0.5f }, GetTotalTime());
+        Graphics::DrawTexture(texture, { width * 0.25f, height * 0.25f }, GetTotalTime() * 0.5f, Vector2{ 1, 1 }, Vector4{ 0.5f, 0.5f, 0.5f, 1.0f }, Vector2{ 1.0f, 1.0f });
         Graphics::DrawFramerate(font, { 0.0f, (float)height - font.size });
 
         Graphics::Present();
 
-        angle += Time::GetDeltaTime();
+        angle += GetDeltaTime();
         posX = cosf(angle) * 100;
-        Time::UpdateAndSleep(60);
+        TimeUpdateAndSleep(60);
     }
 
     Graphics::Quit();

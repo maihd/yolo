@@ -62,8 +62,8 @@ namespace Input
 
     void UpdateCharInput(String string)
     {
-        strcat(_inputText, string);
-        _inputTextLength += strlen(string);
+        strcat(_inputText, string.buffer);
+        _inputTextLength += strlen(string.buffer);
     }
 
     void UpdateKey(KeyCode key, bool down)

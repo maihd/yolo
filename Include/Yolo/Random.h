@@ -11,7 +11,7 @@ namespace Random
 
     constexpr U32 AsCompileTimeU32(U32 seed = 0)
     {
-        String time = __TIME__;
+        const char* time = __TIME__;
 
         U32 timeNumber0 = 0;
         timeNumber0 |= (U32)time[0] << (U32)(3 * 8);
@@ -30,7 +30,7 @@ namespace Random
 
     constexpr U64 AsCompileTimeU64(U64 seed = 0)
     {
-        String time = __TIME__;
+        const char* time = __TIME__;
 
         U64 timeNumber = 0;
         timeNumber |= (U64)time[0] << (U64)(7 * 8);

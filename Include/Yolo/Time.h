@@ -2,24 +2,22 @@
 
 #include <Yolo/Types.h>
 
-namespace Time
-{
-    U64     GetCounter(void);
-    U64     GetFrequency(void);
-    void    MicroSleep(U64 microseconds);
+U64         GetCpuCounter(void);
+U64         GetCpuFrequency(void);
 
-    float     GetFramerate(void);
-    int     GetTotalFrames(void);
+void        MicroSleep(U64 microseconds);
 
-    float     GetTotalTime(void);
+float       GetFramerate(void);
+int         GetTotalFrames(void);
 
-    float     GetTimeScale(void);
-    void    SetTimeScale(float timeScale);
+float       GetTotalTime(void);
 
-    float     GetDeltaTime(void);
-    float     GetUnscaledDeltaTime(void);
+float       GetTimeScale(void);
+void        SetTimeScale(float timeScale);
 
-    void    Update(void);
-    bool    UpdateAndSleep(float framerate = 0);
-}
+float       GetDeltaTime(void);
+float       GetUnscaledDeltaTime(void);
+
+void        TimeUpdate(void);
+bool        TimeUpdateAndSleep(float framerate = 0);
 

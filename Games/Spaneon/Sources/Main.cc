@@ -23,8 +23,8 @@ int main(void)
 
     while (!Window::PollEvents())
     {
-        Time::UpdateAndSleep(60);
-        Game::Update(Time::GetDeltaTime());
+        TimeUpdateAndSleep(60);
+        Game::Update(GetDeltaTime());
 
         Graphics::Clear();
 

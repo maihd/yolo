@@ -98,7 +98,7 @@ namespace HotDylibOps
     static long GetLastModifyTime(String path)
     {
         WIN32_FILE_ATTRIBUTE_DATA fad;
-        if (!GetFileAttributesExA(path, GetFileExInfoStandard, &fad))
+        if (!GetFileAttributesExA(path.buffer, GetFileExInfoStandard, &fad))
         {
             return 0;
         }
@@ -113,7 +113,7 @@ namespace HotDylibOps
     #undef CopyFile
     static bool CopyFile(String from, String to)
     {
-        if (CopyFileA(from, to, false))
+        if (CopyFileA(from.buffer, to.buffer, false))
         {
             return true;
         }
@@ -228,7 +228,7 @@ namespace HotDylibOps
         RM_PROCESS_INFO rgpi[10];
         WCHAR           szSessionKey[CCH_RM_SESSION_KEY + 1] = { 0 };
 
-        MultiByteToWideChar(CP_UTF8, 0, file, -1, szFile, HOTDYLIB_MAX_PATH);
+        MultiByteToWideChar(CP_UTF8, 0, file.buffer, -1, szFile, HOTDYLIB_MAX_PATH);
 
         dwError = RmStartSession(&dwSession, 0, szSessionKey);
         if (dwError == ERROR_SUCCESS)
@@ -257,7 +257,7 @@ namespace HotDylibOps
         char dir[HOTDYLIB_MAX_PATH];
         char name[HOTDYLIB_MAX_PATH];
 
-        GetFullPathNameA(libpath, len, buf, NULL);
+        GetFullPathNameA(libpath.buffer, len, buf, NULL);
         _splitpath(buf, drv, dir, name, NULL);
 
         return snprintf(buf, len, "%s%s%s.pdb", drv, dir, name);
@@ -526,7 +526,7 @@ namespace HotDylibOps
 
     static bool RemoveFile(String path)
     {
-        return DeleteFileA(path);
+        return DeleteFileA(path.buffer);
     }
 
     #undef GetTempPath
@@ -539,7 +539,7 @@ namespace HotDylibOps
             int version = 0;
             while (1)
             {
-                res = snprintf(buffer, length, "%s.%d", path, version++);
+                res = snprintf(buffer, length, "%s.%d", path.buffer, version++);
                 FILE* file = fopen(buffer, "r");
                 if (file)
                 {
@@ -576,7 +576,7 @@ namespace HotDylibOps
     static bool CallEntryFunction(HotDylib* lib, void* library, HotDylibState state)
     {
         typedef void* (*HotDylibEntryFn)(void* userdata, HotDylibState newState, HotDylibState oldState);
-        HotDylibEntryFn func = (HotDylibEntryFn)Dylib_GetSymbol(library, lib->entryName);
+        HotDylibEntryFn func = (HotDylibEntryFn)Dylib_GetSymbol(library, lib->entryName.buffer);
 
         bool res = true;
         if (func)
@@ -627,7 +627,7 @@ namespace HotDylibOps
         data->library = NULL;
         GetTempPath(path, data->libTempPath, HOTDYLIB_MAX_PATH);
 
-        strncpy(data->libRealPath, path, HOTDYLIB_MAX_PATH);
+        strncpy(data->libRealPath, path.buffer, HOTDYLIB_MAX_PATH);
 
 #if defined(_MSC_VER) && HOTDYLIB_PDB_UNLOCK
         data->pdbtime = 0;
@@ -738,7 +738,7 @@ namespace HotDylibOps
     void* GetSymbol(const HotDylib* lib, String symbolName)
     {
         HotDylibData* data = (HotDylibData*)(lib + 1);
-        return Dylib_GetSymbol(data->library, symbolName);
+        return Dylib_GetSymbol(data->library, symbolName.buffer);
     }
 
     String GetError(const HotDylib* lib)

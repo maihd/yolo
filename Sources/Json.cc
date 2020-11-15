@@ -660,8 +660,8 @@ namespace JsonOps
                     Json_Panic(state, JsonType::Object, JsonError::UnexpectedToken, "Expected <string> for <member-key> of <object>");
                 }
 
-                int    nameLength;
-                String name = Json_ParseStringNoToken(state, &nameLength);
+                int   nameLength;
+                char* name = Json_ParseStringNoToken(state, &nameLength);
 
                 Json_SkipSpace(state);
                 Json_MatchChar(state, JsonType::Object, ':');
@@ -669,7 +669,7 @@ namespace JsonOps
                 Json value;
                 Json_ParseSingle(state, &value);
 
-                HashTableOps::SetValue(&values, CalcHash64(name), value);
+                HashTableOps::SetValue(&values, CalcHash64(name, nameLength), value);
             }
 
             Json_SkipSpace(state);
@@ -741,7 +741,7 @@ namespace JsonOps
 
     Json* Parse(String json, int jsonLength)
     {
-        JsonState* state = JsonState_Make(json, jsonLength);
+        JsonState* state = JsonState_Make(json.buffer, jsonLength);
         Json* value = Json_ParseTopLevel(state);
 
         if (!value)
@@ -772,7 +772,7 @@ namespace JsonOps
         return JsonError::None;
     }
 
-    String GetErrorString(const Json* rootValue)
+    const char* GetErrorString(const Json* rootValue)
     {
         if (rootValue)
         {

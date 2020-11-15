@@ -20,7 +20,6 @@ using U16       = unsigned short;
 using U32       = unsigned int;
 using U64       = unsigned long long;
 
-using String    = const char*;
 using Handle    = unsigned int;
 using NullPtr   = decltype(nullptr);
 
@@ -77,6 +76,45 @@ struct Rectangle
     float y;
     float width;
     float height;
+};
+
+struct String
+{
+    const char* buffer;
+    int         length : 30;
+    bool        isOwned : 1;
+    bool        isStatic : 1;
+
+    constexpr String()
+        : buffer("")
+        , length(0)
+        , isOwned(false)
+        , isStatic(true)
+    {
+    }
+
+    template <int LENGTH>
+    constexpr String(const char (&buffer)[LENGTH])
+        : buffer(buffer)
+        , length(LENGTH)
+        , isOwned(false)
+        , isStatic(true)
+    {
+        static_assert(LENGTH >= 0, "You're attempting to use the string have length smaller than 0.");
+    }
+
+    inline String(const char* buffer, int length, bool isOwned, bool isStatic = false)
+        : buffer(buffer)
+        , length(length)
+        , isOwned(isOwned)
+        , isStatic(isStatic)
+    {
+    }
+
+    const char& operator[](int index) const
+    {
+        return buffer[index];
+    }
 };
 
 // ----------------------

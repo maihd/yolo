@@ -35,10 +35,10 @@ struct Json
     JsonType type;
     union
     {
-        double             number;
+        double          number;
         bool            boolean;
 
-        String          string;
+        const char*     string;
 
         Array<Json>     array;
 
@@ -54,7 +54,7 @@ namespace JsonOps
     void        Release(Json* rootValue);
 
     JsonError   GetError(const Json* rootValue);
-    String      GetErrorString(const Json* rootValue);
+    const char* GetErrorString(const Json* rootValue);
 
     bool        Equals(Json a, Json b);
 
