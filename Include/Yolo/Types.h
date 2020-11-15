@@ -39,21 +39,58 @@ struct mat4;
 struct vec2
 {
     float x, y;
+
+    vec2(void)
+        {}
+
+    vec2(float x, float y)
+        : x(x)
+        , y(y)
+        {}
 };
 
 struct vec3
 {
     float x, y, z;
+
+    vec3(void)
+        {}
+
+    vec3(float x, float y, float z)
+        : x(x)
+        , y(y)
+        , z(z)
+        {}
 };
 
 struct vec4
 {
     float x, y, z, w;
+
+    vec4(void)
+        {}
+
+    vec4(float x, float y, float z, float w)
+        : x(x)
+        , y(y)
+        , z(z)
+        , w(w)
+        {}
 };
 
 struct quat
 {
     float x, y, z, w;
+
+    quat(void)
+        {}
+
+    quat(float x, float y, float z, float w)
+        : x(x)
+        , y(y)
+        , z(z)
+        , w(w)
+        {}
 };
 
 struct mat4
