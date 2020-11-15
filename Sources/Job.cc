@@ -7,7 +7,7 @@ namespace JobOps
 
     void Start(Job job)
     {
-        ArrayOps::Push(&jobs, job);
+        ArrayPush(&jobs, job);
     }
 
     void Start(Function<void(void)> job)
@@ -26,11 +26,11 @@ namespace JobOps
 
         if (n == jobs.count)
         {
-            ArrayOps::Clear(&jobs);
+            ArrayClear(&jobs);
         }
         else
         {
-            ArrayOps::Erase(&jobs, 0, n);
+            ArrayErase(&jobs, 0, n);
         }
     }
 }

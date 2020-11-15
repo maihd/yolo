@@ -121,7 +121,7 @@ namespace JsonOps
                 {
                     Json_ReleaseMemory(&value->array.elements[i]);
                 }
-                ArrayOps::Free(&value->array);
+                ArrayFree(&value->array);
                 break;
 
             case JsonType::Object:
@@ -420,7 +420,7 @@ namespace JsonOps
                 Json value;
                 Json_ParseSingle(state, &value);
 
-                ArrayOps::Push(&values, value);
+                ArrayPush(&values, value);
             }
 
             Json_SkipSpace(state);

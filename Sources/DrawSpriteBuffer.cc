@@ -24,9 +24,9 @@ namespace DrawSpriteBufferOps
             false,
             vertexArray,
 
-            ArrayOps::New<VertexColor>(),
-            ArrayOps::New<U16>(),
-            ArrayOps::New<DrawSpriteBuffer::Command>(),
+            ArrayNew<VertexColor>(),
+            ArrayNew<U16>(),
+            ArrayNew<DrawSpriteBuffer::Command>(),
         };
     }
 
@@ -36,18 +36,18 @@ namespace DrawSpriteBufferOps
         
         VertexArrayOps::Free(&drawSpriteBuffer->vertexArray);
 
-        ArrayOps::Free(&drawSpriteBuffer->commands);
-        ArrayOps::Free(&drawSpriteBuffer->indices);
-        ArrayOps::Free(&drawSpriteBuffer->vertices);
+        ArrayFree(&drawSpriteBuffer->commands);
+        ArrayFree(&drawSpriteBuffer->indices);
+        ArrayFree(&drawSpriteBuffer->vertices);
     }
 
     void Clear(DrawSpriteBuffer* drawSpriteBuffer)
     {
         drawSpriteBuffer->shouldUpdate = true;
 
-        ArrayOps::Clear(&drawSpriteBuffer->commands);
-        ArrayOps::Clear(&drawSpriteBuffer->indices);
-        ArrayOps::Clear(&drawSpriteBuffer->vertices);
+        ArrayClear(&drawSpriteBuffer->commands);
+        ArrayClear(&drawSpriteBuffer->indices);
+        ArrayClear(&drawSpriteBuffer->vertices);
     }
 
     void AddTriangle(DrawSpriteBuffer* drawSpriteBuffer, VertexColor v0, VertexColor v1, VertexColor v2, Handle texture)
@@ -55,13 +55,13 @@ namespace DrawSpriteBufferOps
         drawSpriteBuffer->shouldUpdate = true;
 
         U16 startIndex = (U16)drawSpriteBuffer->vertices.count;
-        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
+        ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
+        ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
+        ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
 
-        ArrayOps::Push(&drawSpriteBuffer->vertices, v0);
-        ArrayOps::Push(&drawSpriteBuffer->vertices, v1);
-        ArrayOps::Push(&drawSpriteBuffer->vertices, v2);
+        ArrayPush(&drawSpriteBuffer->vertices, v0);
+        ArrayPush(&drawSpriteBuffer->vertices, v1);
+        ArrayPush(&drawSpriteBuffer->vertices, v2);
 
         DrawSpriteBuffer::Command command = {
             3,
@@ -69,7 +69,7 @@ namespace DrawSpriteBufferOps
             texture
         };
 
-        ArrayOps::Push(&drawSpriteBuffer->commands, command);
+        ArrayPush(&drawSpriteBuffer->commands, command);
     }
 
     void AddQuad(DrawSpriteBuffer* drawSpriteBuffer, VertexColor v0, VertexColor v1, VertexColor v2, VertexColor v3, Handle texture)
@@ -77,17 +77,17 @@ namespace DrawSpriteBufferOps
         drawSpriteBuffer->shouldUpdate = true;
 
         U16 startIndex = (U16)drawSpriteBuffer->vertices.count;
-        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
-        ArrayOps::Push(&drawSpriteBuffer->indices, (U16)(startIndex + 3));
+        ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
+        ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
+        ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
+        ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
+        ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
+        ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 3));
 
-        ArrayOps::Push(&drawSpriteBuffer->vertices, v0);
-        ArrayOps::Push(&drawSpriteBuffer->vertices, v1);
-        ArrayOps::Push(&drawSpriteBuffer->vertices, v2);
-        ArrayOps::Push(&drawSpriteBuffer->vertices, v3);
+        ArrayPush(&drawSpriteBuffer->vertices, v0);
+        ArrayPush(&drawSpriteBuffer->vertices, v1);
+        ArrayPush(&drawSpriteBuffer->vertices, v2);
+        ArrayPush(&drawSpriteBuffer->vertices, v3);
 
         bool addNewCommand = true;
         if (drawSpriteBuffer->commands.count > 0)
@@ -108,7 +108,7 @@ namespace DrawSpriteBufferOps
             texture
             };
 
-            ArrayOps::Push(&drawSpriteBuffer->commands, command);
+            ArrayPush(&drawSpriteBuffer->commands, command);
         }
     }
 
@@ -166,8 +166,8 @@ namespace DrawSpriteBufferOps
         {
             drawSpriteBuffer->shouldUpdate = false;
 
-            VertexArrayOps::SetIndexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->indices.elements, ArrayOps::SizeOf(drawSpriteBuffer->indices), BufferUsage::StreamDraw);
-            VertexArrayOps::SetVertexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->vertices.elements, ArrayOps::SizeOf(drawSpriteBuffer->vertices), BufferUsage::StreamDraw);
+            VertexArrayOps::SetIndexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->indices.elements, ArraySizeInBytes(drawSpriteBuffer->indices), BufferUsage::StreamDraw);
+            VertexArrayOps::SetVertexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->vertices.elements, ArraySizeInBytes(drawSpriteBuffer->vertices), BufferUsage::StreamDraw);
         }
     }
 

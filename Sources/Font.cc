@@ -42,7 +42,7 @@ namespace FontOps
 
             F32 ipw = 1.0f / TEXTURE_WIDTH, iph = 1.0f / TEXTURE_HEIGHT;
 
-            Array<FontGlyph> glyphs = ArrayOps::New<FontGlyph>(GLYPHS_COUNT);
+            Array<FontGlyph> glyphs = ArrayNew<FontGlyph>(GLYPHS_COUNT);
             for (I32 i = 0; i < GLYPHS_COUNT; i++)
             {
                 const stbtt_bakedchar bakedChar = bakedChars[i];
@@ -78,7 +78,7 @@ namespace FontOps
                     bakedChar.xadvance,
                 };
 
-                ArrayOps::Push(&glyphs, fontChar);
+                ArrayPush(&glyphs, fontChar);
             }
 
             free(bakedChars);
@@ -99,7 +99,7 @@ namespace FontOps
     {
         assert(font);
 
-        ArrayOps::Free(&font->glyphs);
+        ArrayFree(&font->glyphs);
         TextureOps::Free(&font->texture);
 
         font->size = 0;

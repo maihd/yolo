@@ -17,15 +17,15 @@ namespace FileOps
 
     void AddSearchPath(String path)
     {
-        if (ArrayOps::IndexOf(searchPaths, path) == -1)
+        if (ArrayIndexOf(searchPaths, path) == -1)
         {
-            ArrayOps::Push(&searchPaths, path);
+            ArrayPush(&searchPaths, path);
         }
     }
 
     void RemoveSearchPath(String path)
     {
-        ArrayOps::Remove(&searchPaths, path);
+        ArrayRemove(&searchPaths, path);
     }
 
     bool Exists(String path, bool useSearchPath)

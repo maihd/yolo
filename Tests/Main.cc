@@ -41,8 +41,8 @@ int main(void)
     int height = Window::GetHeight();
 
     Array<int> intArray = {};
-    ArrayOps::Push(&intArray, 10);
-    ArrayOps::Free(&intArray);
+    ArrayPush(&intArray, 10);
+    ArrayFree(&intArray);
 
     float angle = 0.0f;
 
