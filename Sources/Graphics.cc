@@ -257,11 +257,11 @@ namespace Graphics
         glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
         glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (float*)&model);
 
-        glBindVertexArray(drawBuffer.vertexArray.handle);
-        glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.vertexArray.vertexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.vertexArray.indexBuffer);
+        glBindVertexArray(drawBuffer.VertexArray.handle);
+        glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.VertexArray.vertexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.VertexArray.indexBuffer);
 
-        GLsizei indexCount = drawBuffer.indices.count;
+        GLsizei indexCount = drawBuffer.Indices.count;
         glDrawElements(drawMode, indexCount, GL_UNSIGNED_SHORT, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

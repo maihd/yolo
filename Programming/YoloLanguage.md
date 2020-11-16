@@ -26,13 +26,31 @@ What should I use?
 - Don't use RTTI, exceptions
 > Exception handling is the only C++ language feature which requires significant support from a complex runtime system, and it's the only C++ feature that has a runtime cost even if you don't use it – sometimes as additional hidden code at every object construction, destruction, and try block entry/exit, and always by limiting what the compiler's optimizer can do, often quite significantly. Yet C++ exception specifications are not enforced at compile time anyway, so you don't even get to know that you didn't forget to handle some error case! And on a stylistic note, the exception style of error handling doesn't mesh very well with the C style of error return codes, which causes a real schism in programming styles because a great deal of C++ code must invariably call down into underlying C libraries.
 
-## Further Reading
+Coding convention
+-----------------
+
+- Type name: PascalCase
+- Funtion name: PascalCase
+- Variable name: camelCase
+- Member name: PascalCase
+- Constants name: ALL_CAPS_CASE
+- Enum name: PascalCase
+- Enum's member: EnumName_PascalCase if is enum flags, ALL_CAPS_CASE if mean constants
+- Parameter name: camelCase
+- Global variable name: PascalCase
+- Avoid use multiples global variable, should group in one data structure, context.
+
+Further Reading
+---------------
+
 You will find some similar ideas from theses articles:
 - [Bitsquid's Foundation](https://github.com/niklas-ourmachinery/bitsquid-foundation)
 - [Insomniac Games' coding style](https://gist.github.com/Kerollmops/fcad27cfef9e3552cb75a3d201494ba6)
 - [Orthodox C++](https://gist.github.com/bkaradzic/2e39896bc7d8c34e042b#file-orthodoxc-md)
 - [The Practice of Programming – Kernighan, Pike](https://www.amazon.com/Practice-Programming-Addison-Wesley-Professional-Computing/dp/020161586X)
 
-## Some advices
+Some advices
+------------
+
 - Use Feynman technique for your code, make the code simpler to understand by simpler words and sentences.
 - You only live once.

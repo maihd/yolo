@@ -6,11 +6,11 @@
 
 struct DrawBuffer
 {
-    bool                shouldUpdate;
-    VertexArray         vertexArray;
+    bool                ShouldUpdate;
+    VertexArray         VertexArray;
 
-    Array<VertexShape>  vertices;
-    Array<U16>          indices;
+    Array<VertexShape>  Vertices;
+    Array<U16>          Indices;
 };
 
 DrawBuffer DrawBufferNew(void);

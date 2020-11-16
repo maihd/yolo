@@ -25,26 +25,26 @@ void DrawBufferFree(DrawBuffer* drawBuffer)
 {
     assert(drawBuffer);
 
-    VertexArrayOps::Free(&drawBuffer->vertexArray);
+    VertexArrayOps::Free(&drawBuffer->VertexArray);
 
-    ArrayFree(&drawBuffer->vertices);
-    ArrayFree(&drawBuffer->indices);
+    ArrayFree(&drawBuffer->Vertices);
+    ArrayFree(&drawBuffer->Indices);
 }
 
 void DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v1, VertexShape v2)
 {
     assert(drawBuffer);
 
-    U16 startIndex = (U16)drawBuffer->vertices.count;
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 0u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 1u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 2u));
+    U16 startIndex = (U16)drawBuffer->Vertices.count;
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 0u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 1u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 2u));
 
-    ArrayPush(&drawBuffer->vertices, v0);
-    ArrayPush(&drawBuffer->vertices, v1);
-    ArrayPush(&drawBuffer->vertices, v2);
+    ArrayPush(&drawBuffer->Vertices, v0);
+    ArrayPush(&drawBuffer->Vertices, v1);
+    ArrayPush(&drawBuffer->Vertices, v2);
 
-    drawBuffer->shouldUpdate = true;
+    drawBuffer->ShouldUpdate = true;
 }
 
 void DrawBufferAddTriangle(DrawBuffer* drawBuffer, Array<VertexShape> vertices)
@@ -70,22 +70,22 @@ void DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, I32 co
 
 void DrawBufferClear(DrawBuffer* drawBuffer)
 {
-    drawBuffer->shouldUpdate = true;
+    drawBuffer->ShouldUpdate = true;
 
-    ArrayClear(&drawBuffer->vertices);
-    ArrayClear(&drawBuffer->indices);
+    ArrayClear(&drawBuffer->Vertices);
+    ArrayClear(&drawBuffer->Indices);
 }
 
 void DrawBufferUpdateBuffers(DrawBuffer* drawBuffer)
 {
     assert(drawBuffer);
 
-    if (drawBuffer->shouldUpdate)
+    if (drawBuffer->ShouldUpdate)
     {
-        drawBuffer->shouldUpdate = false;
+        drawBuffer->ShouldUpdate = false;
 
-        VertexArrayOps::SetIndexData(drawBuffer->vertexArray, drawBuffer->indices.elements, ArraySizeInBytes(drawBuffer->indices), BufferUsage::StreamDraw);
-        VertexArrayOps::SetVertexData(drawBuffer->vertexArray, drawBuffer->vertices.elements, ArraySizeInBytes(drawBuffer->vertices), BufferUsage::StreamDraw);
+        VertexArrayOps::SetIndexData(drawBuffer->VertexArray, drawBuffer->Indices.elements, ArraySizeInBytes(drawBuffer->Indices), BufferUsage::StreamDraw);
+        VertexArrayOps::SetVertexData(drawBuffer->VertexArray, drawBuffer->Vertices.elements, ArraySizeInBytes(drawBuffer->Vertices), BufferUsage::StreamDraw);
     }
 }
 
@@ -122,7 +122,7 @@ void DrawBufferAddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float ra
 {
     assert(drawBuffer != nullptr);
 
-    drawBuffer->shouldUpdate = true;
+    drawBuffer->ShouldUpdate = true;
 
     segments = segments < 0 ? 30 : segments;
 
@@ -136,9 +136,9 @@ void DrawBufferAddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float ra
             { position.x + cosf(angle) * radius, position.y + sinf(angle) * radius },
         };
 
-        const U16 index = (U16)drawBuffer->vertices.count;
-        ArrayPush(&drawBuffer->indices, index);
-        ArrayPush(&drawBuffer->vertices, v);
+        const U16 index = (U16)drawBuffer->Vertices.count;
+        ArrayPush(&drawBuffer->Indices, index);
+        ArrayPush(&drawBuffer->Vertices, v);
     }
 }
 
@@ -160,20 +160,20 @@ void DrawBufferAddRectangle(DrawBuffer* drawBuffer, Vector2 position, Vector2 si
         { position.x + size.x, position.y },
     };
 
-    const U16 startIndex = (U16)drawBuffer->vertices.count;
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 0u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 1u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 2u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 0u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 2u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 3u));
+    const U16 startIndex = (U16)drawBuffer->Vertices.count;
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 0u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 1u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 2u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 0u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 2u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 3u));
 
-    ArrayPush(&drawBuffer->vertices, v0);
-    ArrayPush(&drawBuffer->vertices, v1);
-    ArrayPush(&drawBuffer->vertices, v2);
-    ArrayPush(&drawBuffer->vertices, v3);
+    ArrayPush(&drawBuffer->Vertices, v0);
+    ArrayPush(&drawBuffer->Vertices, v1);
+    ArrayPush(&drawBuffer->Vertices, v2);
+    ArrayPush(&drawBuffer->Vertices, v3);
 
-    drawBuffer->shouldUpdate = true;
+    drawBuffer->ShouldUpdate = true;
 }
 
 void DrawBufferAddRectangleLines(DrawBuffer* drawBuffer, Vector2 position, Vector2 size, Vector4 color)
@@ -194,17 +194,17 @@ void DrawBufferAddRectangleLines(DrawBuffer* drawBuffer, Vector2 position, Vecto
         { position.x + size.x, position.y },
     };
 
-    const U16 startIndex = (U16)drawBuffer->vertices.count;
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 0u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 1u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 2u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 3u));
-    ArrayPush(&drawBuffer->indices, (U16)(startIndex + 0u));
+    const U16 startIndex = (U16)drawBuffer->Vertices.count;
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 0u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 1u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 2u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 3u));
+    ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 0u));
 
-    ArrayPush(&drawBuffer->vertices, v0);
-    ArrayPush(&drawBuffer->vertices, v1);
-    ArrayPush(&drawBuffer->vertices, v2);
-    ArrayPush(&drawBuffer->vertices, v3);
+    ArrayPush(&drawBuffer->Vertices, v0);
+    ArrayPush(&drawBuffer->Vertices, v1);
+    ArrayPush(&drawBuffer->Vertices, v2);
+    ArrayPush(&drawBuffer->Vertices, v3);
 
-    drawBuffer->shouldUpdate = true;
+    drawBuffer->ShouldUpdate = true;
 }
