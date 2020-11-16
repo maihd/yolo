@@ -204,7 +204,7 @@ namespace Graphics
         spriteShader = ShaderOps::Compile(spriteVertexSource, spritePixelSource);
 
         spriteMesh = SpriteMesh::New();
-        drawBuffer = DrawBufferOps::New();
+        drawBuffer = DrawBufferNew();
         drawTextBuffer = DrawTextBuffer::New();
         drawSpriteBuffer = DrawSpriteBufferOps::New();
     }
@@ -249,7 +249,7 @@ namespace Graphics
 
     void PresentDrawBuffer(GLenum drawMode)
     {
-        DrawBufferOps::UpdateBuffers(&drawBuffer);
+        DrawBufferUpdateBuffers(&drawBuffer);
 
         Matrix4 model = Matrix4Translation(0, 0);
 
@@ -317,31 +317,31 @@ namespace Graphics
 
     void DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, I32 segments)
     {
-        DrawBufferOps::Clear(&drawBuffer);
+        DrawBufferClear(&drawBuffer);
 
         if (mode == DrawMode::Line)
         {
-            DrawBufferOps::AddCircleLines(&drawBuffer, position, radius, color, segments);
+            DrawBufferAddCircleLines(&drawBuffer, position, radius, color, segments);
             PresentDrawBuffer(GL_LINE_STRIP);
         }
         else
         {
-            DrawBufferOps::AddCircle(&drawBuffer, position, radius, color, segments);
+            DrawBufferAddCircle(&drawBuffer, position, radius, color, segments);
             PresentDrawBuffer(GL_TRIANGLES);
         }
     }
 
     void DrawRectangle(DrawMode mode, Vector2 position, Vector2 size, Vector4 color)
     {
-        DrawBufferOps::Clear(&drawBuffer);
+        DrawBufferClear(&drawBuffer);
         if (mode == DrawMode::Line)
         {
-            DrawBufferOps::AddRectangleLines(&drawBuffer, position, size, color);
+            DrawBufferAddRectangleLines(&drawBuffer, position, size, color);
             PresentDrawBuffer(GL_LINE_STRIP);
         }
         else
         {
-            DrawBufferOps::AddRectangle(&drawBuffer, position, size, color);
+            DrawBufferAddRectangle(&drawBuffer, position, size, color);
             PresentDrawBuffer(GL_TRIANGLES);
         }
     }

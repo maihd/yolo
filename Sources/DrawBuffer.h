@@ -13,21 +13,18 @@ struct DrawBuffer
     Array<U16>          indices;
 };
 
-namespace DrawBufferOps
-{
-    DrawBuffer New(void);
-    void       Free(DrawBuffer* drawBuffer);
+DrawBuffer DrawBufferNew(void);
+void       DrawBufferFree(DrawBuffer* drawBuffer);
 
-    void       AddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v1, VertexShape v2);
-    void       AddTriangle(DrawBuffer* drawBuffer, Array<VertexShape> vertices);
-    void       AddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, I32 count);
+void       DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v1, VertexShape v2);
+void       DrawBufferAddTriangle(DrawBuffer* drawBuffer, Array<VertexShape> vertices);
+void       DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, I32 count);
 
-    void       AddCircle(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, I32 segments = 30);
-    void       AddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, I32 segments = 30);
+void       DrawBufferAddCircle(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, I32 segments = 30);
+void       DrawBufferAddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float radius, Vector4 color, I32 segmentDrawBuffers = 30);
 
-    void       AddRectangle(DrawBuffer* drawBuffer, Vector2 position, Vector2 size, Vector4 color);
-    void       AddRectangleLines(DrawBuffer* drawBuffer, Vector2 position, Vector2 size, Vector4 color);
+void       DrawBufferAddRectangle(DrawBuffer* drawBuffer, Vector2 position, Vector2 DrawBuffersize, Vector4 color);
+void       DrawBufferAddRectangleLines(DrawBuffer* drawBuffer, Vector2 position, Vector2 DrawBuffersize, Vector4 color);
 
-    void       Clear(DrawBuffer* drawBuffer);
-    void       UpdateBuffers(DrawBuffer* drawBuffer);
-}
+void       DrawBufferClear(DrawBuffer* drawBuffer);
+void       DrawBufferUpdateBuffers(DrawBuffer* drawBuffer);
