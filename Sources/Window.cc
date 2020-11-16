@@ -2,6 +2,7 @@
 #include <Yolo/String.h>
 
 #include "./Internal.h"
+#include "./Imgui/imgui_impl_sdl.h"
 
 #ifdef _WIN32
 #   pragma comment(lib, "OpenGL32.lib")
@@ -198,6 +199,8 @@ bool WindowPollEvents(void)
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+
         switch (event.type)
         {
         case SDL_QUIT:

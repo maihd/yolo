@@ -261,9 +261,9 @@ void ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags flags)
                     allocDesc = allocDesc->Next;
                 }
             }
-
-            ImGui::EndChild();
         }
+
+        ImGui::EndChild();
     }
 
     if (openWindow)

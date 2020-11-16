@@ -48,10 +48,10 @@
     <ClInclude Include="..\Include\Yolo\HotDylib.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Imgui.h">
+    <ClInclude Include="..\Include\Yolo\ImGui.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\ImguiConfig.h">
+    <ClInclude Include="..\Include\Yolo\ImGuiConfig.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Input.h">
@@ -135,6 +135,9 @@
     <ClInclude Include="..\Sources\Imgui\imstb_truetype.h">
       <Filter>Sources\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\Internal.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\OpenGL.h">
       <Filter>Sources</Filter>
     </ClInclude>
@@ -142,9 +145,6 @@
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SpriteMesh.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\Internal.h">
       <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
@@ -176,9 +176,6 @@
     <ClCompile Include="..\Sources\Imgui\imgui.cpp">
       <Filter>Sources\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Imgui\imgui_demo.cpp">
-      <Filter>Sources\Imgui</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\Imgui\imgui_draw.cpp">
       <Filter>Sources\Imgui</Filter>
     </ClCompile>
@@ -192,6 +189,9 @@
       <Filter>Sources\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Input.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Internal.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Job.cc">
@@ -241,9 +241,6 @@
     </ClCompile>
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c">
       <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\Internal.cc">
-      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
