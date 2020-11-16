@@ -117,6 +117,9 @@ int main(void)
             ImGui::End();
         }
 
+        // 4. Tracking your memory allocations
+        ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags_OpenWindow);
+
         Graphics::Present();
 
         angle += GetDeltaTime();

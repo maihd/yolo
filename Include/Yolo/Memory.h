@@ -52,8 +52,14 @@ static inline U64 CalcHashPtr64(void* ptr, U32 seed = 0)
     return value;
 }
 
-namespace Imgui
+enum ImGuiDumpMemoryFlags
+{
+    ImGuiDumpMemoryFlags_None,
+    ImGuiDumpMemoryFlags_OpenWindow = 1 << 0,
+};
+
+namespace ImGui
 {
     // Open an debug window to view your memory allocations
-    void DumpMemoryAllocs(void);
+    void DumpMemoryAllocs(ImGuiDumpMemoryFlags flags);
 }
