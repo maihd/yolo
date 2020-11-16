@@ -3,39 +3,43 @@
 #include <string.h>
 #include <Yolo/Input.h>
 
-namespace
+constexpr int KEY_INPUT_COUNT = 1024;
+constexpr int MOUSE_INPUT_COUNT = 8;
+
+constexpr int GAMEPAD_INPUT_COUNT = 8;
+constexpr int GAMEPAD_AXIS_COUNT = 8;
+constexpr int GAMEPAD_BUTTON_COUNT = 32;
+
+struct GamepadState
 {
-    struct GamepadState
-    {
-        float axis[8];
+    float   Axes[GAMEPAD_AXIS_COUNT];
 
-        I32 buttonUpFrame[32];
-        I32 buttonDownFrame[32];
-    };
+    I32     ButtonUpFrames[GAMEPAD_BUTTON_COUNT];
+    I32     ButtonDownFrames[GAMEPAD_BUTTON_COUNT];
+};
 
-    constexpr I32   KEY_INPUT_COUNT = 1024;
-    constexpr I32   MOUSE_INPUT_COUNT = 8;
+static struct
+{
+    I32             CurrentFrame;
 
-    static I32      _currentFrame;
+    I32             InputTextLength;
+    char            InputText[1024];
 
-    static I32      _inputTextLength;
-    static char     _inputText[1024];
-
-    static bool     _keyState[KEY_INPUT_COUNT];
-    static I32      _keyUpFrame[KEY_INPUT_COUNT];
-    static I32      _keyDownFrame[KEY_INPUT_COUNT];
+    bool            KeyState[KEY_INPUT_COUNT];
+    I32             KeyUpFrame[KEY_INPUT_COUNT];
+    I32             KeyDownFrame[KEY_INPUT_COUNT];
                     
-    static I32      _mouseState;
-    static I32      _mouseUpFrame[MOUSE_INPUT_COUNT];
-    static I32      _mouseDownFrame[MOUSE_INPUT_COUNT];
-    static float      _mouseX;
-    static float      _mouseY;
+    I32             MouseState;
+    I32             MouseUpFrame[MOUSE_INPUT_COUNT];
+    I32             MouseDownFrame[MOUSE_INPUT_COUNT];
+    float           MouseX;
+    float           MouseY;
 
-    static float      _mouseWheelH;
-    static float      _mouseWheelV;
+    float           MouseWheelH;
+    float           MouseWheelV;
     
-    static GamepadState _gamepadStates[8];
-}
+    GamepadState    GamepadStates[GAMEPAD_INPUT_COUNT];
+} InputState;
     
 namespace Input
 {
@@ -46,24 +50,24 @@ namespace Input
 
     void NewFrame(void)
     {
-        _currentFrame++;
-        _inputTextLength = 0;
+        InputState.CurrentFrame++;
+        InputState.InputTextLength = 0;
     }
 
     void EndFrame(void)
     {
-        _inputText[_inputTextLength] = 0;
+        InputState.InputText[InputState.InputTextLength] = 0;
     }
 
     void UpdateCharInput(I32 character)
     {
-        _inputText[_inputTextLength++] = (char)character;
+        InputState.InputText[InputState.InputTextLength++] = (char)character;
     }
 
     void UpdateCharInput(String string)
     {
-        strcat(_inputText, string.Buffer);
-        _inputTextLength += string.Length;
+        strcat(InputState.InputText, string.Buffer);
+        InputState.InputTextLength += string.Length;
     }
 
     void UpdateKey(KeyCode key, bool down)
@@ -71,15 +75,15 @@ namespace Input
         I32 index = (I32)key;
         if (index > -1 && index < KEY_INPUT_COUNT)
         {
-            _keyState[index] = down;
+            InputState.KeyState[index] = down;
 
             if (down)
             {
-                _keyDownFrame[index] = _currentFrame;
+                InputState.KeyDownFrame[index] = InputState.CurrentFrame;
             }
             else
             {
-                _keyUpFrame[index] = _currentFrame;
+                InputState.KeyUpFrame[index] = InputState.CurrentFrame;
             }
         }
     }
@@ -91,62 +95,62 @@ namespace Input
         {
             if (down)
             {
-                _mouseState |= button;
-                _mouseDownFrame[index] = _currentFrame;
+                InputState.MouseState |= button;
+                InputState.MouseDownFrame[index] = InputState.CurrentFrame;
             }
             else
             {
-                _mouseState &= ~button;
-                _mouseUpFrame[index] = _currentFrame;
+                InputState.MouseState &= ~button;
+                InputState.MouseUpFrame[index] = InputState.CurrentFrame;
             }
         }
     }
 
     void UpdateMouseMove(float x, float y)
     {
-        _mouseX = x;
-        _mouseY = y;
+        InputState.MouseX = x;
+        InputState.MouseY = y;
     }
 
     void UpdateMouseWheel(float h, float v)
     {
-        _mouseWheelV += v;
-        _mouseWheelH += h;
+        InputState.MouseWheelV += v;
+        InputState.MouseWheelH += h;
     }
 
     void UpdateGamepadAxis(I32 gamepadID, GamepadAxis axis, float value)
     {
-        if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
+        if (gamepadID > -1 && gamepadID < GAMEPAD_INPUT_COUNT)
         {
-            GamepadState& state = _gamepadStates[gamepadID];
+            GamepadState& state = InputState.GamepadStates[gamepadID];
             
             I32 index = (I32)axis;
-            if (index > -1 && index < CountOf(state.axis))
+            if (index > -1 && index < CountOf(state.Axes))
             {
-                state.axis[index] = value;
+                state.Axes[index] = value;
             }
         }
     }
 
     void UpdateGamepadButton(I32 gamepadID, GamepadButton button, bool down)
     {
-        if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
+        if (gamepadID > -1 && gamepadID < GAMEPAD_INPUT_COUNT)
         {
-            GamepadState& state = _gamepadStates[gamepadID];
+            GamepadState& state = InputState.GamepadStates[gamepadID];
 
             I32 index = (I32)button;
             if (down)
             {
-                if (index > -1 && index < CountOf(state.buttonDownFrame))
+                if (index > -1 && index < CountOf(state.ButtonDownFrames))
                 {
-                    state.buttonDownFrame[index] = _currentFrame;
+                    state.ButtonDownFrames[index] = InputState.CurrentFrame;
                 }
             }
             else
             {
-                if (index > -1 && index < CountOf(state.buttonUpFrame))
+                if (index > -1 && index < CountOf(state.ButtonUpFrames))
                 {
-                    state.buttonUpFrame[index] = _currentFrame;
+                    state.ButtonUpFrames[index] = InputState.CurrentFrame;
                 }
             }
         }
@@ -174,23 +178,23 @@ namespace Input
 
     I32  GetMouseState(float* x, float* y)
     {
-        if (x) *x = _mouseX;
-        if (y) *y = _mouseY;
+        if (x) *x = InputState.MouseX;
+        if (y) *y = InputState.MouseY;
 
-        return _mouseState;
+        return InputState.MouseState;
     }
     
     Vector2 GetMousePosition(void)
     {
-        return Vector2{ _mouseX, _mouseY };
+        return Vector2 { InputState.MouseX, InputState.MouseY };
     }
 
     bool GetMouseButton(MouseButton button)
     {
         I32 index = (I32)button;
-        if (index > -1 && index < CountOf(_mouseDownFrame) && index < CountOf(_mouseUpFrame))
+        if (index > -1 && index < CountOf(InputState.MouseDownFrame) && index < CountOf(InputState.MouseUpFrame))
         {
-            return _mouseDownFrame[index] > _mouseUpFrame[index];
+            return InputState.MouseDownFrame[index] > InputState.MouseUpFrame[index];
         }
 
         return false;
@@ -199,9 +203,9 @@ namespace Input
     bool GetMouseButtonUp(MouseButton button)
     {
         I32 index = (I32)button;
-        if (index > -1 && index < CountOf(_mouseUpFrame))
+        if (index > -1 && index < CountOf(InputState.MouseUpFrame))
         {
-            return _mouseUpFrame[index] == _currentFrame;
+            return InputState.MouseUpFrame[index] == InputState.CurrentFrame;
         }
 
         return false;
@@ -210,9 +214,9 @@ namespace Input
     bool GetMouseButtonDown(MouseButton button)
     {
         I32 index = (I32)button;
-        if (index > -1 && index < CountOf(_mouseDownFrame))
+        if (index > -1 && index < CountOf(InputState.MouseDownFrame))
         {
-            return _mouseDownFrame[index] == _currentFrame;
+            return InputState.MouseDownFrame[index] == InputState.CurrentFrame;
         }
 
         return false;
@@ -223,7 +227,7 @@ namespace Input
         I32 index = (I32)key;
         if (index > -1 && index < KEY_INPUT_COUNT)
         {
-            return _keyState[index];
+            return InputState.KeyState[index];
         }
 
         return false;
@@ -234,7 +238,7 @@ namespace Input
         I32 index = (I32)key;
         if (index > -1 && index < KEY_INPUT_COUNT)
         {
-            return _keyUpFrame[index] == _currentFrame;
+            return InputState.KeyUpFrame[index] == InputState.CurrentFrame;
         }
 
         return false;
@@ -245,7 +249,7 @@ namespace Input
         I32 index = (I32)key;
         if (index > -1 && index < KEY_INPUT_COUNT)
         {
-            return _keyDownFrame[index] == _currentFrame;
+            return InputState.KeyDownFrame[index] == InputState.CurrentFrame;
         }
 
         return false;
@@ -253,14 +257,14 @@ namespace Input
 
     float GetAxis(I32 gamepadID, GamepadAxis axis)
     {
-        if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
+        if (gamepadID > -1 && gamepadID < CountOf(InputState.GamepadStates))
         {
-            GamepadState& state = _gamepadStates[gamepadID];
+            GamepadState& state = InputState.GamepadStates[gamepadID];
 
             I32 index = (I32)axis;
-            if (index > -1 && index < CountOf(state.axis))
+            if (index > -1 && index < CountOf(state.Axes))
             {
-                return state.axis[index];
+                return state.Axes[index];
             }
         }
 
@@ -269,14 +273,14 @@ namespace Input
 
     bool  GetButton(I32 gamepadID, GamepadButton button)
     {
-        if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
+        if (gamepadID > -1 && gamepadID < CountOf(InputState.GamepadStates))
         {
-            GamepadState& state = _gamepadStates[gamepadID];
+            GamepadState& state = InputState.GamepadStates[gamepadID];
 
             I32 index = (I32)button;
-            if (index > -1 && index < CountOf(state.buttonDownFrame) && index < CountOf(state.buttonUpFrame))
+            if (index > -1 && index < CountOf(state.ButtonDownFrames) && index < CountOf(state.ButtonUpFrames))
             {
-                return state.buttonDownFrame[index] > state.buttonUpFrame[index];
+                return state.ButtonDownFrames[index] > state.ButtonUpFrames[index];
             }
         }
 
@@ -285,14 +289,14 @@ namespace Input
 
     bool  GetButtonUp(I32 gamepadID, GamepadButton button)
     {
-        if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
+        if (gamepadID > -1 && gamepadID < CountOf(InputState.GamepadStates))
         {
-            GamepadState& state = _gamepadStates[gamepadID];
+            GamepadState& state = InputState.GamepadStates[gamepadID];
 
             I32 index = (I32)button;
-            if (index > -1 && index < CountOf(state.buttonUpFrame))
+            if (index > -1 && index < CountOf(state.ButtonUpFrames))
             {
-                return state.buttonUpFrame[index] == _currentFrame;
+                return state.ButtonUpFrames[index] == InputState.CurrentFrame;
             }
         }
 
@@ -301,14 +305,14 @@ namespace Input
 
     bool  GetButtonDown(I32 gamepadID, GamepadButton button)
     {
-        if (gamepadID > -1 && gamepadID < CountOf(_gamepadStates))
+        if (gamepadID > -1 && gamepadID < CountOf(InputState.GamepadStates))
         {
-            GamepadState& state = _gamepadStates[gamepadID];
+            GamepadState& state = InputState.GamepadStates[gamepadID];
 
             I32 index = (I32)button;
-            if (index > -1 && index < CountOf(state.buttonDownFrame))
+            if (index > -1 && index < CountOf(state.ButtonDownFrames))
             {
-                return state.buttonDownFrame[index] == _currentFrame;
+                return state.ButtonDownFrames[index] == InputState.CurrentFrame;
             }
         }
 
@@ -317,6 +321,6 @@ namespace Input
 
     const char* GetTextInput(void)
     {
-        return _inputText;
+        return InputState.InputText;
     }
 }
