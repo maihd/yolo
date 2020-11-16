@@ -176,11 +176,11 @@ namespace Graphics
     void ApplyDefaultSettings(void) 
     {
         glEnable(GL_BLEND);
-        glEnable(GL_TEXTURE);
+        //glEnable(GL_TEXTURE);
         //glEnable(GL_DEPTH_TEST);
         //glEnable(GL_STENCIL_TEST);
 
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         //glEnable(GL_LINE_SMOOTH);
         //glEnable(GL_POLYGON_SMOOTH);
@@ -189,7 +189,7 @@ namespace Graphics
         //glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
         SetVSync(true);
-        SetLineWidth(1.0f);
+        //SetLineWidth(1.0f);
     }
 
     void CreateDefaultObjects(void)
@@ -273,22 +273,12 @@ namespace Graphics
 
     bool IsVSync(void)
     {
-        if (wglGetSwapIntervalEXT)
-        {
-            return wglGetSwapIntervalEXT() != 0;
-        }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     void SetVSync(bool enable)
     {
-        if (wglSwapIntervalEXT)
-        {
-            wglSwapIntervalEXT((I32)enable);
-        }
+        
     }
     
     bool IsWireframe(void)

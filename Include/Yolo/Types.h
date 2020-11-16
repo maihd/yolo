@@ -141,6 +141,14 @@ struct String
     {
     }
 
+    inline String(const String& other)
+        : buffer(other.buffer)
+        , length(other.length)
+        , isOwned(other.isOwned)
+        , isStatic(other.isStatic)
+    {
+    }
+
     const char& operator[](int index) const
     {
         return buffer[index];
