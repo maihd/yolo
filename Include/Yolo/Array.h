@@ -10,37 +10,40 @@
 // API
 // --------------------------------------
 
-constexpr I32 ARRAY_MIN_CAPACITY = 16;
+constexpr int ARRAY_MIN_CAPACITY = 16;
 
 template <typename T>
-Array<T> ArrayNew(I32 capacity = 0);
+Array<T> ArrayNew(int capacity = 0);
 
 template <typename T>
-Array<T> ArrayNew(const T* buffer, I32 count);
+Array<T> ArrayNew(const T* buffer, int count);
 
 template <typename T>
 T* ArrayNew(const Array<T> array);
 
 template <typename T>
-Array<T> ArrayFill(I32 capacity, T value);
+Array<T> ArrayFill(int capacity, T value);
 
 template <typename T>
-I32 ArraySizeInBytes(const Array<T> array);
+inline void ArrayFree(Array<T>* array);
+
+template <typename T>
+int ArraySizeInBytes(const Array<T> array);
 
 template <typename T>
 bool ArrayIsEmpty(const Array<T> array);
 
 template <typename T>
-bool ArrayResize(Array<T>* array, I32 capacity);
+bool ArrayResize(Array<T>* array, int capacity);
 
 template <typename T>
-bool ArrayEnsure(Array<T>* array, I32 capacity);
+bool ArrayEnsure(Array<T>* array, int capacity);
 
 template <typename T>
-bool ArrayEnsure(const Array<T> array, I32 capacity);
+bool ArrayEnsure(const Array<T> array, int capacity);
 
 template <typename T>
-I32 ArrayPush(Array<T>* array, T element);
+int ArrayPush(Array<T>* array, T element);
 
 template <typename T>
 T ArrayPop(Array<T>* array);
@@ -49,19 +52,19 @@ template <typename T>
 void ArrayClear(Array<T>* array);
 
 template <typename T>
-I32 ArrayIndexOf(Array<T> array, T value);
+int ArrayIndexOf(Array<T> array, T value);
 
 template <typename T>
-I32 ArrayLastIndexOf(Array<T> array, T value);
+int ArrayLastIndexOf(Array<T> array, T value);
 
 template <typename T>
-bool ArrayErase(Array<T>* array, I32 index);
+bool ArrayErase(Array<T>* array, int index);
 
 template <typename T>
-bool ArrayErase(Array<T>* array, I32 start, I32 end);
+bool ArrayErase(Array<T>* array, int start, int end);
 
 template <typename T>
-bool ArrayUnorderedErase(Array<T>* array, I32 index);
+bool ArrayUnorderedErase(Array<T>* array, int index);
 
 template <typename T>
 bool ArrayRemove(Array<T>* array, T value);
@@ -80,7 +83,7 @@ bool ArrayUnorderedRemoveLast(Array<T>* array, T value);
 // --------------------------------------
 
 template <typename T>
-inline Array<T> ArrayNew(I32 capacity)
+inline Array<T> ArrayNew(int capacity)
 {
     if (capacity <= 0)
     {
@@ -93,7 +96,7 @@ inline Array<T> ArrayNew(I32 capacity)
 }
 
 template <typename T>
-inline Array<T> ArrayNew(const T* buffer, I32 count)
+inline Array<T> ArrayNew(const T* buffer, int count)
 {
     if (!buffer || count <= 0)
     {
@@ -125,12 +128,12 @@ inline T* ArrayNew(const Array<T> array)
 }
 
 template <typename T>
-inline Array<T> ArrayFill(I32 capacity, T value)
+inline Array<T> ArrayFill(int capacity, T value)
 {
     T* array = Empty();
     if (ArrayEnsure(&array, capacity))
     {
-        for (I32 i = 0; i < capacity; i++)
+        for (int i = 0; i < capacity; i++)
         {
             ArrayPush(&array, value);
         }
@@ -152,7 +155,7 @@ inline void ArrayFree(Array<T>* array)
 }
 
 template <typename T>
-inline I32 ArraySizeInBytes(const Array<T> array)
+inline int ArraySizeInBytes(const Array<T> array)
 {
     return array.count * sizeof(T);
 }
@@ -164,7 +167,7 @@ inline bool ArrayIsEmpty(const Array<T> array)
 }
 
 template <typename T>
-inline bool ArrayResize(Array<T>* array, I32 capacity)
+inline bool ArrayResize(Array<T>* array, int capacity)
 {
     assert(array);
 
@@ -173,8 +176,8 @@ inline bool ArrayResize(Array<T>* array, I32 capacity)
         return true;
     }
 
-    I32 oldCapacity = array->capacity;
-    I32 newCapacity = capacity < ARRAY_MIN_CAPACITY ? ARRAY_MIN_CAPACITY : NextPOT(capacity);
+    int oldCapacity = array->capacity;
+    int newCapacity = capacity < ARRAY_MIN_CAPACITY ? ARRAY_MIN_CAPACITY : NextPOT(capacity);
 
     T* elements = (T*)realloc(array->elements, newCapacity * sizeof(T));
     if (elements)
@@ -191,7 +194,7 @@ inline bool ArrayResize(Array<T>* array, I32 capacity)
 }
 
 template <typename T>
-inline bool ArrayEnsure(Array<T>* array, I32 capacity)
+inline bool ArrayEnsure(Array<T>* array, int capacity)
 {
     assert(array != NULL);
 
@@ -199,19 +202,19 @@ inline bool ArrayEnsure(Array<T>* array, I32 capacity)
 }
 
 template <typename T>
-inline bool ArrayEnsure(const Array<T> array, I32 capacity)
+inline bool ArrayEnsure(const Array<T> array, int capacity)
 {
     return (array.capacity >= capacity);
 }
 
 template <typename T>
-inline I32 ArrayPush(Array<T>* array, T element)
+inline int ArrayPush(Array<T>* array, T element)
 {
     assert(array != NULL);
 
     if (ArrayEnsure(array, array->count + 1))
     {
-        I32 index = array->count++;
+        int index = array->count++;
         array->elements[index] = element;
 
         return index;
@@ -238,9 +241,9 @@ inline void ArrayClear(Array<T>* array)
 }
 
 template <typename T>
-inline I32 ArrayIndexOf(Array<T> array, T value)
+inline int ArrayIndexOf(Array<T> array, T value)
 {
-    for (I32 i = 0, n = array.count; i < n; i++)
+    for (int i = 0, n = array.count; i < n; i++)
     {
         if (array.elements[i] == value)
         {
@@ -252,10 +255,10 @@ inline I32 ArrayIndexOf(Array<T> array, T value)
 }
 
 template <typename T>
-inline I32 ArrayLastIndexOf(Array<T> array, T value)
+inline int ArrayLastIndexOf(Array<T> array, T value)
 {
-    I32 index = -1;
-    for (I32 i = 0, n = array.length; i < n; i++)
+    int index = -1;
+    for (int i = 0, n = array.length; i < n; i++)
     {
         if (elements[i] == value)
         {
@@ -267,7 +270,7 @@ inline I32 ArrayLastIndexOf(Array<T> array, T value)
 }
 
 template <typename T>
-inline bool ArrayErase(Array<T>* array, I32 index)
+inline bool ArrayErase(Array<T>* array, int index)
 {
     if (index < 0 || index >= array->count)
     {
@@ -286,12 +289,12 @@ inline bool ArrayErase(Array<T>* array, I32 index)
 }
 
 template <typename T>
-inline bool ArrayErase(Array<T>* array, I32 start, I32 end)
+inline bool ArrayErase(Array<T>* array, int start, int end)
 {
     start = start > -1 ? start : 0;
     end = end > array->count ? array->count : end;
 
-    I32 eraseCount = (end - start);
+    int eraseCount = (end - start);
     if (eraseCount <= 0)
     {
         return false;
@@ -309,7 +312,7 @@ inline bool ArrayErase(Array<T>* array, I32 start, I32 end)
 }
 
 template <typename T>
-inline bool ArrayUnorderedErase(Array<T>* array, I32 index)
+inline bool ArrayUnorderedErase(Array<T>* array, int index)
 {
     if (index < 0 || index >= array->count)
     {

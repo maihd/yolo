@@ -60,7 +60,7 @@ do
     }
 
     links {
-        --"SDL2",
+        "SDL2",
         "OpenAL32",
     }
 

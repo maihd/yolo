@@ -16,12 +16,12 @@ namespace Game
 
 int main(void)
 {
-    Window::Init("Spaneon", 1280, 720);
+    OpenWindow("Spaneon", 1280, 720);
     Graphics::Init();
 
     Game::Init();
 
-    while (!Window::PollEvents())
+    while (!WindowPollEvents())
     {
         TimeUpdateAndSleep(60);
         Game::Update(GetDeltaTime());
@@ -34,6 +34,6 @@ int main(void)
     }
 
     Graphics::Quit();
-    Window::Quit();
+    CloseWindow();
     return 0;
 }

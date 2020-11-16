@@ -4,7 +4,37 @@
 // System info
 // ----------------------
 
-#define CPU_LITTLE_ENDIAN 1
+// Runtime architecture
+#if defined(__x86_64__)    \
+ || defined(_M_X64)        \
+ || defined(__aarch64__)   \
+ || defined(__64BIT__)     \
+ || defined(__mips64)      \
+ || defined(__powerpc64__) \
+ || defined(__ppc64__)     \
+ || defined(__LP64__)
+#   define ARCH_64BIT   1
+#   define ARCH_32BIT   0
+#   define ARCH_BITNESS 64
+#else
+#   define ARCH_64BIT   0
+#   define ARCH_32BIT   1
+#   define ARCH_BITNESS 32
+#endif
+
+// Dectect cpu endian
+#if CPU_PPC
+#	if _LITTLE_ENDIAN
+#       define CPU_BIG_ENDIAN    0
+#       define CPU_LITTLE_ENDIAN 1
+#	else
+#       define CPU_BIG_ENDIAN    1
+#       define CPU_LITTLE_ENDIAN 0
+#   endif
+#else
+#   define CPU_BIG_ENDIAN    0
+#   define CPU_LITTLE_ENDIAN 1
+#endif
 
 // ----------------------
 // Primitive types
@@ -124,21 +154,21 @@ struct String
 template <typename T>
 struct Array
 {
-    I32 count;
-    I32 capacity;
+    int count;
+    int capacity;
     T*  elements;
 };
 
 template <typename T>
 struct HashTable
 {
-    I32         count;
-    I32         capacity;
+    int         count;
+    int         capacity;
 
-    I32*        hashs;
-    I32         hashCount;
+    int*        hashs;
+    int         hashCount;
 
-    I32*        nexts;
+    int*        nexts;
     U64*        keys;
     T*          values;
 };
@@ -146,8 +176,8 @@ struct HashTable
 template <typename TKey, typename TValue>
 struct OrderedTable
 {
-    I32         count;
-    I32         capacity;
+    int         count;
+    int         capacity;
 
     TKey*       keys;
     TValue*     values;

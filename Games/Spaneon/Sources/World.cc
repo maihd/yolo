@@ -231,13 +231,13 @@ namespace WorldOps
 
     Vector2 GetSpawnPosition(World world)
     {
-        const float min_distance_sqr = (Window::GetHeight() * 0.3f) * (Window::GetHeight() * 0.3f);
+        const float min_distance_sqr = (WindowHeight() * 0.3f) * (WindowHeight() * 0.3f);
 
         Vector2 pos;
         do
         {
-            float x = (2.0f * (rand() % 101) / 100.0f - 1.0f) * 0.8f * Window::GetWidth();
-            float y = (2.0f * (rand() % 101) / 100.0f - 1.0f) * 0.8f * Window::GetHeight();
+            float x = (2.0f * (rand() % 101) / 100.0f - 1.0f) * 0.8f * WindowWidth();
+            float y = (2.0f * (rand() % 101) / 100.0f - 1.0f) * 0.8f * WindowHeight();
             pos = Vector2{ x, y };
         } while (distsqr(pos, world.player.position) < min_distance_sqr);
 
@@ -469,7 +469,7 @@ namespace WorldOps
 
         for (int i = 0; i < 1200; i++)
         {
-            float speed = 10.0f * maxf((float)Window::GetWidth(), (float)Window::GetHeight()) * (0.6f + (rand() % 101 / 100.0f) * 0.4f);
+            float speed = 10.0f * maxf((float)WindowWidth(), (float)WindowHeight()) * (0.6f + (rand() % 101 / 100.0f) * 0.4f);
             float angle = rand() % 101 / 100.0f * 2 * PI;
             Vector2  vel   = Vector2{cosf(angle) * speed, sinf(angle) * speed };
 
@@ -491,7 +491,7 @@ namespace WorldOps
         else if (distance(other->position, blackhole->position) <= other->radius + blackhole->radius * 10.0f)
         {
             Vector2 diff = blackhole->position - other->position;
-            other->velocity += normalize(diff) * lerpf(1, 0, length(diff) / (Window::GetWidth() * 0.2f));
+            other->velocity += normalize(diff) * lerpf(1, 0, length(diff) / (WindowWidth() * 0.2f));
             other->velocity  = normalize(other->velocity);
         }
 
@@ -510,7 +510,7 @@ namespace WorldOps
         world->lock = true;
 
         world->player.velocity = lerp(world->player.velocity, normalize(Vector2{ horizontal, vertical }), 5.0f * dt);
-        world->player = EntityOps::Update(world->player, Window::GetSize(), dt);
+        world->player = EntityOps::Update(world->player, WindowSize(), dt);
         //if (lensqr(world->player.velocity) > 0.1f && fmodf(Time::GetTotalTime(), 0.025f) <= 0.01f)
         //{
         //    float speed;
@@ -546,10 +546,10 @@ namespace WorldOps
             if (world->bullets.elements[i].active)
             {
                 Entity bullet = world->bullets.elements[i] = EntityOps::Update(world->bullets.elements[i], dt);
-                if (bullet.position.x < -Window::GetWidth() 
-                    || bullet.position.x > Window::GetWidth()
-                    || bullet.position.y < -Window::GetHeight() 
-                    || bullet.position.y > Window::GetHeight())
+                if (bullet.position.x < -WindowWidth() 
+                    || bullet.position.x > WindowWidth()
+                    || bullet.position.y < -WindowHeight() 
+                    || bullet.position.y > WindowHeight())
                 {
                     DestroyBullet(world, i, true);
                 }
@@ -600,8 +600,8 @@ namespace WorldOps
                     {
                         direction += (0.12f * (rand() % 101 / 100.0f) - 0.06f) * PI;
 
-                        if (s->position.x < -Window::GetWidth() || s->position.x > Window::GetWidth()
-                            || s->position.y < -Window::GetHeight() || s->position.y > Window::GetHeight())
+                        if (s->position.x < -WindowWidth() || s->position.x > WindowWidth()
+                            || s->position.y < -WindowHeight() || s->position.y > WindowHeight())
                         {
                             direction = atan2f(-s->position.y, -s->position.x) + (1.0f * (rand() % 101 / 100.0f) - 0.5f) * PI;
                         }

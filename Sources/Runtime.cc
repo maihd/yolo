@@ -2,8 +2,6 @@
 
 namespace Runtime
 {
-    bool shouldQuit         = false;
-
-    HWND mainWindow         = NULL;
-    HDC  mainWindowContext  = NULL;
+    bool        shouldQuit = false;
+    SDL_Window* mainWindow = nullptr;
 }

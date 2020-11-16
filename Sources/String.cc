@@ -113,8 +113,13 @@ namespace StringOps
 
     String FormatArgv(void* buffer, I32 bufferSize, String format, ArgList argv)
     {
-        vsnprintf((char*)buffer, bufferSize, format.buffer, argv);
-        return String((char*)buffer, strlen((char*)buffer), false);
+        int length = vsnprintf((char*)buffer, bufferSize, format.buffer, argv);
+        if (length < -1)
+        {
+            return String();
+        }
+
+        return String((char*)buffer, length, false);
     }
 
     char CharAt(String target, I32 index)

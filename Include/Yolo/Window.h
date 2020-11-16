@@ -2,19 +2,16 @@
 
 #include <Yolo/Types.h>
 
-namespace Window
-{
-    bool    Init(String title, I32 width, I32 height);
-    void    Quit(void);
+bool    OpenWindow(String title, int width, int height);
+void    CloseWindow(void);
 
-    bool    PollEvents(void);
-    void    SwapBuffer(void);
+bool    WindowPollEvents(void);
+void    WindowSwapBuffer(void);
 
-    bool    ShouldQuit(void);
+bool    ShouldWindowQuit(void);
 
-    Vector2 GetSize(void);
-    I32     GetWidth(void);
-    I32     GetHeight(void);
+Vector2 WindowSize(void);
+int     WindowWidth(void);
+int     WindowHeight(void);
 
-    Handle  GetHandle(void);
-}
+Handle  GetWindowHandle(void);

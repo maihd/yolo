@@ -276,7 +276,7 @@ namespace FileOps
         }
         else
         {
-            return { (Handle)handle };
+            return (Handle)(intptr_t)handle;
         }
 
         return 0;
@@ -284,12 +284,12 @@ namespace FileOps
 
     void Close(File file)
     {
-        CloseHandle((HANDLE)file);
+        CloseHandle((HANDLE)(intptr_t)file);
     }
 
     I32 GetSize(File file)
     {
-        return (I32)::GetFileSize((HANDLE)file, 0);
+        return (I32)::GetFileSize((HANDLE)(intptr_t)file, 0);
     }
 
     I32 GetSize(String path)
@@ -304,7 +304,7 @@ namespace FileOps
     I64 GetSize64(File file)
     {
         LARGE_INTEGER size;
-        if (::GetFileSizeEx((HANDLE)file, &size))
+        if (::GetFileSizeEx((HANDLE)(intptr_t)file, &size))
         {
             return size.QuadPart;
         }
@@ -331,7 +331,7 @@ namespace FileOps
         }
         
         DWORD readBytes;
-        if (::ReadFile((HANDLE)file, buffer, (DWORD)length, &readBytes, 0))
+        if (::ReadFile((HANDLE)(intptr_t)file, buffer, (DWORD)length, &readBytes, 0))
         {
             return (I32)readBytes;
         }
@@ -349,7 +349,7 @@ namespace FileOps
         }
 
         DWORD writeBytes;
-        if (::WriteFile((HANDLE)file, buffer, (DWORD)length, &writeBytes, 0))
+        if (::WriteFile((HANDLE)(intptr_t)file, buffer, (DWORD)length, &writeBytes, 0))
         {
             return (I32)writeBytes;
         }

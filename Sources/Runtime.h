@@ -11,11 +11,13 @@
 #include <Yolo/Types.h>
 #include <Yolo/Input.h>
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+
 namespace Runtime
 {
-    extern bool shouldQuit;
-    extern HWND mainWindow;
-    extern HDC  mainWindowContext;
+    extern bool             shouldQuit;
+    extern SDL_Window*      mainWindow;
 }
 
 namespace Input

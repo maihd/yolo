@@ -32,13 +32,13 @@ int main(void)
         printf("string1 and string2 is not equal!\n");
     }
 
-    Window::Init("Yolo Window", 1280, 720);
+    OpenWindow("Yolo Window", 1280, 720);
     Graphics::Init();
 
     Font font = FontOps::Load("../Assets/OpenSans_Regular.ttf", 32.0f);
 
-    int width = Window::GetWidth();
-    int height = Window::GetHeight();
+    int width = WindowWidth();
+    int height = WindowHeight();
 
     Array<int> intArray = {};
     ArrayPush(&intArray, 10);
@@ -59,7 +59,7 @@ int main(void)
 
     Graphics::SetVSync(true);
 
-    while (!Window::PollEvents())
+    while (!WindowPollEvents())
     {
         //Graphics::ClearColor(1, 1, 1);
         Graphics::Clear();
@@ -81,6 +81,6 @@ int main(void)
     }
 
     Graphics::Quit();
-    Window::Quit();
+    CloseWindow();
     return 0;
 }

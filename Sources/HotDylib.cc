@@ -168,7 +168,7 @@ namespace HotDylibOps
         GetProcessHandleCount(hProcess, &handleCount);
         for (handleIter = 0, handleCount *= 16; handleIter <= handleCount; handleIter += 4)
         {
-            HANDLE handle = (HANDLE)handleIter;
+            HANDLE handle = (HANDLE)(uintptr_t)handleIter;
 
             HANDLE hCopy; // Duplicate the handle in the current process
             if (!DuplicateHandle(hProcess, handle, hCurProcess, &hCopy, 0, FALSE, DUPLICATE_SAME_ACCESS))
