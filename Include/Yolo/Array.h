@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include <Yolo/Types.h>
+#include <Yolo/Memory.h>
 
 // --------------------------------------
 // API
@@ -106,7 +107,7 @@ inline Array<T> ArrayNew(const T* buffer, int count)
     Array<T> result = {};
     if (ArrayResize(&result, count))
     {
-        memcpy(result, buffer, sizeof(T) * count);
+        MemoryCopy(result, buffer, sizeof(T) * count);
     }
     return result;
 }
@@ -122,7 +123,7 @@ inline T* ArrayNew(const Array<T> array)
     Array<T> result = {};
     if (ArrayResize(&result, array.count))
     {
-        memcpy(result, buffer, sizeof(T) * length);
+        MemoryCopy(result, buffer, sizeof(T) * length);
     }
     return result;
 }
@@ -147,7 +148,7 @@ inline void ArrayFree(Array<T>* array)
 {
     assert(array);
 
-    free(array->elements);
+    MemoryFree(array->elements);
 
     array->count = 0;
     array->capacity = 0;
@@ -179,7 +180,7 @@ inline bool ArrayResize(Array<T>* array, int capacity)
     int oldCapacity = array->capacity;
     int newCapacity = capacity < ARRAY_MIN_CAPACITY ? ARRAY_MIN_CAPACITY : NextPOT(capacity);
 
-    T* elements = (T*)realloc(array->elements, newCapacity * sizeof(T));
+    T* elements = (T*)MemoryRealloc(array->elements, newCapacity * sizeof(T));
     if (elements)
     {
         array->capacity = newCapacity;
@@ -281,7 +282,7 @@ inline bool ArrayErase(Array<T>* array, int index)
         array->count--;
         if (index < array->count)
         {
-            memcpy(&array->elements[index], &array->elements[index + 1], (array->count - index - 1) * sizeof(T));
+            MemoryCopy(&array->elements[index], &array->elements[index + 1], (array->count - index - 1) * sizeof(T));
         }
 
         return true;
@@ -303,7 +304,7 @@ inline bool ArrayErase(Array<T>* array, int start, int end)
     {
         if (array->count - end > 0)
         {
-            memcpy(&array->elements[start], &array->elements[end - 1], (array->count - end) * sizeof(T));
+            MemoryCopy(&array->elements[start], &array->elements[end - 1], (array->count - end) * sizeof(T));
         }
         array->count = array->count - eraseCount;
 
@@ -345,11 +346,11 @@ inline bool ArrayRemoveLast(Array<T>* array, T value)
 template <typename T>
 inline bool ArrayUnorderedRemove(Array<T>* array, T value)
 {
-    return ArrayUnorderedErase(array, IndexOf(*array, value));
+    return ArrayUnorderedErase(array, ArrayIndexOf(*array, value));
 }
 
 template <typename T>
 inline bool ArrayUnorderedRemoveLast(Array<T>* array, T value)
 {
-    return ArrayUnorderedErase(array, LastIndexOf(*array, value));
+    return ArrayUnorderedErase(array, ArrayLastIndexOf(*array, value));
 }

@@ -194,6 +194,7 @@
     <ClInclude Include="..\Include\Yolo\Job.h" />
     <ClInclude Include="..\Include\Yolo\Json.h" />
     <ClInclude Include="..\Include\Yolo\Math.h" />
+    <ClInclude Include="..\Include\Yolo\Memory.h" />
     <ClInclude Include="..\Include\Yolo\OrderedTable.h" />
     <ClInclude Include="..\Include\Yolo\Random.h" />
     <ClInclude Include="..\Include\Yolo\Shader.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\Sources\Input.cc" />
     <ClCompile Include="..\Sources\Job.cc" />
     <ClCompile Include="..\Sources\Json.cc" />
+    <ClCompile Include="..\Sources\Memory.cc" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
     <ClCompile Include="..\Sources\Runtime.cc" />
