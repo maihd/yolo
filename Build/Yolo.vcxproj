@@ -220,7 +220,7 @@
     <ClInclude Include="..\Sources\Imgui\imstb_textedit.h" />
     <ClInclude Include="..\Sources\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\Sources\OpenGL.h" />
-    <ClInclude Include="..\Sources\Runtime.h" />
+    <ClInclude Include="..\Sources\Internal.h" />
     <ClInclude Include="..\Sources\SpriteBatch.h" />
     <ClInclude Include="..\Sources\SpriteMesh.h" />
   </ItemGroup>
@@ -245,7 +245,7 @@
     <ClCompile Include="..\Sources\Memory.cc" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
-    <ClCompile Include="..\Sources\Runtime.cc" />
+    <ClCompile Include="..\Sources\Internal.cc" />
     <ClCompile Include="..\Sources\Shader.cc" />
     <ClCompile Include="..\Sources\Sprite.cc" />
     <ClCompile Include="..\Sources\SpriteBatch.cc" />

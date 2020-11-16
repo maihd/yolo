@@ -14,11 +14,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-namespace Runtime
+struct RuntimeState
 {
-    extern bool             shouldQuit;
-    extern SDL_Window*      mainWindow;
-}
+    bool             ShouldQuit;
+    SDL_Window*      MainWindow;
+};
+
+extern RuntimeState Runtime;
 
 namespace Input
 {

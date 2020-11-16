@@ -1,17 +1,20 @@
 #include <Yolo/Time.h>
 
-#include "Runtime.h"
+#include "./Internal.h"
 
-static I32 totalFrames = 0;
-static float framerate = 0.0f;
-static float deltaTime = 0.0f;
-static float totalTime = 0.0f;
-static float timeScale = 1.0f;
+static struct
+{
+    I32 TotalFrames = 0;
+    float Framerate = 0.0f;
+    float DeltaTime = 0.0f;
+    float TotalTime = 0.0f;
+    float TimeScale = 1.0f;
 
-static float updateFramerateTimer    = 0.0f;
-static float updateFramerateInterval = 1.0f;
+    float UpdateFramerateTimer = 0.0f;
+    float UpdateFramerateInterval = 1.0f;
 
-static U64 prevCounter = 0;
+    U64 PrevCounter = 0;
+} Timer;
 
 U64 GetCpuCounter(void)
 {
@@ -57,57 +60,57 @@ void MicroSleep(U64 microseconds)
 
 float GetFramerate(void)
 {
-    return framerate;
+    return Timer.Framerate;
 }
 
 I32 GetTotalFrames(void)
 {
-    return totalFrames;
+    return Timer.TotalFrames;
 }
 
 float GetTotalTime(void)
 {
-    return totalTime;
+    return Timer.TotalTime;
 }
 
 float GetTimeScale(void)
 {
-    return timeScale;
+    return Timer.TimeScale;
 }
 
 void SetTimeScale(float timeScale)
 {
-    ::timeScale = timeScale;
+    Timer.TimeScale = timeScale;
 }
 
 float GetDeltaTime(void)
 {
-    return deltaTime * timeScale;
+    return Timer.DeltaTime * Timer.TimeScale;
 }
 
 float GetUnscaledDeltaTime(void)
 {
-    return deltaTime;
+    return Timer.DeltaTime;
 }
 
 void TimeUpdate(void)
 {
     U64 counter = GetCpuCounter();
-    U64 ticks = counter - prevCounter;
+    U64 ticks = counter - Timer.PrevCounter;
 
-    deltaTime = (float)((double)ticks / (double)GetCpuFrequency());
-    totalTime = totalTime + deltaTime;
+    Timer.DeltaTime = (float)((double)ticks / (double)GetCpuFrequency());
+    Timer.TotalTime = Timer.TotalTime + Timer.DeltaTime;
 
-    updateFramerateTimer += deltaTime;
-    if (updateFramerateTimer >= updateFramerateInterval)
+    Timer.UpdateFramerateTimer += Timer.DeltaTime;
+    if (Timer.UpdateFramerateTimer >= Timer.UpdateFramerateInterval)
     {
-        updateFramerateTimer -= updateFramerateInterval;
-        framerate = 1.0f / deltaTime;
+        Timer.UpdateFramerateTimer -= Timer.UpdateFramerateInterval;
+        Timer.Framerate = 1.0f / Timer.DeltaTime;
     }
 
-    totalFrames++;
+    Timer.TotalFrames++;
 
-    prevCounter = counter;
+    Timer.PrevCounter = counter;
 }
 
 bool TimeUpdateAndSleep(float targetFramerate)
@@ -116,7 +119,7 @@ bool TimeUpdateAndSleep(float targetFramerate)
     U64 limitTicks = (U64)(frequency / (double)(targetFramerate < 1.0f ? 1.0f : targetFramerate));
 
     U64 counter = GetCpuCounter();
-    U64 ticks = prevCounter > 0 ? counter - prevCounter : limitTicks;
+    U64 ticks = Timer.PrevCounter > 0 ? counter - Timer.PrevCounter : limitTicks;
 
     bool isSleep = false;
     if (ticks < limitTicks)
@@ -131,17 +134,17 @@ bool TimeUpdateAndSleep(float targetFramerate)
         ticks = limitTicks;
     }
 
-    deltaTime = (float)((double)ticks / (double)frequency);
-    totalTime = totalTime + deltaTime;
+    Timer.DeltaTime = (float)((double)ticks / (double)frequency);
+    Timer.TotalTime = Timer.TotalTime + Timer.DeltaTime;
 
-    updateFramerateTimer += deltaTime;
-    if (updateFramerateTimer >= updateFramerateInterval)
+    Timer.UpdateFramerateTimer += Timer.DeltaTime;
+    if (Timer.UpdateFramerateTimer >= Timer.UpdateFramerateInterval)
     {
-        updateFramerateTimer -= updateFramerateInterval;
-        framerate = 1.0f / deltaTime;
+        Timer.UpdateFramerateTimer -= Timer.UpdateFramerateInterval;
+        Timer.Framerate = 1.0f / Timer.DeltaTime;
     }
 
-    totalFrames++;
-    prevCounter = counter;
+    Timer.TotalFrames++;
+    Timer.PrevCounter = counter;
     return isSleep;
 }

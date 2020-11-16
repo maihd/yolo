@@ -1,6 +1,6 @@
 #include "./SpriteMesh.h"
 
-#include "./Runtime.h"
+#include "./Internal.h"
 
 #include <assert.h>
 #include <stdlib.h>

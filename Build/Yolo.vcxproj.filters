@@ -138,13 +138,13 @@
     <ClInclude Include="..\Sources\OpenGL.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\Runtime.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SpriteBatch.h">
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SpriteMesh.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Internal.h">
       <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
@@ -209,9 +209,6 @@
     <ClCompile Include="..\Sources\Random.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Runtime.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\Shader.cc">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -244,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c">
       <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Internal.cc">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

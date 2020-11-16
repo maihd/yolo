@@ -1,7 +1,7 @@
 #include <Yolo/Window.h>
 #include <Yolo/String.h>
 
-#include "./Runtime.h"
+#include "./Internal.h"
 
 #ifdef _WIN32
 #   pragma comment(lib, "OpenGL32.lib")
@@ -175,22 +175,22 @@ bool OpenWindow(String title, int width, int height)
         return false;
     }
 
-    Runtime::mainWindow = window;
-    Runtime::shouldQuit = false;
+    Runtime.MainWindow = window;
+    Runtime.ShouldQuit = false;
     return true;
 }
 
 void CloseWindow(void)
 {
-    SDL_DestroyWindow(Runtime::mainWindow);
-    Runtime::mainWindow = nullptr;
+    SDL_DestroyWindow(Runtime.MainWindow);
+    Runtime.MainWindow = nullptr;
 }
 
 bool WindowPollEvents(void)
 {
     Input::NewFrame();
 
-    if (Runtime::shouldQuit)
+    if (Runtime.ShouldQuit)
     {
         return true;
     }
@@ -201,47 +201,47 @@ bool WindowPollEvents(void)
         switch (event.type)
         {
         case SDL_QUIT:
-            Runtime::shouldQuit = true;
+            Runtime.ShouldQuit = true;
             break;
         }
     }
 
     Input::EndFrame();
-    return Runtime::shouldQuit;
+    return Runtime.ShouldQuit;
 }
 
 void WindowSwapBuffer(void)
 {
-    SDL_GL_SwapWindow(Runtime::mainWindow);
+    SDL_GL_SwapWindow(Runtime.MainWindow);
 }
 
 bool ShouldWindowQuit(void)
 {
-    return Runtime::shouldQuit;
+    return Runtime.ShouldQuit;
 }
 
 Vector2 WindowSize(void)
 {
     int width, height;
-    SDL_GetWindowSize(Runtime::mainWindow, &width, &height);
+    SDL_GetWindowSize(Runtime.MainWindow, &width, &height);
     return { (float)width, (float)height };
 }
 
 int WindowWidth(void)
 {
     int width, height;
-    SDL_GetWindowSize(Runtime::mainWindow, &width, &height);
+    SDL_GetWindowSize(Runtime.MainWindow, &width, &height);
     return width;
 }
 
 int WindowHeight(void)
 {
     int width, height;
-    SDL_GetWindowSize(Runtime::mainWindow, &width, &height);
+    SDL_GetWindowSize(Runtime.MainWindow, &width, &height);
     return height;
 }
 
 Handle GetWindowHandle(void)
 {
-    return (Handle)(U64)Runtime::mainWindow;
+    return (Handle)(U64)Runtime.MainWindow;
 }

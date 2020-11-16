@@ -6,7 +6,7 @@
 #include <Yolo/Window.h>
 #include <Yolo/Shader.h>
 
-#include "./Runtime.h"
+#include "./Internal.h"
 #include "./SpriteMesh.h"
 #include "./DrawBuffer.h"
 #include "./DrawTextBuffer.h"
@@ -132,7 +132,7 @@ namespace Graphics
     bool Init(void)
     {
         // Make sure window is initialized
-        if (!Runtime::mainWindow)
+        if (!Runtime.MainWindow)
         {
             return false;
         }
@@ -146,13 +146,13 @@ namespace Graphics
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-        SDL_GLContext context = SDL_GL_CreateContext(Runtime::mainWindow);
+        SDL_GLContext context = SDL_GL_CreateContext(Runtime.MainWindow);
         if (!context)
         {
             return false;
         }
 
-        if (SDL_GL_MakeCurrent(Runtime::mainWindow, context) != 0)
+        if (SDL_GL_MakeCurrent(Runtime.MainWindow, context) != 0)
         {
             SDL_GL_DeleteContext(context);
             return false;
@@ -183,7 +183,7 @@ namespace Graphics
         ImGui::StyleColorsDark();
         //ImGui::StyleColorsClassic();
 
-        ImGui_ImplSDL2_InitForOpenGL(Runtime::mainWindow, glContext);
+        ImGui_ImplSDL2_InitForOpenGL(Runtime.MainWindow, glContext);
         ImGui_ImplOpenGL3_Init("#version 130");
 
         return true;
@@ -266,9 +266,23 @@ namespace Graphics
         glClearColor(r, g, b, a);
     }
 
+    void NewFrame(void)
+    {
+        Clear();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL2_NewFrame(Runtime.MainWindow);
+        ImGui::NewFrame();
+    }
+
     void Present(void)
     {
         DrawSpriteBufferOps::Draw(&drawSpriteBuffer, spriteShader, projection);
+
+        ImGui::Render();
+        ImGuiIO& io = ImGui::GetIO();
+        glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         WindowSwapBuffer();
     }
