@@ -77,6 +77,10 @@ static struct
 {
     SysFreeList FreeAllocDescs = { sizeof(AllocDesc), NULL };
     AllocDesc*  HashAllocDescs[ALLOC_DESC_COUNT];
+    int         Allocations = 0;
+    int         AllocCalled = 0;
+    int         ReallocCalled = 0;
+    int         FreeCalled = 0;
 } AllocStore;
 
 static void AddAlloc(void* ptr, size_t size, const char* func, const char* file, int line)
@@ -92,6 +96,8 @@ static void AddAlloc(void* ptr, size_t size, const char* func, const char* file,
     U64 ptrHash = CalcHashPtr64(ptr) & (ALLOC_DESC_COUNT - 1);
     allocDesc->Next = AllocStore.HashAllocDescs[ptrHash];
     AllocStore.HashAllocDescs[ptrHash] = allocDesc;
+
+    AllocStore.Allocations++;
 }
 
 static void UpdateAlloc(void* ptr, void* newPtr, size_t size, const char* func, const char* file, int line)
@@ -149,10 +155,14 @@ static void RemoveAlloc(void* ptr, const char* func, const char* file, int line)
     {
         AllocStore.HashAllocDescs[ptrHash] = allocDesc->Next;
     }
+
+    AllocStore.Allocations--;
 }
 
 void* _MemoryAlloc(size_t size, const char* func, const char* file, int line)
 {
+    AllocStore.AllocCalled++;
+
     void* ptr = malloc(size);
     AddAlloc(ptr, size, func, file, line);
     return ptr;
@@ -160,6 +170,8 @@ void* _MemoryAlloc(size_t size, const char* func, const char* file, int line)
 
 void* _MemoryRealloc(void* ptr, size_t size, const char* func, const char* file, int line)
 {
+    AllocStore.ReallocCalled++;
+
     void* newPtr = realloc(ptr, size);
     if (ptr == nullptr)
     {
@@ -174,10 +186,14 @@ void* _MemoryRealloc(void* ptr, size_t size, const char* func, const char* file,
 
 void _MemoryFree(void* ptr, const char* func, const char* file, int line)
 {
-    DebugAssert(ptr != nullptr, "Attempt free nullptr at %s:%d:%s", func, file, line);
+    //DebugAssert(ptr != nullptr, "Attempt free nullptr at %s:%d:%s", func, file, line);
+    AllocStore.FreeCalled++;
 
-    RemoveAlloc(ptr, func, file, line);
-    free(ptr);
+    if (ptr)
+    {
+        RemoveAlloc(ptr, func, file, line);
+        free(ptr);
+    }
 }
 
 void MemoryDumpAllocs(void)
@@ -197,15 +213,60 @@ void MemoryDumpAllocs(void)
 // Open an debug window to view your memory allocations
 void ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags flags)
 {
-    bool windowOpened = false;
-    if ((flags & ImGuiDumpMemoryFlags_OpenWindow) != 0)
+    bool render = true;
+
+    bool openWindow = (flags & ImGuiDumpMemoryFlags_OpenWindow) != 0;
+    if (openWindow)
     {
-        windowOpened = ImGui::Begin("Memory Allocations");
+        render = ImGui::Begin("Memory Allocations");
     }
 
+    if (render)
+    {
+        ImGui::Text("Allocations: %d", AllocStore.Allocations);
+        ImGui::Text("AllocCalled: %d", AllocStore.AllocCalled);
+        ImGui::Text("ReallocCalled: %d", AllocStore.ReallocCalled);
+        ImGui::Text("FreeCalled: %d", AllocStore.FreeCalled);
 
+        ImGui::Columns(3);
+        ImGui::SetColumnWidth(0, 96);
+        ImGui::SetColumnWidth(1, 88);
 
-    if (windowOpened)
+        ImGui::Text("Address");
+        ImGui::NextColumn();
+        ImGui::Text("Size");
+        ImGui::NextColumn();
+        ImGui::Text("Source");
+        ImGui::NextColumn();
+
+        ImGui::Columns(1);
+        if (ImGui::BeginChild("Allocations List"))
+        {
+            ImGui::Columns(3);
+            ImGui::SetColumnWidth(0, 88);
+            ImGui::SetColumnWidth(1, 88);
+
+            for (int i = 0; i < ALLOC_DESC_COUNT; i++)
+            {
+                AllocDesc* allocDesc = AllocStore.HashAllocDescs[i];
+                while (allocDesc != NULL)
+                {
+                    ImGui::Text("0x%p", allocDesc->Ptr);
+                    ImGui::NextColumn();
+                    ImGui::Text("%zu", allocDesc->Size);
+                    ImGui::NextColumn();
+                    ImGui::Text("%s:%d:%s", allocDesc->File, allocDesc->Line, allocDesc->Func);
+                    ImGui::NextColumn();
+
+                    allocDesc = allocDesc->Next;
+                }
+            }
+
+            ImGui::EndChild();
+        }
+    }
+
+    if (openWindow)
     {
         ImGui::End();
     }
