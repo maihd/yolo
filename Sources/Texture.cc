@@ -50,7 +50,7 @@ namespace TextureOps
     Texture Load(String path)
     {
         String fullPath = FileOps::GetFullPath(path);
-        if (fullPath.length == 0)
+        if (fullPath.Length == 0)
         {
             return {};
         }
@@ -64,7 +64,7 @@ namespace TextureOps
         }
 
         I32 width, height, channel;
-        void* pixels = stbi_load(fullPath.buffer, &width, &height, &channel, 0);
+        void* pixels = stbi_load(fullPath.Buffer, &width, &height, &channel, 0);
         if (!pixels)
         {
             return {};

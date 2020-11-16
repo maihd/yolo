@@ -45,12 +45,12 @@ namespace StringOps
 
 inline U32 CalcHash32(String string, U32 seed = 0)
 {
-    return CalcHash32(string.buffer, string.length, seed);
+    return CalcHash32(string.Buffer, string.Length, seed);
 }
 
 inline U64 CalcHash64(String string, U64 seed = 0)
 {
-    return CalcHash64(string.buffer, string.length, seed);
+    return CalcHash64(string.Buffer, string.Length, seed);
 }
 
 inline bool operator==(String a, String b)

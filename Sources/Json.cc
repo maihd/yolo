@@ -736,12 +736,12 @@ namespace JsonOps
 
     Json* Parse(String json)
     {
-        return Parse(json, StringOps::Length(json));
+        return Parse(json.Buffer, json.Length);
     }
 
-    Json* Parse(String json, int jsonLength)
+    Json* Parse(const char* jsonContent, int jsonLength)
     {
-        JsonState* state = JsonState_Make(json.buffer, jsonLength);
+        JsonState* state = JsonState_Make(jsonContent, jsonLength);
         Json* value = Json_ParseTopLevel(state);
 
         if (!value)

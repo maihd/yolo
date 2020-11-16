@@ -37,6 +37,24 @@
 #endif
 
 // ----------------------
+// Assertions
+// ----------------------
+
+#ifndef NDEBUG
+#define DebugAssert(test, format, ...)                                                  \
+    do {                                                                                \
+        if (!(test)) {                                                                  \
+            DebugPrint(#test, __FUNCTION__, __FILE__, __LINE__, format, ##__VA_ARGS__); \
+            __debugbreak();                                                             \
+        }                                                                               \
+    } while (0)
+
+void DebugPrint(const char* test, const char* func, const char* file, int line, const char* format, ...);
+#else
+#define DebugAssert(test, format, ...) ((void)0)
+#endif
+
+// ----------------------
 // Primitive types
 // ----------------------
 
@@ -110,48 +128,55 @@ struct Rectangle
 
 struct String
 {
-    const char* buffer;
-    int         length : 30;
-    bool        isOwned : 1;
-    bool        isStatic : 1;
+    const char* Buffer;
+    int         Length : 30;
+    bool        IsOwned : 1;
+    bool        IsStatic : 1;
 
     constexpr String()
-        : buffer("")
-        , length(0)
-        , isOwned(false)
-        , isStatic(true)
+        : Buffer("")
+        , Length(0)
+        , IsOwned(false)
+        , IsStatic(true)
     {
     }
 
     template <int LENGTH>
     constexpr String(const char (&buffer)[LENGTH])
-        : buffer(buffer)
-        , length(LENGTH)
-        , isOwned(false)
-        , isStatic(true)
+        : Buffer(buffer)
+        , Length(LENGTH)
+        , IsOwned(false)
+        , IsStatic(true)
     {
         static_assert(LENGTH >= 0, "You're attempting to use the string have length smaller than 0.");
     }
 
     inline String(const char* buffer, int length, bool isOwned, bool isStatic = false)
-        : buffer(buffer)
-        , length(length)
-        , isOwned(isOwned)
-        , isStatic(isStatic)
+        : Buffer(buffer)
+        , Length(length)
+        , IsOwned(isOwned)
+        , IsStatic(isStatic)
     {
+        DebugAssert(buffer != nullptr, "buffer mustnot be nullptr");
+        DebugAssert(length > 0, "length mustnot be smaller than 0");
+        DebugAssert(!(isOwned && isStatic), "string cannot be both isOwned & isStatic");
     }
 
     inline String(const String& other)
-        : buffer(other.buffer)
-        , length(other.length)
-        , isOwned(other.isOwned)
-        , isStatic(other.isStatic)
+        : Buffer(other.Buffer)
+        , Length(other.Length)
+        , IsOwned(other.IsOwned)
+        , IsStatic(other.IsStatic)
     {
+        DebugAssert(Buffer != nullptr, "buffer mustnot be nullptr. Are you changed your string data?");
+        DebugAssert(Length > 0, "length mustnot be smaller than 0. Are you changed your string data?");
+        DebugAssert(!(IsOwned && IsStatic), "string cannot be both isOwned & isStatic. Are you changed your string data?");
     }
 
-    const char& operator[](int index) const
+    inline char operator[](int index) const
     {
-        return buffer[index];
+        DebugAssert(index > -1 && index < Length, "Index is out range.");
+        return Buffer[index];
     }
 };
 
@@ -192,96 +217,13 @@ struct OrderedTable
 };
 
 // ----------------------
-// Function types
-// ----------------------
-
-template <typename T>
-struct Function;
-
-template <typename R, typename ...Args>
-struct Function<R(Args...)>
-{
-    using Executor = R(*)(void*, Args...);
-
-    void*       context;
-    Executor    executor;
-
-    static R ExecuteFunction(void* context, Args... args)
-    {
-        using Function = R(*)(Args...);
-        return ((Function)context)(args...);
-    };
-
-    template <typename T>
-    static R ExecuteLambda(void* context, Args... args)
-    {
-        return (*(T*)&context)(args...);
-    };
-
-    inline Function(R(*function)(Args...))
-    {
-        this->context = function;
-        this->executor = &ExecuteFunction;
-    }
-
-    template <typename T>
-    inline Function(T lambda)
-    {
-        static_assert(sizeof(lambda) <= sizeof(void*), "Lambda is too big, it must be <= sizeof(void*). We only should one variable binding, because closure is undefined behaviour.");
-
-        this->context  = *(void**)&lambda;
-        this->executor = &ExecuteLambda<T>;
-    } 
-
-    inline R operator()(Args... args)
-    {
-        return this->executor(this->context, args...);
-    }
-};
-
-template <typename R, typename ...Args>
-inline bool operator==(Function<R(Args...)> a, Function<R(Args...)> b)
-{
-    return a.context == b.context;
-}
-
-template <typename R, typename ...Args>
-inline bool operator!=(Function<R(Args...)> a, Function<R(Args...)> b)
-{
-    return a.context != b.context;
-}
-
-template <typename R, typename ...Args>
-inline bool operator==(Function<R(Args...)> a, NullPtr)
-{
-    return a.executor == nullptr;
-}
-
-template <typename R, typename ...Args>
-inline bool operator==(NullPtr, Function<R(Args...)> b)
-{
-    return b.executor == nullptr;
-}
-
-template <typename R, typename ...Args>
-inline bool operator!=(Function<R(Args...)> a, NullPtr)
-{
-    return a.executor != nullptr;
-}
-
-template <typename R, typename ...Args>
-inline bool operator!=(NullPtr, Function<R(Args...)> b)
-{
-    return b.executor != nullptr;
-}
-
-// ----------------------
-// Runtime
+// System
 // ----------------------
 
 struct Job
 {
-    Function<void(void)> executor;
+    void* Data;
+    void (*Execute)(void* data);
 };
 
 // ----------------------

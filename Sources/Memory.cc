@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #if !defined(NDEBUG)
 
@@ -95,7 +94,7 @@ static void UpdateAlloc(void* ptr, void* newPtr, size_t size, const char* func, 
         allocDesc = allocDesc->next;
     }
 
-    assert(allocDesc != nullptr);
+    DebugAssert(allocDesc != nullptr, "This block is not allocated by our system, please check your memory source!");
     allocDesc->ptr = newPtr;
 
     U64 newPtrHash = CalcHashPtr64(newPtr) & (ALLOC_DESC_COUNT - 1);
@@ -127,7 +126,7 @@ static void RemoveAlloc(void* ptr, const char* func, const char* file, int line)
         allocDesc = allocDesc->next;
     }
 
-    assert(allocDesc != nullptr);
+    DebugAssert(allocDesc != nullptr, "This block is not allocated by our system! Are you attempt to double-free?");
     SysFreeListCollect(&freeAllocDescs, allocDesc);
 
     if (prevAllocDesc)
@@ -163,6 +162,8 @@ void* _MemoryRealloc(void* ptr, size_t size, const char* func, const char* file,
 
 void _MemoryFree(void* ptr, const char* func, const char* file, int line)
 {
+    DebugAssert(ptr != nullptr, "Attempt free nullptr at %s:%d:%s", func, file, line);
+
     RemoveAlloc(ptr, func, file, line);
     free(ptr);
 }
@@ -203,7 +204,16 @@ void MemoryDumpAllocs(void)
 #endif
 
 // Open an debug window to view your memory allocations
-void Imgui::MemoryDumpAllocs(void)
+void Imgui::DumpMemoryAllocs(void)
 {
-
+    printf("Address,Size,Source\n");
+    for (int i = 0; i < ALLOC_DESC_COUNT; i++)
+    {
+        AllocDesc* allocDesc = hashAllocDescs[i];
+        while (allocDesc != NULL)
+        {
+            printf("0x%p,%zu,%s:%d:%s\n", allocDesc->ptr, allocDesc->size, allocDesc->file, allocDesc->line, allocDesc->func);
+            allocDesc = allocDesc->next;
+        }
+    }
 }

@@ -20,12 +20,12 @@
 int main(void)
 {
     String string1 = StringOps::Static("Hello world");
-    printf("string 1: %s\n", string1.buffer);
+    printf("string 1: %s\n", string1.Buffer);
 
     String string2 = StringOps::Intern(string1);
-    printf("string 2: %s\n", string2.buffer);
+    printf("string 2: %s\n", string2.Buffer);
 
-    if (string1.buffer == string2.buffer)
+    if (string1.Buffer == string2.Buffer)
     {
         printf("string1 and string2 is equal!\n");
     }

@@ -169,7 +169,7 @@ bool OpenWindow(String title, int width, int height)
     }
 
     DWORD winFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
-    SDL_Window* window = SDL_CreateWindow(title.buffer, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, winFlags);
+    SDL_Window* window = SDL_CreateWindow(title.Buffer, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, winFlags);
     if (!window)
     {
         return false;

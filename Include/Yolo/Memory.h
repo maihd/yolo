@@ -55,5 +55,5 @@ static inline U64 CalcHashPtr64(void* ptr, U32 seed = 0)
 namespace Imgui
 {
     // Open an debug window to view your memory allocations
-    void MemoryDumpAllocs(void);
+    void DumpMemoryAllocs(void);
 }

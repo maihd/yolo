@@ -1,5 +1,7 @@
 #include <Yolo/Types.h>
 
+#include <stdio.h>
+
 U32 CalcHash32(const void* buffer, I32 length, U32 seed)
 {
     U8* target = (U8*)buffer;
@@ -92,3 +94,13 @@ U64 CalcHash64(const void* buffer, I32 length, U64 seed)
     return h;
 }
 
+void DebugPrint(const char* test, const char* func, const char* file, int line, const char* format, ...)
+{
+    printf("Assertion failed: %s\n", test);
+    printf("At %s:%d:%s\n\n", file, line, func);
+
+    ArgList arglist;
+    ArgListBegin(arglist, format);
+    vprintf(format, arglist);
+    ArgListEnd(arglist);
+}

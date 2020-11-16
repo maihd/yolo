@@ -146,7 +146,7 @@ inline Array<T> ArrayFill(int capacity, T value)
 template <typename T>
 inline void ArrayFree(Array<T>* array)
 {
-    assert(array);
+    DebugAssert(array != nullptr, "The input array is nullptr");
 
     MemoryFree(array->elements);
 
@@ -170,7 +170,7 @@ inline bool ArrayIsEmpty(const Array<T> array)
 template <typename T>
 inline bool ArrayResize(Array<T>* array, int capacity)
 {
-    assert(array);
+    DebugAssert(array != nullptr, "The input array is nullptr");
 
     if (capacity <= array->capacity)
     {
@@ -197,7 +197,7 @@ inline bool ArrayResize(Array<T>* array, int capacity)
 template <typename T>
 inline bool ArrayEnsure(Array<T>* array, int capacity)
 {
-    assert(array != NULL);
+    DebugAssert(array != nullptr, "The input array is nullptr");
 
     return (array->capacity < capacity) ? ArrayResize(array, capacity) : true;
 }
@@ -211,7 +211,7 @@ inline bool ArrayEnsure(const Array<T> array, int capacity)
 template <typename T>
 inline int ArrayPush(Array<T>* array, T element)
 {
-    assert(array != NULL);
+    DebugAssert(array != nullptr, "The input array is nullptr");
 
     if (ArrayEnsure(array, array->count + 1))
     {
@@ -227,8 +227,8 @@ inline int ArrayPush(Array<T>* array, T element)
 template <typename T>
 inline T ArrayPop(Array<T>* array)
 {
-    assert(array != NULL);
-    assert(array->count > 0);
+    DebugAssert(array != nullptr, "The input array is nullptr");
+    DebugAssert(array->count > 0, "Attempt to pop last item from empty array");
 
     return array->elements[--array->count];
 }
@@ -236,7 +236,7 @@ inline T ArrayPop(Array<T>* array)
 template <typename T>
 inline void ArrayClear(Array<T>* array)
 {
-    assert(array);
+    DebugAssert(array != nullptr, "The input array is nullptr");
 
     array->count = 0;
 }

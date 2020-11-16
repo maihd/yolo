@@ -49,7 +49,7 @@ struct Json
 namespace JsonOps
 {
     Json*       Parse(String content);
-    Json*       Parse(String content, I32 contentLength);
+    Json*       Parse(const char* content, I32 contentLength);
 
     void        Release(Json* rootValue);
 

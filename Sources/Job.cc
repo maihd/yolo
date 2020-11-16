@@ -10,9 +10,9 @@ namespace JobOps
         ArrayPush(&jobs, job);
     }
 
-    void Start(Function<void(void)> job)
+    void Start(void* data, void (*execute)(void* data))
     {
-        Start(Job{ job });
+        Start(Job{ data, execute });
     }
 
     void UpdateJobs(void)
@@ -21,7 +21,7 @@ namespace JobOps
         for (int i = 0; i < n; i++)
         {
             Job job = jobs.elements[i];
-            job.executor();
+            job.Execute(job.Data);
         }
 
         if (n == jobs.count)
