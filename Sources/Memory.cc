@@ -201,3 +201,9 @@ void MemoryDumpAllocs(void)
 {
 }
 #endif
+
+// Open an debug window to view your memory allocations
+void Imgui::MemoryDumpAllocs(void)
+{
+
+}

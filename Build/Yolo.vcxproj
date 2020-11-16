@@ -190,6 +190,8 @@
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
     <ClInclude Include="..\Include\Yolo\HotDylib.h" />
+    <ClInclude Include="..\Include\Yolo\Imgui.h" />
+    <ClInclude Include="..\Include\Yolo\ImguiConfig.h" />
     <ClInclude Include="..\Include\Yolo\Input.h" />
     <ClInclude Include="..\Include\Yolo\Job.h" />
     <ClInclude Include="..\Include\Yolo\Json.h" />
@@ -211,6 +213,12 @@
     <ClInclude Include="..\Sources\DrawBuffer.h" />
     <ClInclude Include="..\Sources\DrawSpriteBuffer.h" />
     <ClInclude Include="..\Sources\DrawTextBuffer.h" />
+    <ClInclude Include="..\Sources\Imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\Sources\Imgui\imgui_impl_sdl.h" />
+    <ClInclude Include="..\Sources\Imgui\imgui_internal.h" />
+    <ClInclude Include="..\Sources\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\Sources\Imgui\imstb_textedit.h" />
+    <ClInclude Include="..\Sources\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\Sources\OpenGL.h" />
     <ClInclude Include="..\Sources\Runtime.h" />
     <ClInclude Include="..\Sources\SpriteBatch.h" />
@@ -225,6 +233,12 @@
     <ClCompile Include="..\Sources\Font.cc" />
     <ClCompile Include="..\Sources\Graphics.cc" />
     <ClCompile Include="..\Sources\HotDylib.cc" />
+    <ClCompile Include="..\Sources\Imgui\imgui.cpp" />
+    <ClCompile Include="..\Sources\Imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\Sources\Imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Sources\Imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\Sources\Imgui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="..\Sources\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\Sources\Input.cc" />
     <ClCompile Include="..\Sources\Job.cc" />
     <ClCompile Include="..\Sources\Json.cc" />

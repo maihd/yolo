@@ -163,12 +163,12 @@ static KeyCode ConvertKeyCode(int nativeKey)
 
 bool OpenWindow(String title, int width, int height)
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
     {
         return false;
     }
 
-    DWORD winFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+    DWORD winFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
     SDL_Window* window = SDL_CreateWindow(title.buffer, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, winFlags);
     if (!window)
     {

@@ -80,6 +80,7 @@ do
         "Include/Yolo",
 
         "Sources",
+        "Sources/Imgui",
     }
 
     filter { "platforms:x32" }
@@ -89,6 +90,7 @@ do
         }
 
         postbuildcommands {
+            
         }
     end
 

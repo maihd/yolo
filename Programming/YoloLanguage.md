@@ -39,6 +39,8 @@ Coding convention
 - Parameter name: camelCase
 - Global variable name: PascalCase
 - Avoid use multiples global variable, should group in one data structure, context.
+- Macro name: PascalCase when use as function, ALL_CAPS_CASE otherwise.
+- Source code file and directory names: PascalCase
 
 Further Reading
 ---------------
