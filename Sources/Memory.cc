@@ -77,6 +77,8 @@ static struct
 {
     SysFreeList FreeAllocDescs = { sizeof(AllocDesc), NULL };
     AllocDesc*  HashAllocDescs[ALLOC_DESC_COUNT];
+
+    size_t      AllocSize = 0;
     int         Allocations = 0;
     int         AllocCalled = 0;
     int         ReallocCalled = 0;
@@ -97,6 +99,7 @@ static void AddAlloc(void* ptr, size_t size, const char* func, const char* file,
     allocDesc->Next = AllocStore.HashAllocDescs[ptrHash];
     AllocStore.HashAllocDescs[ptrHash] = allocDesc;
 
+    AllocStore.AllocSize += size;
     AllocStore.Allocations++;
 }
 
@@ -114,6 +117,8 @@ static void UpdateAlloc(void* ptr, void* newPtr, size_t size, const char* func, 
 
     DebugAssert(allocDesc != nullptr, "This block is not allocated by our system, please check your memory source!");
     allocDesc->Ptr = newPtr;
+    AllocStore.AllocSize -= allocDesc->Size;
+    AllocStore.AllocSize += size;
 
     U64 newPtrHash = CalcHashPtr64(newPtr) & (ALLOC_DESC_COUNT - 1);
     if (newPtrHash != ptrHash)
@@ -156,6 +161,7 @@ static void RemoveAlloc(void* ptr, const char* func, const char* file, int line)
         AllocStore.HashAllocDescs[ptrHash] = allocDesc->Next;
     }
 
+    AllocStore.AllocSize -= allocDesc->Size;
     AllocStore.Allocations--;
 }
 
@@ -223,6 +229,7 @@ void ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags flags)
 
     if (render)
     {
+        ImGui::Text("AllocSize: %.2lfKB", AllocStore.AllocSize / 1024.0);
         ImGui::Text("Allocations: %d", AllocStore.Allocations);
         ImGui::Text("AllocCalled: %d", AllocStore.AllocCalled);
         ImGui::Text("ReallocCalled: %d", AllocStore.ReallocCalled);
