@@ -1,9 +1,9 @@
 #include <Yolo/Memory.h>
+#include <Yolo/ImGui.h>
 
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <Yolo/ImGui.h>
 
 #if !defined(NDEBUG)
 
@@ -31,6 +31,12 @@ typedef struct AllocDesc
     const char*         Func;
     const char*         File;
     int                 Line;
+
+    time_t              CreateTime;
+    time_t              ModifiedTime;
+
+    int                 ModifiedCount;
+    int                 AddressChangedCount;
 
     struct AllocDesc*   Next;
 } AllocDesc;
@@ -95,6 +101,12 @@ static void AddAlloc(void* ptr, size_t size, const char* func, const char* file,
     allocDesc->File = file;
     allocDesc->Line = line;
 
+    allocDesc->CreateTime = time(nullptr);
+    allocDesc->ModifiedTime = allocDesc->CreateTime;
+    
+    allocDesc->ModifiedCount = 0;
+    allocDesc->AddressChangedCount = 0;
+
     U64 ptrHash = CalcHashPtr64(ptr) & (ALLOC_DESC_COUNT - 1);
     allocDesc->Next = AllocStore.HashAllocDescs[ptrHash];
     AllocStore.HashAllocDescs[ptrHash] = allocDesc;
@@ -118,6 +130,13 @@ static void UpdateAlloc(void* ptr, void* newPtr, size_t size, const char* func, 
     DebugAssert(allocDesc != nullptr, "This block is not allocated by our system, please check your memory source!");
     allocDesc->Ptr = newPtr;
     allocDesc->Size = size;
+    allocDesc->Func = func;
+    allocDesc->File = file;
+    allocDesc->Line = line;
+
+    allocDesc->ModifiedTime = time(nullptr);
+    allocDesc->ModifiedCount++;
+    allocDesc->AddressChangedCount += (ptr != newPtr);
 
     AllocStore.AllocSize -= allocDesc->Size;
     AllocStore.AllocSize += size;
@@ -237,13 +256,19 @@ void ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags flags)
         ImGui::Text("ReallocCalled: %d", AllocStore.ReallocCalled);
         ImGui::Text("FreeCalled: %d", AllocStore.FreeCalled);
 
-        ImGui::Columns(3);
+        ImGui::Columns(5);
         ImGui::SetColumnWidth(0, 96);
         ImGui::SetColumnWidth(1, 88);
+        ImGui::SetColumnWidth(2, 120);
+        ImGui::SetColumnWidth(3, 146);
 
         ImGui::Text("Address");
         ImGui::NextColumn();
         ImGui::Text("Size");
+        ImGui::NextColumn();
+        ImGui::Text("ModifiedCount");
+        ImGui::NextColumn();
+        ImGui::Text("AddressChangedCount");
         ImGui::NextColumn();
         ImGui::Text("Source");
         ImGui::NextColumn();
@@ -251,9 +276,11 @@ void ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags flags)
         ImGui::Columns(1);
         if (ImGui::BeginChild("Allocations List"))
         {
-            ImGui::Columns(3);
+            ImGui::Columns(5);
             ImGui::SetColumnWidth(0, 88);
             ImGui::SetColumnWidth(1, 88);
+            ImGui::SetColumnWidth(2, 120);
+            ImGui::SetColumnWidth(3, 146);
 
             for (int i = 0; i < ALLOC_DESC_COUNT; i++)
             {
@@ -263,6 +290,10 @@ void ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags flags)
                     ImGui::Text("0x%p", allocDesc->Ptr);
                     ImGui::NextColumn();
                     ImGui::Text("%zu", allocDesc->Size);
+                    ImGui::NextColumn();
+                    ImGui::Text("%d", allocDesc->ModifiedCount);
+                    ImGui::NextColumn();
+                    ImGui::Text("%d", allocDesc->AddressChangedCount);
                     ImGui::NextColumn();
                     ImGui::Text("%s:%d:%s", allocDesc->File, allocDesc->Line, allocDesc->Func);
                     ImGui::NextColumn();
