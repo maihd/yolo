@@ -117,6 +117,8 @@ static void UpdateAlloc(void* ptr, void* newPtr, size_t size, const char* func, 
 
     DebugAssert(allocDesc != nullptr, "This block is not allocated by our system, please check your memory source!");
     allocDesc->Ptr = newPtr;
+    allocDesc->Size = size;
+
     AllocStore.AllocSize -= allocDesc->Size;
     AllocStore.AllocSize += size;
 
