@@ -48,10 +48,10 @@
     <ClInclude Include="..\Include\Yolo\HotDylib.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\ImGui.h">
+    <ClInclude Include="..\Include\Yolo\Imgui.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\ImGuiConfig.h">
+    <ClInclude Include="..\Include\Yolo\ImguiConfig.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Input.h">
@@ -79,6 +79,9 @@
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Shapes.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Sort.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Sprite.h">

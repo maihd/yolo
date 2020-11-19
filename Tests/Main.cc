@@ -13,6 +13,7 @@
 #include <Yolo/HotDylib.h>
 
 #include <Yolo/Imgui.h>
+#include <Yolo/Sort.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -24,6 +25,13 @@ int main(void)
 
     String string2 = StringOps::Intern(string1);
     printf("string 2: %s\n", string2.Buffer);
+
+    int intArray[4];
+    intArray[0] = rand();
+    intArray[1] = rand();
+    intArray[2] = rand();
+    intArray[3] = rand();
+    InsertSort(intArray, 4);
 
     if (string1.Buffer == string2.Buffer)
     {
@@ -41,10 +49,6 @@ int main(void)
 
     int width = WindowWidth();
     int height = WindowHeight();
-
-    Array<int> intArray = {};
-    ArrayPush(&intArray, 10);
-    ArrayFree(&intArray);
 
     float angle = 0.0f;
 

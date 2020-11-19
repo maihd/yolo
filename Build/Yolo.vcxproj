@@ -23,6 +23,7 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Yolo</RootNamespace>
+    <LatestTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</LatestTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -189,8 +190,8 @@
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
     <ClInclude Include="..\Include\Yolo\HotDylib.h" />
-    <ClInclude Include="..\Include\Yolo\ImGui.h" />
-    <ClInclude Include="..\Include\Yolo\ImGuiConfig.h" />
+    <ClInclude Include="..\Include\Yolo\Imgui.h" />
+    <ClInclude Include="..\Include\Yolo\ImguiConfig.h" />
     <ClInclude Include="..\Include\Yolo\Input.h" />
     <ClInclude Include="..\Include\Yolo\Job.h" />
     <ClInclude Include="..\Include\Yolo\Json.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="..\Include\Yolo\Random.h" />
     <ClInclude Include="..\Include\Yolo\Shader.h" />
     <ClInclude Include="..\Include\Yolo\Shapes.h" />
+    <ClInclude Include="..\Include\Yolo\Sort.h" />
     <ClInclude Include="..\Include\Yolo\Sprite.h" />
     <ClInclude Include="..\Include\Yolo\String.h" />
     <ClInclude Include="..\Include\Yolo\Texture.h" />
