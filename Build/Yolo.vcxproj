@@ -191,7 +191,6 @@
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
     <ClInclude Include="..\Include\Yolo\HotDylib.h" />
     <ClInclude Include="..\Include\Yolo\Imgui.h" />
-    <ClInclude Include="..\Include\Yolo\ImguiConfig.h" />
     <ClInclude Include="..\Include\Yolo\Input.h" />
     <ClInclude Include="..\Include\Yolo\Job.h" />
     <ClInclude Include="..\Include\Yolo\Json.h" />

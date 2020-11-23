@@ -51,9 +51,6 @@
     <ClInclude Include="..\Include\Yolo\Imgui.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\ImguiConfig.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Input.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>

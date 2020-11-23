@@ -128,6 +128,7 @@ struct Rectangle
 
 // String containers
 // Useful for storing string data in other structure
+// and manage ownership, checking for memory location
 struct String
 {
     const char* Buffer;
@@ -400,6 +401,10 @@ inline I64 NextPOT(I64 x)
     return result + 1;
 }
 
+// -------------------------------------
+// Main hashsing functions
+// -------------------------------------
+
 U32 CalcHash32(const void* buffer, I32 length, U32 seed = 0);
 U64 CalcHash64(const void* buffer, I32 length, U64 seed = 0);
 
@@ -495,4 +500,32 @@ constexpr U64 ConstHash64(const char (&buffer)[length], U64 seed = 0)
     h ^= (h << 25);
 
     return h;
+}
+
+inline U32 CalcHashPtr32(void* ptr, U32 seed = 0)
+{
+    const U32 magic = 2057;
+
+    U32 value = (U32)(uintptr_t)ptr + (seed ^ magic);
+    value = ~value + (value << 15);
+    value = value ^ (value >> 12);
+    value = value + (value << 2);
+    value = value ^ (value >> 4);
+    value = value * magic;
+    value = value ^ (value >> 16);
+    return value;
+}
+
+inline U64 CalcHashPtr64(void* ptr, U32 seed = 0)
+{
+    const U64 magic = 41142057ULL;
+
+    U64 value = (U64)(uintptr_t)ptr + (seed ^ magic);
+    value = ~value + (value << 30);
+    value = value ^ (value >> 24);
+    value = value + (value << 4);
+    value = value ^ (value >> 8);
+    value = value * magic;
+    value = value ^ (value >> 32);
+    return value;
 }

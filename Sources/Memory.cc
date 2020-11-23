@@ -1,9 +1,12 @@
-#include <Yolo/Memory.h>
+#include <Yolo/Types.h>
 #include <Yolo/ImGui.h>
+#include <Yolo/Memory.h>
 
 #include <time.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #if !defined(NDEBUG)
 
@@ -18,7 +21,7 @@
 
 typedef struct SysFreeList
 {
-    size_t  ItemSize;
+    int     ItemSize;
     void*   FreeItem;
 } SysFreeList;
 
@@ -55,7 +58,7 @@ static void* SysFreeListAcquire(SysFreeList* freeList)
         const int itemsPerBatch = allocSize / itemSize;
 
 #if defined(_WIN32)
-        void* allocBatch = VirtualAlloc(NULL, (SIZE_T)allocSize, MEM_COMMIT, PAGE_READWRITE);
+        void* allocBatch = VirtualAlloc(nullptr, (SIZE_T)allocSize, MEM_COMMIT, PAGE_READWRITE);
 #else
         void* allocBatch = malloc(allocSize);
 #endif
@@ -78,7 +81,7 @@ static void* SysFreeListAcquire(SysFreeList* freeList)
 constexpr int ALLOC_DESC_COUNT = 64;
 static struct
 {
-    SysFreeList FreeAllocDescs = { sizeof(AllocDesc), NULL };
+    SysFreeList FreeAllocDescs = { sizeof(AllocDesc), nullptr };
     AllocDesc*  HashAllocDescs[ALLOC_DESC_COUNT];
 
     int         AllocSize = 0;
@@ -230,7 +233,7 @@ void MemoryDumpAllocs(void)
     for (int i = 0; i < ALLOC_DESC_COUNT; i++)
     {
         AllocDesc* allocDesc = AllocStore.HashAllocDescs[i];
-        while (allocDesc != NULL)
+        while (allocDesc != nullptr)
         {
             printf("0x%p,%zu,%s:%d:%s\n", allocDesc->Ptr, allocDesc->Size, allocDesc->File, allocDesc->Line, allocDesc->Func);
             allocDesc = allocDesc->Next;
@@ -286,7 +289,7 @@ void ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags flags)
             for (int i = 0; i < ALLOC_DESC_COUNT; i++)
             {
                 AllocDesc* allocDesc = AllocStore.HashAllocDescs[i];
-                while (allocDesc != NULL)
+                while (allocDesc != nullptr)
                 {
                     ImGui::Text("0x%p", allocDesc->Ptr);
                     ImGui::NextColumn();
