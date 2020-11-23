@@ -4,14 +4,6 @@
 #include "./Internal.h"
 #include "./Imgui/imgui_impl_sdl.h"
 
-#ifdef _WIN32
-#   pragma comment(lib, "OpenGL32.lib")
-#   pragma comment(lib, "SetupAPI.lib")
-#   pragma comment(lib, "Version.lib")
-#   pragma comment(lib, "Imm32.lib")
-#   pragma comment(lib, "Winmm.lib")
-#endif
-
 static KeyCode s_keyCodeMap[2048];
 static KeyCode ConvertKeyCode(int nativeKey)
 {
@@ -162,7 +154,7 @@ static KeyCode ConvertKeyCode(int nativeKey)
     }
 }
 
-bool OpenWindow(String title, int width, int height)
+bool OpenWindow(const char* title, int width, int height)
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
     {
@@ -170,7 +162,7 @@ bool OpenWindow(String title, int width, int height)
     }
 
     DWORD winFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
-    SDL_Window* window = SDL_CreateWindow(title.Buffer, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, winFlags);
+    SDL_Window* window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, winFlags);
     if (!window)
     {
         return false;

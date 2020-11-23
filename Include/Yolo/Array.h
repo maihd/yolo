@@ -282,7 +282,7 @@ inline bool ArrayErase(Array<T>* array, int index)
         array->count--;
         if (index < array->count)
         {
-            MemoryCopy(&array->elements[index], &array->elements[index + 1], (array->count - index - 1) * sizeof(T));
+            memcpy(&array->elements[index], &array->elements[index + 1], (array->count - index - 1) * sizeof(T));
         }
 
         return true;
@@ -304,7 +304,7 @@ inline bool ArrayErase(Array<T>* array, int start, int end)
     {
         if (array->count - end > 0)
         {
-            MemoryCopy(&array->elements[start], &array->elements[end - 1], (array->count - end) * sizeof(T));
+            memcpy(&array->elements[start], &array->elements[end - 1], (array->count - end) * sizeof(T));
         }
         array->count = array->count - eraseCount;
 

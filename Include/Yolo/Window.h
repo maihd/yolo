@@ -2,7 +2,7 @@
 
 #include <Yolo/Types.h>
 
-bool    OpenWindow(String title, int width, int height);
+bool    OpenWindow(const char* title, int width, int height);
 void    CloseWindow(void);
 
 bool    WindowPollEvents(void);

@@ -1,8 +1,3 @@
-/**************************************************************
- * HotDylib - Hot reload dynamic library from memory and file *
- *                                                            *
- **************************************************************/
-
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
@@ -56,7 +51,7 @@ struct HotDylibData
 #   define Dylib_Free(lib)          FreeLibrary((HMODULE)lib)
 #   define Dylib_GetSymbol(l, n)    (void*)GetProcAddress((HMODULE)l, n)
 
-static String Dylib_GetError(void)
+static const char* Dylib_GetError(void)
 {
     static int  error;
     static char buffer[256];
@@ -95,10 +90,10 @@ namespace HotDylibOps
 /** Custom helper functions **/
 #if defined(_WIN32)
 
-    static long GetLastModifyTime(String path)
+    static long GetLastModifyTime(const char* path)
     {
         WIN32_FILE_ATTRIBUTE_DATA fad;
-        if (!GetFileAttributesExA(path.Buffer, GetFileExInfoStandard, &fad))
+        if (!GetFileAttributesExA(path, GetFileExInfoStandard, &fad))
         {
             return 0;
         }
@@ -111,9 +106,9 @@ namespace HotDylibOps
     }
 
     #undef CopyFile
-    static bool CopyFile(String from, String to)
+    static bool CopyFile(const char* from, const char* to)
     {
-        if (CopyFileA(from.Buffer, to.Buffer, false))
+        if (CopyFileA(from, to, false))
         {
             return true;
         }
@@ -124,7 +119,7 @@ namespace HotDylibOps
     }
 
     #undef RemoveFile
-    static bool RemoveFile(String path);
+    static bool RemoveFile(const char* path);
 
 #if defined(_MSC_VER)
 
@@ -216,7 +211,7 @@ namespace HotDylibOps
         CloseHandle(hProcess);
     }
 
-    static void UnlockPdbFile(HotDylibData* lib, String file)
+    static void UnlockPdbFile(HotDylibData* lib, const char* file)
     {
         WCHAR           szFile[HOTDYLIB_MAX_PATH + 1];
         UINT            i;
@@ -228,7 +223,7 @@ namespace HotDylibOps
         RM_PROCESS_INFO rgpi[10];
         WCHAR           szSessionKey[CCH_RM_SESSION_KEY + 1] = { 0 };
 
-        MultiByteToWideChar(CP_UTF8, 0, file.Buffer, -1, szFile, HOTDYLIB_MAX_PATH);
+        MultiByteToWideChar(CP_UTF8, 0, file, -1, szFile, HOTDYLIB_MAX_PATH);
 
         dwError = RmStartSession(&dwSession, 0, szSessionKey);
         if (dwError == ERROR_SUCCESS)
@@ -251,13 +246,13 @@ namespace HotDylibOps
         }
     }
 
-    static int GetPdbPath(String libpath, char* buf, int len)
+    static int GetPdbPath(const char* libpath, char* buf, int len)
     {
         char drv[8];
         char dir[HOTDYLIB_MAX_PATH];
         char name[HOTDYLIB_MAX_PATH];
 
-        GetFullPathNameA(libpath.Buffer, len, buf, NULL);
+        GetFullPathNameA(libpath, len, buf, NULL);
         _splitpath(buf, drv, dir, name, NULL);
 
         return snprintf(buf, len, "%s%s%s.pdb", drv, dir, name);
@@ -524,13 +519,13 @@ namespace HotDylibOps
 #error "Unsupported platform"
 #endif
 
-    static bool RemoveFile(String path)
+    static bool RemoveFile(const char* path)
     {
-        return DeleteFileA(path.Buffer);
+        return DeleteFileA(path);
     }
 
     #undef GetTempPath
-    static int GetTempPath(String path, char* buffer, I32 length)
+    static int GetTempPath(const char* path, char* buffer, I32 length)
     {
         int res;
 
@@ -539,7 +534,7 @@ namespace HotDylibOps
             int version = 0;
             while (1)
             {
-                res = snprintf(buffer, length, "%s.%d", path.Buffer, version++);
+                res = snprintf(buffer, length, "%s.%d", path, version++);
                 FILE* file = fopen(buffer, "r");
                 if (file)
                 {
@@ -609,7 +604,7 @@ namespace HotDylibOps
         return res;
     }
 
-    HotDylib* Open(String path, String entryName)
+    HotDylib* Open(const char* path, String entryName)
     {
         HotDylib* lib = (HotDylib*)(malloc(sizeof(HotDylib) + sizeof(HotDylibData)));
         if (!lib)
@@ -627,7 +622,7 @@ namespace HotDylibOps
         data->library = NULL;
         GetTempPath(path, data->libTempPath, HOTDYLIB_MAX_PATH);
 
-        strncpy(data->libRealPath, path.Buffer, HOTDYLIB_MAX_PATH);
+        strncpy(data->libRealPath, path, HOTDYLIB_MAX_PATH);
 
 #if defined(_MSC_VER) && HOTDYLIB_PDB_UNLOCK
         data->pdbtime = 0;
@@ -741,7 +736,7 @@ namespace HotDylibOps
         return Dylib_GetSymbol(data->library, symbolName.Buffer);
     }
 
-    String GetError(const HotDylib* lib)
+    const char* GetError(const HotDylib* lib)
     {
         (void)lib;
         return Dylib_GetError();

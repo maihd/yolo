@@ -33,7 +33,7 @@ namespace Graphics
     static DrawTextBuffer   drawTextBuffer;
     static DrawSpriteBuffer drawSpriteBuffer;
 
-    constexpr String vshaderSource =
+    constexpr const char* vshaderSource =
         "#version 330 core\n"
         "layout (location = 0) in vec3 pos;"
         "layout (location = 1) in vec2 uv;"
@@ -48,7 +48,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    constexpr String fshaderSource =
+    constexpr const char* fshaderSource =
         "#version 330\n"
 
         "in vec2 fragUV;"
@@ -62,7 +62,7 @@ namespace Graphics
         "resultColor = vec4(1.0);"
         "}";
 
-    constexpr String spriteVertexSource =
+    constexpr const char* spriteVertexSource =
         "#version 330 core\n"
 
         "layout (location = 0) in vec3 pos;"
@@ -81,7 +81,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    constexpr String spritePixelSource =
+    constexpr const char* spritePixelSource =
         "#version 330 core\n"
 
         "in vec2 uv;"
@@ -96,7 +96,7 @@ namespace Graphics
         "}";
 
 
-    constexpr String fontVertexSource =
+    constexpr const char* fontVertexSource =
         "#version 330 core\n"
 
         "layout (location = 0) in vec3 pos;"
@@ -112,7 +112,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    constexpr String fontPixelSource =
+    constexpr const char* fontPixelSource =
         "#version 330 core\n"
 
         "in vec2 uv;"
@@ -442,7 +442,7 @@ namespace Graphics
     }
 
 #undef DrawText
-    void DrawText(String text, Font font, Vector2 position)
+    void DrawText(const char* text, Font font, Vector2 position)
     {
         DrawTextBuffer::AddText(&drawTextBuffer, text, font);
         DrawTextBuffer::UpdateBuffers(&drawTextBuffer);
@@ -481,8 +481,8 @@ namespace Graphics
     {
         char buffer[1024];
         float framerate = GetFramerate();
-        String text = StringOps::Format(buffer, sizeof(buffer), "FPS: %.2f", framerate);
-        DrawText(text, font, position);
+        String text = StringFormat(buffer, sizeof(buffer), "FPS: %.2f", framerate);
+        DrawText(text.Buffer, font, position);
     }
 }
 

@@ -28,25 +28,21 @@ namespace FileOps
         ArrayRemove(&searchPaths, path);
     }
 
-    bool Exists(String path, bool useSearchPath)
+    bool Exists(const char* path, bool useSearchPath)
     {
-        if (!::PathFileExistsA(path.Buffer))
+        if (!PathFileExistsA(path))
         {
             if (useSearchPath)
             {
                 char pathBuffer[2048];
-                if (!Exists(path, false))
+                for (I32 i = 0, n = searchPaths.count; i < n; i++)
                 {
-                    String originPath = path;
-                    for (I32 i = 0, n = searchPaths.count; i < n; i++)
-                    {
-                        String searchPath = searchPaths.elements[i];
+                    String searchPath = searchPaths.elements[i];
 
-                        ::sprintf(pathBuffer, "%s/%s", searchPath.Buffer, originPath.Buffer);
-                        if (Exists(pathBuffer, false))
-                        {
-                            return true;
-                        }
+                    ::sprintf(pathBuffer, "%s/%s", searchPath.Buffer, path);
+                    if (!PathFileExistsA(pathBuffer))
+                    {
+                        return true;
                     }
                 }
             }
@@ -59,24 +55,20 @@ namespace FileOps
         }
     }
 
-    String GetFullPath(String path)
+    const char* GetFullPath(const char* path)
     {
         thread_local char pathBuffer[2048];
 
-        if (!PathFileExistsA(path.Buffer))
+        if (!Exists(path, false))
         {
-            if (!Exists(path, false))
+            for (I32 i = 0, n = searchPaths.count; i < n; i++)
             {
-                String originPath = path;
-                for (I32 i = 0, n = searchPaths.count; i < n; i++)
-                {
-                    String searchPath = searchPaths.elements[i];
+                String searchPath = searchPaths.elements[i];
 
-                    sprintf(pathBuffer, "%s/%s", searchPath.Buffer, originPath.Buffer);
-                    if (Exists(pathBuffer, false))
-                    {
-                        return pathBuffer;
-                    }
+                sprintf(pathBuffer, "%s/%s", searchPath.Buffer, path);
+                if (Exists(pathBuffer, false))
+                {
+                    return pathBuffer;
                 }
             }
 
@@ -88,10 +80,10 @@ namespace FileOps
         }
     }
 
-    File Open(String path, FileMode mode)
+    File Open(const char* path, FileMode mode)
     {
-        String fullPath = GetFullPath(path);
-        if (fullPath.Length == 0)
+        const char* fullPath = GetFullPath(path);
+        if (fullPath == "")
         {
             return 0;
         }
@@ -251,7 +243,7 @@ namespace FileOps
             //attributes |= FILE_FLAG_OVERLAPPED;
         }
 
-        HANDLE handle = CreateFileA(path.Buffer,
+        HANDLE handle = CreateFileA(path,
             access,
             shared,
             NULL,
@@ -292,7 +284,7 @@ namespace FileOps
         return (I32)::GetFileSize((HANDLE)(intptr_t)file, 0);
     }
 
-    I32 GetSize(String path)
+    I32 GetSize(const char* path)
     {
         File file = Open(path, FileMode::Read);
         I32  size = GetSize(file);
@@ -314,7 +306,7 @@ namespace FileOps
         }
     }
 
-    I64 GetSize64(String path)
+    I64 GetSize64(const char* path)
     {
         File  file = Open(path, FileMode::Read);
         I64 size = GetSize64(file);

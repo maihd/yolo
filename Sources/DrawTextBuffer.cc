@@ -89,9 +89,9 @@ void DrawTextBuffer::UpdateBuffers(DrawTextBuffer* drawBuffer)
     }
 }
 
-void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, String text, Font font)
+void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, const char* text, Font font)
 {
-    I32 length = StringOps::Length(text);
+    I32 length = (size_t)strlen(text);
     if (length > 0)
     {
         float advanceX = 0;

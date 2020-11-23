@@ -4,7 +4,7 @@
 
 namespace ShaderOps
 {
-    Shader Load(String vertexFile, String pixelsFile);
-    Shader Compile(String vertexSource, String pixelsSource);
+    Shader Load(const char* vertexFile, const char* pixelsFile);
+    Shader Compile(const char* vertexSource, const char* pixelsSource);
 }
 

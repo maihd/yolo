@@ -47,15 +47,15 @@ namespace TextureOps
         };
     }
 
-    Texture Load(String path)
+    Texture Load(const char* path)
     {
-        String fullPath = FileOps::GetFullPath(path);
-        if (fullPath.Length == 0)
+        const char* fullPath = FileOps::GetFullPath(path);
+        if (fullPath == "")
         {
             return {};
         }
 
-        U64 textureHash = CalcHash64(fullPath);
+        U64 textureHash = CalcHash64(fullPath, (int)strlen(fullPath));
 
         Texture cachedTexture;
         if (HashTableOps::TryGetValue(loadedTextures, textureHash, &cachedTexture))
@@ -64,7 +64,7 @@ namespace TextureOps
         }
 
         I32 width, height, channel;
-        void* pixels = stbi_load(fullPath.Buffer, &width, &height, &channel, 0);
+        void* pixels = stbi_load(fullPath, &width, &height, &channel, 0);
         if (!pixels)
         {
             return {};

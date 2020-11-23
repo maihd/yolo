@@ -34,6 +34,6 @@ namespace Graphics
 
     void    DrawTexture(Texture texture, Vector2 position, float rotation = 0.0f, Vector2 scale = Vector2{ 1, 1 }, Vector4 color = Vector4{ 1, 1, 1, 1 }, Vector2 pivot = Vector2{ 0.5f, 0.5f });
 
-    void    DrawText(String text, Font font, Vector2 position);
+    void    DrawText(const char* text, Font font, Vector2 position);
     void    DrawFramerate(Font font, Vector2 position);
 }

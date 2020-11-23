@@ -17,7 +17,7 @@ struct DrawTextBuffer
     static DrawTextBuffer   New();
     static void             Free(DrawTextBuffer* drawBuffer);
 
-    static void             AddText(DrawTextBuffer* drawTextBuffer, String text, Font font);
+    static void             AddText(DrawTextBuffer* drawTextBuffer, const char* text, Font font);
 
     static void             Clear(DrawTextBuffer* drawBuffer);
     static void             UpdateBuffers(DrawTextBuffer* drawBuffer);

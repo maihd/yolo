@@ -6,213 +6,180 @@
 #include <stdint.h>
 
 #include <Yolo/Math.h>
+#include <Yolo/Memory.h>
 #include <Yolo/String.h>
 #include <Yolo/Random.h>
 #include <Yolo/HashTable.h>
 
-namespace StringOps
-{   
-    static HashTable<String> internedStrings = HashTableOps::New<String>(64);
+String MakeString(void* buffer, int bufferSize, const char* source = "")
+{
+    DebugAssert(buffer != nullptr, "Invalid buffer");
+    DebugAssert(bufferSize > 0, "Invalid bufferSize, which must be > 0");
 
-    String SaveString(String source)
+    char* content = (char*)buffer;
+    strcpy(content, source);
+
+    return { content, 0, bufferSize, true, false };
+}
+
+String SaveString(String source)
+{
+    if (source.IsStatic)
     {
-        if (source.IsStatic)
+        return source;
+    }
+    else
+    {
+        char* buffer = (char*)MemoryAlloc(source.Alloced);
+        memcpy(buffer, source.Buffer, source.Length + 1);
+
+        return { buffer, source.Length, source.Alloced, true, false };
+    }
+}
+
+String SaveString(const char* source)
+{
+    int length = (int)strlen(source);
+    char* buffer = (char*)MemoryAlloc(length + 1);
+    memcpy(buffer, source, length + 1);
+
+    return { buffer, length, length + 1, true, false };
+}
+
+void FreeString(String* source)
+{
+    DebugAssert(source != nullptr, "Attempting free string data from nullptr.");
+
+    if (source->IsOwned)
+    {
+        MemoryFree((void*)source->Buffer);
+        *source = String();
+    }
+}
+
+bool IsStringEmpty(String target)
+{
+    return target.Length == 0;
+}
+
+I32 StringCompare(String str0, String str1)
+{
+    return strncmp(str0.Buffer, str1.Buffer, min(str0.Length, str1.Length));
+}
+
+String StringFormat(I32 bufferSize, const char* format, ...)
+{
+    ArgList argv;
+    ArgListBegin(argv, format);
+    String result = StringFormatArgv(bufferSize, format, argv);
+    ArgListEnd(argv);
+    return result;
+}
+
+String StringFormatArgv(I32 bufferSize, const char* format, ArgList argv)
+{
+    void* buffer = MemoryAlloc(bufferSize);
+    return StringFormatArgv(buffer, bufferSize, format, argv);
+}
+
+String StringFormat(void* buffer, I32 bufferSize, const char* format, ...)
+{
+    ArgList argv;
+    ArgListBegin(argv, format);
+    String result = StringFormatArgv(buffer, bufferSize, format, argv);
+    ArgListEnd(argv);
+    return result;
+}
+
+String StringFormatArgv(void* buffer, I32 bufferSize, const char* format, ArgList argv)
+{
+    int length = vsnprintf((char*)buffer, bufferSize, format, argv);
+    if (length < -1)
+    {
+        return { "", 0, 0, false, true };
+    }
+
+    return { (char*)buffer, length, bufferSize, false, false };
+}
+
+I32 StringIndexOf(String target, I32 charCode)
+{
+    I32 length = target.Length;
+    for (I32 i = 0; i < length; i++)
+    {
+        if (target.Buffer[i] == charCode)
         {
-            return source;
+            return i;
         }
-        else
+    }
+
+    return -1;
+}
+
+I32 StringIndexOf(String target, String substring)
+{
+    I32 substringLength = substring.Length;
+    for (I32 i = 0, n = target.Length - substringLength; i < n; i++)
+    {
+        if (strncmp(&target.Buffer[i], substring.Buffer, (size_t)substringLength) == 0)
         {
-            return String(_strdup(source.Buffer), source.Length, true);
+            return i;
         }
     }
 
-    String Intern(String source)
-    {
-        U64 hash = CalcHash64(source);
+    return -1;
+}
 
-        return Intern(hash, source);
-    }
-
-    String Intern(U64 hash, String source)
+I32 StringLastIndexOf(String target, I32 charCode)
+{
+    I32 length = target.Length;
+    for (I32 i = length - 1; i > -1; i--)
     {
-        if (Length(source) == 0)
+        if (target.Buffer[i] == charCode)
         {
-            return "";
+            return i;
         }
+    }
 
-        String result;
-        if (HashTableOps::TryGetValue(internedStrings, hash, &result))
+    return -1;
+}
+
+I32 StringLastIndexOf(String target, String substring)
+{
+    I32 substringLength = substring.Length;
+    for (I32 i = target.Length - substringLength - 1; i > -1; i--)
+    {
+        if (strncmp(target.Buffer + i, substring.Buffer, (size_t)substringLength) == 0)
         {
-            return result;
-        }
-        else
-        {
-            String duplicatedString = SaveString(source);
-            HashTableOps::SetValue(&internedStrings, hash, duplicatedString);
-            return duplicatedString;
+            return i;
         }
     }
 
-    String InternNoAllocation(U64 hash, String source)
-    {
-        if (Length(source) == 0)
-        {
-            return "";
-        }
+    return -1;
+}
 
-        String result;
-        if (HashTableOps::TryGetValue(internedStrings, hash, &result))
-        {
-            return result;
-        }
-        else
-        {
-            HashTableOps::SetValue(&internedStrings, hash, source);
-            return source;
-        }
+String SubString(String source, I32 start, I32 end)
+{
+    if (start < 0)
+    {
+        return String();
     }
 
-    I32 Length(String target)
+    if (end < 0)
     {
-        return target.Length;
+        return { source.Buffer + start, source.Length - start, source.IsOwned, source.Alloced, source.IsStatic };
     }
-
-    bool IsEmpty(String target)
+    else
     {
-        return target.Length == 0;
-    }
-
-    I32 Compare(String str0, String str1)
-    {
-        return strncmp(str0.Buffer, str1.Buffer, min(str0.Length, str1.Length));
-    }
-
-    String Format(I32 bufferSize, String format, ...)
-    {
-        ArgList argv;
-        ArgListBegin(argv, format);
-        String result = FormatArgv(bufferSize, format, argv);
-        ArgListEnd(argv);
-        return result;
-    }
-
-    String FormatArgv(I32 bufferSize, String format, ArgList argv)
-    {
-        void* buffer = malloc(bufferSize);
-        return FormatArgv(buffer, bufferSize, format, argv);
-    }
-
-    String Format(void* buffer, I32 bufferSize, String format, ...)
-    {
-        ArgList argv;
-        ArgListBegin(argv, format);
-        String result = FormatArgv(buffer, bufferSize, format, argv);
-        ArgListEnd(argv);
-        return result;
-    }
-
-    String FormatArgv(void* buffer, I32 bufferSize, String format, ArgList argv)
-    {
-        int length = vsnprintf((char*)buffer, bufferSize, format.Buffer, argv);
-        if (length < -1)
-        {
-            return String();
-        }
-
-        return String((char*)buffer, length, false);
-    }
-
-    char CharAt(String target, I32 index)
-    {
-        return target.Buffer[index];
-    }
-
-    I32 CharCodeAt(String target, I32 index)
-    {
-        return target.Buffer[index];
-    }
-
-    I32 IndexOf(String target, I32 charCode)
-    {
-        I32 length = StringOps::Length(target);
-        for (I32 i = 0; i < length; i++)
-        {
-            if (StringOps::CharCodeAt(target, i) == charCode)
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    I32 IndexOf(String target, String substring)
-    {
-        I32 substringLength = substring.Length;
-        for (I32 i = 0, n = target.Length - substringLength; i < n; i++)
-        {
-            if (strncmp(target.Buffer + i, substring.Buffer, (size_t)substringLength) == 0)
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    I32 LastIndexOf(String target, I32 charCode)
-    {
-        I32 length = StringOps::Length(target);
-        for (I32 i = length - 1; i > -1; i--)
-        {
-            if (StringOps::CharCodeAt(target, i) == charCode)
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    I32 LastIndexOf(String target, String substring)
-    {
-        I32 substringLength = substring.Length;
-        for (I32 i = StringOps::Length(target) - substringLength - 1; i > -1; i--)
-        {
-            if (strncmp(target.Buffer + i, substring.Buffer, (size_t)substringLength) == 0)
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    String SubString(String source, I32 start, I32 end)
-    {
-        if (start < 0)
+        I32 substringLength = end - start;
+        if (substringLength <= 0)
         {
             return String();
         }
 
-        if (end < 0)
-        {
-            return String(source.Buffer + start, source.Length - start, source.IsOwned, source.IsStatic);
-        }
-        else
-        {
-            I32 substringLength = end - start;
-            if (substringLength <= 0)
-            {
-                return String();
-            }
+        char* content = (char*)MemoryAlloc(substringLength + 1);
+        memcpy(content, source.Buffer, substringLength + 1);
 
-            char* content = (char*)malloc(substringLength + 1);
-
-            strncpy(content, source.Buffer, substringLength);
-            content[substringLength] = 0;
-
-            return String(content, substringLength, true);
-        }
+        return { content, substringLength, substringLength + 1, true, false };
     }
 }

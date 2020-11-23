@@ -126,58 +126,16 @@ struct Rectangle
     float height;
 };
 
+// String containers
+// Useful for storing string data in other structure
 struct String
 {
     const char* Buffer;
-    int         Length : 30;
-    bool        IsOwned : 1;
-    bool        IsStatic : 1;
+    int         Length;
 
-    constexpr String()
-        : Buffer("")
-        , Length(0)
-        , IsOwned(false)
-        , IsStatic(true)
-    {
-    }
-
-    template <int LENGTH>
-    constexpr String(const char (&buffer)[LENGTH])
-        : Buffer(buffer)
-        , Length(LENGTH)
-        , IsOwned(false)
-        , IsStatic(true)
-    {
-        static_assert(LENGTH >= 0, "You're attempting to use the string have length smaller than 0.");
-    }
-
-    inline String(const char* buffer, int length, bool isOwned, bool isStatic = false)
-        : Buffer(buffer)
-        , Length(length)
-        , IsOwned(isOwned)
-        , IsStatic(isStatic)
-    {
-        DebugAssert(buffer != nullptr, "buffer mustnot be nullptr");
-        DebugAssert(length > 0, "length mustnot be smaller than 0");
-        DebugAssert(!(isOwned && isStatic), "string cannot be both isOwned & isStatic");
-    }
-
-    inline String(const String& other)
-        : Buffer(other.Buffer)
-        , Length(other.Length)
-        , IsOwned(other.IsOwned)
-        , IsStatic(other.IsStatic)
-    {
-        DebugAssert(Buffer != nullptr, "buffer mustnot be nullptr. Are you changed your string data?");
-        DebugAssert(Length > 0, "length mustnot be smaller than 0. Are you changed your string data?");
-        DebugAssert(!(IsOwned && IsStatic), "string cannot be both isOwned & isStatic. Are you changed your string data?");
-    }
-
-    inline char operator[](int index) const
-    {
-        DebugAssert(index > -1 && index < Length, "Index is out range.");
-        return Buffer[index];
-    }
+    int         Alloced : 30;
+    int         IsOwned : 1;
+    int         IsStatic : 1;
 };
 
 // ----------------------

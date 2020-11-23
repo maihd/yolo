@@ -13,7 +13,7 @@
 
 namespace FontOps
 {
-    Font Load(String path, float size)
+    Font Load(const char* path, float size)
     {
         constexpr I32 TEXTURE_WIDTH     = 1024;
         constexpr I32 TEXTURE_HEIGHT    = 1024;

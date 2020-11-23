@@ -734,9 +734,9 @@ namespace JsonOps
         }
     }
 
-    Json* Parse(String json)
+    Json* Parse(const char* json)
     {
-        return Parse(json.Buffer, json.Length);
+        return Parse(json, (int)strlen(json));
     }
 
     Json* Parse(const char* jsonContent, int jsonLength)
@@ -841,9 +841,9 @@ namespace JsonOps
         return false;
     }
 
-    Json Find(Json obj, String name)
+    Json Find(Json obj, const char* name)
     {
-        return Find(obj, CalcHash64(name));
+        return Find(obj, CalcHash64(name, (int)strlen(name)));
     }
 
     Json Find(Json obj, U64 hash)

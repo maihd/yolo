@@ -47,7 +47,7 @@ namespace HotDylibOps
     /**
      * Open an hot dynamic library, path can be not exists from open moment
      */
-    HotDylib*       Open(String path, String entryName);
+    HotDylib*       Open(const char* path, const char* entryName);
 
     /**
      * Close opened files by hot dynamic library
@@ -62,10 +62,10 @@ namespace HotDylibOps
     /**
      * Get an symbol address from library with symbol's name
      */
-    void*           GetSymbol(const HotDylib* lib, String symbolName);
+    void*           GetSymbol(const HotDylib* lib, const char* symbolName);
 
     /**
      * Get error message of hot dynamic library from last update
      */
-    String          GetError(const HotDylib* lib);
+    const char*     GetError(const HotDylib* lib);
 }

@@ -20,10 +20,10 @@
 
 int main(void)
 {
-    String string1 = StringOps::Static("Hello world");
+    String string1 = ConstString("Hello world");
     printf("string 1: %s\n", string1.Buffer);
 
-    String string2 = StringOps::Intern(string1);
+    String string2 = string1;
     printf("string 2: %s\n", string2.Buffer);
 
     int intArray[4];
@@ -33,7 +33,7 @@ int main(void)
     intArray[3] = rand();
     InsertSort(intArray, 4);
 
-    if (string1.Buffer == string2.Buffer)
+    if (string1 == string2)
     {
         printf("string1 and string2 is equal!\n");
     }
@@ -57,9 +57,9 @@ int main(void)
     Texture texture2 = TextureOps::Load("../Assets/character.png");
 
     HashTable<int> hashTable = HashTableOps::New<int>();
-    HashTableOps::SetValue(&hashTable, CalcHash64("ten"), 10);
+    HashTableOps::SetValue(&hashTable, ConstHash64("ten"), 10);
 
-    int value = HashTableOps::GetValue(hashTable, CalcHash64("ten"));
+    int value = HashTableOps::GetValue(hashTable, ConstHash64("ten"));
 
     HashTableOps::Free(&hashTable);
 

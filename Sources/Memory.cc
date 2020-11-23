@@ -7,10 +7,9 @@
 
 #if !defined(NDEBUG)
 
-#if defined(__unix__)
-#   include <unistd.h>
-#elif defined(_WIN32)
-#   include <windows.h>
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #endif
 
 // ----------------------
@@ -26,7 +25,7 @@ typedef struct SysFreeList
 typedef struct AllocDesc
 {
     void*               Ptr;
-    size_t              Size;
+    int                 Size;
 
     const char*         Func;
     const char*         File;
@@ -51,19 +50,17 @@ static void* SysFreeListAcquire(SysFreeList* freeList)
 {
     if (!freeList->FreeItem)
     {
-        const size_t itemSize = freeList->ItemSize;
-        const size_t allocSize = 64 * 1024;
-        const size_t itemsPerBatch = allocSize / itemSize;
+        const int itemSize = freeList->ItemSize;
+        const int allocSize = 64 * 1024;
+        const int itemsPerBatch = allocSize / itemSize;
 
-#if defined(__unix__)
-        void* allocBatch = vmalloc(allocSize);
-#elif defined(_WIN32)
+#if defined(_WIN32)
         void* allocBatch = VirtualAlloc(NULL, (SIZE_T)allocSize, MEM_COMMIT, PAGE_READWRITE);
 #else
         void* allocBatch = malloc(allocSize);
 #endif
 
-        for (size_t i = 0; i < itemsPerBatch; i++)
+        for (int i = 0; i < itemsPerBatch; i++)
         {
             SysFreeListCollect(freeList, (uint8_t*)allocBatch + i * itemSize);
         }
@@ -84,18 +81,18 @@ static struct
     SysFreeList FreeAllocDescs = { sizeof(AllocDesc), NULL };
     AllocDesc*  HashAllocDescs[ALLOC_DESC_COUNT];
 
-    size_t      AllocSize = 0;
+    int         AllocSize = 0;
     int         Allocations = 0;
     int         AllocCalled = 0;
     int         ReallocCalled = 0;
     int         FreeCalled = 0;
 } AllocStore;
 
-static void AddAlloc(void* ptr, size_t size, const char* func, const char* file, int line)
+static void AddAlloc(void* ptr, int size, const char* func, const char* file, int line)
 {
     AllocDesc* allocDesc = (AllocDesc*)SysFreeListAcquire(&AllocStore.FreeAllocDescs);
 
-    allocDesc->Ptr = ptr;
+    allocDesc->Ptr  = ptr;
     allocDesc->Size = size;
     allocDesc->Func = func;
     allocDesc->File = file;
@@ -115,7 +112,7 @@ static void AddAlloc(void* ptr, size_t size, const char* func, const char* file,
     AllocStore.Allocations++;
 }
 
-static void UpdateAlloc(void* ptr, void* newPtr, size_t size, const char* func, const char* file, int line)
+static void UpdateAlloc(void* ptr, void* newPtr, int size, const char* func, const char* file, int line)
 {
     U64 ptrHash = CalcHashPtr64(ptr) & (ALLOC_DESC_COUNT - 1);
 
@@ -186,20 +183,24 @@ static void RemoveAlloc(void* ptr, const char* func, const char* file, int line)
     AllocStore.Allocations--;
 }
 
-void* _MemoryAlloc(size_t size, const char* func, const char* file, int line)
+void* MemoryAllocDebug(int size, const char* func, const char* file, int line)
 {
+    DebugAssert(size > 0, "Request size must be greater than 0.");
+
     AllocStore.AllocCalled++;
 
-    void* ptr = malloc(size);
+    void* ptr = malloc((size_t)size);
     AddAlloc(ptr, size, func, file, line);
     return ptr;
 }
 
-void* _MemoryRealloc(void* ptr, size_t size, const char* func, const char* file, int line)
+void* MemoryReallocDebug(void* ptr, int size, const char* func, const char* file, int line)
 {
+    DebugAssert(size > 0, "Request size must be greater than 0.");
+
     AllocStore.ReallocCalled++;
 
-    void* newPtr = realloc(ptr, size);
+    void* newPtr = realloc(ptr, (size_t)size);
     if (ptr == nullptr)
     {
         AddAlloc(newPtr, size, func, file, line);
@@ -211,7 +212,7 @@ void* _MemoryRealloc(void* ptr, size_t size, const char* func, const char* file,
     return newPtr;
 }
 
-void _MemoryFree(void* ptr, const char* func, const char* file, int line)
+void MemoryFreeDebug(void* ptr, const char* func, const char* file, int line)
 {
     //DebugAssert(ptr != nullptr, "Attempt free nullptr at %s:%d:%s", func, file, line);
     AllocStore.FreeCalled++;
@@ -313,14 +314,14 @@ void ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags flags)
 }
 // END OF #if !defined(NDEBUG)
 #else
-void* MemoryAlloc(size_t size)
+void* MemoryAlloc(int size)
 {
-    return malloc(size);
+    return malloc((size_t)size);
 }
 
-void* MemoryRealloc(void* ptr, size_t size)
+void* MemoryRealloc(void* ptr, int size)
 {
-    return realloc(ptr, size);
+    return realloc(ptr, (size_t)size);
 }
 
 void MemoryFree(void* ptr)

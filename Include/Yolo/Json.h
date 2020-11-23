@@ -48,8 +48,8 @@ struct Json
 
 namespace JsonOps
 {
-    Json*       Parse(String content);
-    Json*       Parse(const char* content, I32 contentLength);
+    Json*       Parse(const char* content);
+    Json*       Parse(const char* content, int contentLength);
 
     void        Release(Json* rootValue);
 
@@ -58,6 +58,6 @@ namespace JsonOps
 
     bool        Equals(Json a, Json b);
 
-    Json        Find(Json x, String name);
+    Json        Find(Json x, const char* name);
     Json        Find(Json x, U64 hash);
 }

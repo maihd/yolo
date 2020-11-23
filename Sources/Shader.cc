@@ -4,7 +4,7 @@
 
 namespace ShaderOps
 {
-    static Handle CreateGLShader(GLenum shaderType, String source)
+    static Handle CreateGLShader(GLenum shaderType, const char* source)
     {
         Handle shader = glCreateShader(shaderType);
         if (!shader)
@@ -12,7 +12,7 @@ namespace ShaderOps
             return 0;
         }
 
-        glShaderSource(shader, 1, &source.Buffer, 0);
+        glShaderSource(shader, 1, &source, 0);
         glCompileShader(shader);
 
         int status = 0;
@@ -28,12 +28,12 @@ namespace ShaderOps
         return shader;
     }
 
-    Shader Load(String vertexFile, String pixelsFile)
+    Shader Load(const char* vertexFile, const char* pixelsFile)
     {
         return Shader{ 0 };
     }
 
-    Shader Compile(String vertexSource, String pixelsSource)
+    Shader Compile(const char* vertexSource, const char* pixelsSource)
     {
         Handle vertexShader = CreateGLShader(GL_VERTEX_SHADER, vertexSource);
         Handle pixelsShader = CreateGLShader(GL_FRAGMENT_SHADER, pixelsSource);

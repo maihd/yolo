@@ -4,6 +4,6 @@
 
 namespace FontOps
 {
-    Font Load(String path, float size);
+    Font Load(const char* path, float fontSize);
     void Free(Font* font);
 }
