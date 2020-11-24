@@ -78,8 +78,10 @@ do
 
     filedirs {
         "Include/Yolo",
+        "Include/Yolo/Heap",
 
         "Sources",
+        "Sources/Heap",
         "Sources/Imgui",
     }
 
