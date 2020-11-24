@@ -191,6 +191,7 @@
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
     <ClInclude Include="..\Include\Yolo\Heap\CrtMalloc.h" />
     <ClInclude Include="..\Include\Yolo\Heap\PagedFreeList.h" />
+    <ClInclude Include="..\Include\Yolo\Heap\PagedHeap.h" />
     <ClInclude Include="..\Include\Yolo\Heap\SizeHeap.h" />
     <ClInclude Include="..\Include\Yolo\Heap\StrictSegHeap.h" />
     <ClInclude Include="..\Include\Yolo\HotDylib.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="..\Sources\Font.cc" />
     <ClCompile Include="..\Sources\Graphics.cc" />
     <ClCompile Include="..\Sources\Heap\PagedFreeList.cpp" />
+    <ClCompile Include="..\Sources\Heap\PagedHeap.cpp" />
     <ClCompile Include="..\Sources\HotDylib.cc" />
     <ClCompile Include="..\Sources\Imgui\imgui.cpp" />
     <ClCompile Include="..\Sources\Imgui\imgui_draw.cpp" />

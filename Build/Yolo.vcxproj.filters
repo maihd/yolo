@@ -57,6 +57,9 @@
     <ClInclude Include="..\Include\Yolo\Heap\PagedFreeList.h">
       <Filter>Include\Yolo\Heap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Heap\PagedHeap.h">
+      <Filter>Include\Yolo\Heap</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Heap\SizeHeap.h">
       <Filter>Include\Yolo\Heap</Filter>
     </ClInclude>
@@ -189,6 +192,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Heap\PagedFreeList.cpp">
+      <Filter>Sources\Heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Heap\PagedHeap.cpp">
       <Filter>Sources\Heap</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\HotDylib.cc">

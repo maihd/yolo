@@ -3,7 +3,7 @@
 #include <Yolo/Memory.h>
 
 #include <Yolo/Heap/SizeHeap.h>
-#include <Yolo/Heap/CrtMalloc.h>
+#include <Yolo/Heap/PagedHeap.h>
 #include <Yolo/Heap/PagedFreeList.h>
 #include <Yolo/Heap/StrictSegHeap.h>
 
@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static StrictSegHeap<10, StrictSegHeapTraits, SizeHeap<PagedFreeList>, SizeHeap<CrtMalloc>> GlobalHeap;
+static StrictSegHeap<10, StrictSegHeapTraits, SizeHeap<PagedFreeList>, SizeHeap<PagedHeap>> GlobalHeap;
 
 #if !defined(NDEBUG)
 

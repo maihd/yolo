@@ -5,9 +5,9 @@
 // --------------------------------------
 
 #if !defined(NDEBUG)
-#define MemoryAlloc(size)              MemoryAllocDebug(size, __FUNCTION__, __FILE__, __LINE__)
-#define MemoryRealloc(ptr, size)       MemoryReallocDebug(ptr, size, __FUNCTION__, __FILE__, __LINE__)
-#define MemoryFree(ptr)                MemoryFreeDebug(ptr, __FUNCTION__, __FILE__, __LINE__)
+#define MemoryAlloc(size)           MemoryAllocDebug(size, __FUNCTION__, __FILE__, __LINE__)
+#define MemoryRealloc(ptr, size)    MemoryReallocDebug(ptr, size, __FUNCTION__, __FILE__, __LINE__)
+#define MemoryFree(ptr)             MemoryFreeDebug(ptr, __FUNCTION__, __FILE__, __LINE__)
 
 void* MemoryAllocDebug(int size, const char* func, const char* file, int line);
 void* MemoryReallocDebug(void* ptr, int size, const char* func, const char* file, int line);
