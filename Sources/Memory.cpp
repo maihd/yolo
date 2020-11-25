@@ -312,3 +312,30 @@ void ImGui::DumpMemoryAllocs(void)
 }
 #endif
 
+// ------------------------------------
+// Memory system information functions
+// ------------------------------------
+
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+int MemoryPageSize(void)
+{
+    SYSTEM_INFO systemInfo;
+    GetSystemInfo(&systemInfo);
+    return (int)systemInfo.dwPageSize;
+}
+
+#elif defined(__unix__)
+#include <unistd.h>
+int MemoryPageSize(void)
+{
+    return getpagesize();
+}
+#else
+int MemoryPageSize(void)
+{
+    return 4096;
+}
+#endif

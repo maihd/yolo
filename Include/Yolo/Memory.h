@@ -35,3 +35,9 @@ namespace ImGui
     // Open an debug window to view your memory allocations
     void DumpMemoryAllocs(ImGuiDumpMemoryFlags flags);
 }
+
+// ------------------------------------
+// Memory system information functions
+// ------------------------------------
+
+int MemoryPageSize(void);

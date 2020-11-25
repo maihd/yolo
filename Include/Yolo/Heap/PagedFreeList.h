@@ -15,16 +15,19 @@ struct PagedFreeList
         Page* Next;
     };
 
-    void*   FreeItem;
-    int     ItemSize;
+    Item*   FreeItem;
+    Page*   AllocedPages;
 
     void*   Alloc(int size);
     void    Free(void* ptr);
     int     GetSize(void* ptr) const;
 
-    inline PagedFreeList()
+            ~PagedFreeList();
+
+    inline  PagedFreeList()
         : FreeItem(nullptr)
-        , ItemSize(0)
+        , AllocedPages(nullptr)
     {
     }
+
 };

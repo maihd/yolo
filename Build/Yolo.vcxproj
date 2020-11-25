@@ -249,7 +249,7 @@
     <ClCompile Include="..\Sources\Internal.cc" />
     <ClCompile Include="..\Sources\Job.cc" />
     <ClCompile Include="..\Sources\Json.cc" />
-    <ClCompile Include="..\Sources\Memory.cc" />
+    <ClCompile Include="..\Sources\Memory.cpp" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
     <ClCompile Include="..\Sources\Shader.cc" />
