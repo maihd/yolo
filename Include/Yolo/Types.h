@@ -114,10 +114,6 @@ struct Matrix4
 };
 #endif
 
-// ----------------------
-// Common types
-// ----------------------
-
 struct Rectangle
 {
     float x;
@@ -125,6 +121,10 @@ struct Rectangle
     float width;
     float height;
 };
+
+// ----------------------
+// Common types
+// ----------------------
 
 // String containers
 // Useful for storing string data in other structure
@@ -146,33 +146,33 @@ struct String
 template <typename T>
 struct Array
 {
-    int count;
-    int capacity;
-    T*  elements;
+    T*  Items;
+    int Count;
+    int Capacity;
 };
 
 template <typename T>
 struct HashTable
 {
-    int         count;
-    int         capacity;
+    int         Count;
+    int         Capacity;
 
-    int*        hashs;
-    int         hashCount;
+    int*        Hashs;
+    int         HashCount;
 
-    int*        nexts;
-    U64*        keys;
-    T*          values;
+    int*        Nexts;
+    U64*        Keys;
+    T*          Values;
 };
 
 template <typename TKey, typename TValue>
 struct OrderedTable
 {
-    int         count;
-    int         capacity;
+    int         Count;
+    int         Capacity;
 
-    TKey*       keys;
-    TValue*     values;
+    TKey*       Keys;
+    TValue*     Values;
 };
 
 // ----------------------
@@ -278,53 +278,54 @@ enum struct BufferUsage
 
 struct VertexArray
 {
-    Handle handle;
-    Handle indexBuffer;
-    Handle vertexBuffer;
+    U32 Handle;
+    U32 IndexBuffer;
+    U32 VertexBuffer;
 };
 
 struct Texture
 {
-    Handle      handle;
-    PixelFormat format;
+    U32         Handle;
+    PixelFormat Format;
 
-    float         width;
-    float         height;
+    float       Width;
+    float       Height;
 };
 
 struct Shader
 {
-    Handle  handle;
+    U32         Handle;
 };
 
 struct FontGlyph
 {
-    I32     value;
+    I32     Value;
 
-    float     x0, y0;
-    float     x1, y1;
+    float   X0, Y0;
+    float   X1, Y1;
 
-    float     u0, v0;
-    float     u1, v1;
+    float   U0, V0;
+    float   U1, V1;
 
-    float     advance;
+    float   Advance;
 };
 
 struct Font
 {
-    float                 size;
-    Array<FontGlyph>    glyphs;
+    float               Size;
+    Array<FontGlyph>    Glyphs;
 
-    Texture             texture;
+    Texture             Texture;
 }; 
 
 struct Sprite
 {
-    Texture     texture;
-    float         x;
-    float         y;
-    float         width;
-    float         height;
+    Texture     Texture;
+
+    float       FrameX;
+    float       FrameY;
+    float       FrameWidth;
+    float       FrameWeight;
 };
 
 // ----------------------
@@ -341,12 +342,12 @@ enum struct AudioFormat
 
 struct AudioBuffer
 {
-    Handle handle;
+    U32 Handle;
 };
 
 struct AudioSource
 {
-    Handle handle;
+    U32 Handle;
 };
 
 // ----------------------
@@ -411,13 +412,15 @@ U64 CalcHash64(const void* buffer, I32 length, U64 seed = 0);
 template <U32 length>
 constexpr U32 ConstHash32(const char(&buffer)[length], U32 seed = 0)
 {
-    U8* target = (U8*)buffer;
+    // Murmur hash: multiply (mu) and rotate (r) x2
+    constexpr U32 mul = 0xcc9e2d51;
+    constexpr U32 rot = 17; // should be prime number
 
-    U64 h = seed;
-
+    const U8* target = (U8*)buffer;
     const U32 l = length - 1;
     const U32 n = (l >> 3) << 3;
 
+    U64 h = seed ^ (l | mul);
     for (U32 i = 0; i < n; i += 4)
     {
         U32 b0 = target[i + 0];
@@ -430,23 +433,25 @@ constexpr U32 ConstHash32(const char(&buffer)[length], U32 seed = 0)
         U32 k = (b0 << 24) | (b1 << 16) | (b2 << 8) | (b3 << 0);
 #endif
 
-        k ^= (k << 12);
-        k ^= (k >> 24);
-        k ^= (k << 15);
+        k *= mul;
+        k ^= (k >> rot);
+        k *= mul;
 
         h ^= k;
+        h *= mul;
     }
 
-    switch (l & 7)
+    switch (l & 3)
     {
     case 3: h ^= (U32)((target + n)[2]) << 16;   /* fall through */
-    case 2: h ^= (U32)((target + n)[1]) << 8;   /* fall through */
-    case 1: h ^= (U32)((target + n)[0]) << 0;   /* fall through */
+    case 2: h ^= (U32)((target + n)[1]) <<  8;   /* fall through */
+    case 1: h ^= (U32)((target + n)[0]) <<  0;   /* fall through */
     };
 
-    h ^= (h << 12);
-    h ^= (h >> 24);
-    h ^= (h << 15);
+    h *= mul;
+    h ^= (h >> rot);
+    h *= mul;
+    h ^= (h >> rot);
 
     return h;
 }
@@ -454,13 +459,16 @@ constexpr U32 ConstHash32(const char(&buffer)[length], U32 seed = 0)
 template <U64 length>
 constexpr U64 ConstHash64(const char (&buffer)[length], U64 seed = 0)
 {
-    U8* target = (U8*)buffer;
+    // Murmur hash: multiply (mu) and rotate (r) x2
+    constexpr U64 mul = 0xc6a4a7935bd1e995ULL;
+    constexpr U64 rot = 47; // should be prime number
 
-    U64 h = seed;
+    const U8* target = (U8*)buffer;
 
     const U32 l = length - 1;
     const U32 n = (l >> 3) << 3;
 
+    U64 h = seed ^ (l | mul);
     for (U32 i = 0; i < n; i += 8)
     {
         U64 b0 = target[i + 0];
@@ -477,11 +485,12 @@ constexpr U64 ConstHash64(const char (&buffer)[length], U64 seed = 0)
         U64 k = (b0 << 56) | (b1 << 48) | (b2 << 40) | (b3 << 32) | (b4 << 24) | (b5 << 16) | (b6 << 8) | (b7 << 0);
 #endif
 
-        k ^= (k << 12);
-        k ^= (k >> 47);
-        k ^= (k << 25);
+        k *= mul;
+        k ^= (k >> rot);
+        k *= mul;
 
         h ^= k;
+        h *= mul;
     }
 
     switch (l & 7)
@@ -495,9 +504,10 @@ constexpr U64 ConstHash64(const char (&buffer)[length], U64 seed = 0)
     case 1: h ^= (U64)((target + n)[0]) <<  0;   /* fall through */
     };
 
-    h ^= (h << 12);
-    h ^= (h >> 47);
-    h ^= (h << 25);
+    h *= mul;
+    h ^= (h >> rot);
+    h *= mul;
+    h ^= (h >> rot);
 
     return h;
 }
@@ -508,11 +518,11 @@ inline U32 CalcHashPtr32(void* ptr, U32 seed = 0)
 
     U32 value = (U32)(uintptr_t)ptr + (seed ^ magic);
     value = ~value + (value << 15);
-    value = value ^ (value >> 12);
-    value = value + (value << 2);
-    value = value ^ (value >> 4);
-    value = value * magic;
-    value = value ^ (value >> 16);
+    value =  value ^ (value >> 13);
+    value =  value + (value << 3);
+    value =  value ^ (value >> 5);
+    value =  value * magic;
+    value =  value ^ (value >> 17);
     return value;
 }
 
@@ -521,11 +531,11 @@ inline U64 CalcHashPtr64(void* ptr, U32 seed = 0)
     const U64 magic = 41142057ULL;
 
     U64 value = (U64)(uintptr_t)ptr + (seed ^ magic);
-    value = ~value + (value << 30);
-    value = value ^ (value >> 24);
-    value = value + (value << 4);
-    value = value ^ (value >> 8);
-    value = value * magic;
-    value = value ^ (value >> 32);
+    value = ~value + (value << 31);
+    value =  value ^ (value >> 23);
+    value =  value + (value << 5);
+    value =  value ^ (value >> 7);
+    value =  value * magic;
+    value =  value ^ (value >> 37);
     return value;
 }

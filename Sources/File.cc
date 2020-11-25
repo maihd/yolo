@@ -35,9 +35,9 @@ namespace FileOps
             if (useSearchPath)
             {
                 char pathBuffer[2048];
-                for (I32 i = 0, n = searchPaths.count; i < n; i++)
+                for (I32 i = 0, n = searchPaths.Count; i < n; i++)
                 {
-                    String searchPath = searchPaths.elements[i];
+                    String searchPath = searchPaths.Items[i];
 
                     ::sprintf(pathBuffer, "%s/%s", searchPath.Buffer, path);
                     if (!PathFileExistsA(pathBuffer))
@@ -61,9 +61,9 @@ namespace FileOps
 
         if (!Exists(path, false))
         {
-            for (I32 i = 0, n = searchPaths.count; i < n; i++)
+            for (I32 i = 0, n = searchPaths.Count; i < n; i++)
             {
-                String searchPath = searchPaths.elements[i];
+                String searchPath = searchPaths.Items[i];
 
                 sprintf(pathBuffer, "%s/%s", searchPath.Buffer, path);
                 if (Exists(pathBuffer, false))

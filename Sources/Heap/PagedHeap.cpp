@@ -1,5 +1,7 @@
+#include <Yolo/Types.h>
 #include <Yolo/Heap/PagedHeap.h>
 
+#include <math.h>
 #include <stdio.h>
 
 #if defined(_WIN32)
@@ -36,4 +38,10 @@ void PagedHeap::Free(void* ptr)
 #elif defined(__unix__)
     munmap(ptr, 0);
 #endif
+}
+
+int PagedHeap::GetSize(void* ptr)
+{
+    DebugAssert(false, "NOT IMPLEMENTED");
+    return 0;
 }

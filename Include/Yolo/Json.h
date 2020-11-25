@@ -32,17 +32,17 @@ enum struct JsonError
 
 struct Json
 {
-    JsonType type;
+    JsonType Type;
     union
     {
-        double          number;
-        bool            boolean;
+        double          Number;
+        bool            Boolean;
 
-        const char*     string;
+        String          String;
 
-        Array<Json>     array;
+        Array<Json>     Array;
 
-        HashTable<Json> object;
+        HashTable<Json> Object;
     };
 };
 

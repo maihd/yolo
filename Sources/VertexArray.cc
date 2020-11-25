@@ -97,18 +97,18 @@ namespace VertexArrayOps
     {
         assert(vertexArray != nullptr);
 
-        glDeleteBuffers(2, &vertexArray->indexBuffer);
-        glDeleteVertexArrays(1, &vertexArray->handle);
+        glDeleteBuffers(2, &vertexArray->IndexBuffer);
+        glDeleteVertexArrays(1, &vertexArray->Handle);
 
-        vertexArray->handle = 0;
-        vertexArray->indexBuffer = 0;
-        vertexArray->vertexBuffer = 0;
+        vertexArray->Handle = 0;
+        vertexArray->IndexBuffer = 0;
+        vertexArray->VertexBuffer = 0;
     }
 
     void SetIndexData(VertexArray vertexArray, const void* data, I32 size, BufferUsage usage)
     {
-        glBindVertexArray(vertexArray.handle);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexArray.indexBuffer);
+        glBindVertexArray(vertexArray.Handle);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexArray.IndexBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)size, data, BufferUsageToGLenum(usage));
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -116,8 +116,8 @@ namespace VertexArrayOps
 
     void SetVertexData(VertexArray vertexArray, const void* data, I32 size, BufferUsage usage)
     {
-        glBindVertexArray(vertexArray.handle);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexArray.vertexBuffer);
+        glBindVertexArray(vertexArray.Handle);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexArray.VertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)size, data, BufferUsageToGLenum(usage));
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -133,8 +133,8 @@ namespace VertexArrayOps
         GLenum typeEnum = DataTypeToGLenum(type);
         GLint  typeComponents = DataTypeComponents(type);
 
-        glBindVertexArray(vertexArray.handle);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexArray.vertexBuffer);
+        glBindVertexArray(vertexArray.Handle);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexArray.VertexBuffer);
 
         glEnableVertexAttribArray((GLuint)location);
         glVertexAttribPointer((GLuint)location, typeComponents, typeEnum, GL_FALSE, stride, (const void*)(GLintptr)offset);

@@ -6,7 +6,7 @@ namespace Random
     {
         I32 result = seed;
 
-        result ^= (result >> 12);
+        result ^= (result >> 13);
         result ^= (result << 17);
         result ^= (result >> 5);
 
@@ -17,12 +17,12 @@ namespace Random
     {
         I64 result = seed;
 
-        result ^= (result >> 12);
+        result ^= (result >> 13);
         result ^= (result << 17);
         result ^= (result >> 5);
-        result ^= (result >> 24);
-        result ^= (result << 34);
-        result ^= (result >> 10);
+        result ^= (result >> 23);
+        result ^= (result << 37);
+        result ^= (result >> 11);
 
         return result;
     }
@@ -31,7 +31,7 @@ namespace Random
     {
         U32 result = seed;
 
-        result ^= (result >> 12);
+        result ^= (result >> 13);
         result ^= (result << 17);
         result ^= (result >> 5);
 
@@ -42,12 +42,12 @@ namespace Random
     {
         U64 result = seed;
 
-        result ^= (result >> 12);
+        result ^= (result >> 13);
         result ^= (result << 17);
         result ^= (result >> 5);
-        result ^= (result >> 24);
-        result ^= (result << 34);
-        result ^= (result >> 10);
+        result ^= (result >> 23);
+        result ^= (result << 37);
+        result ^= (result >> 11);
 
         return result;
     }

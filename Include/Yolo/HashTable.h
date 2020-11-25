@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include <Yolo/Types.h>
+#include <Yolo/Memory.h>
 
 namespace HashTableOps
 {
@@ -28,10 +29,10 @@ namespace HashTableOps
     {
         assert(hashTable);
 
-        free(hashTable->nexts);
-        free(hashTable->hashs);
+        MemoryFree(hashTable->Nexts);
+        MemoryFree(hashTable->Hashs);
 
-        *hashTable = HashTableOps::New<T>(hashTable->hashCount);
+        *hashTable = HashTableOps::New<T>(hashTable->HashCount);
     }
 
     // Clean memory usage
@@ -47,24 +48,24 @@ namespace HashTableOps
     template <typename T>
     inline I32 IndexOf(HashTable<T> hashTable, U64 key, I32* outHash = 0, I32* outPrev = 0)
     {
-        if (!hashTable.hashs || !hashTable.count)
+        if (!hashTable.Hashs || !hashTable.Count)
         {
             return -1;
         }
 
-        I32 hash = (I32)(key % (U64)hashTable.hashCount);
-        I32 curr = hashTable.hashs[hash];
+        I32 hash = (I32)(key % (U64)hashTable.HashCount);
+        I32 curr = hashTable.Hashs[hash];
         I32 prev = -1;
 
         while (curr > -1)
         {
-            if (hashTable.keys[curr] == key)
+            if (hashTable.Keys[curr] == key)
             {
                 break;
             }
 
             prev = curr;
-            curr = hashTable.nexts[curr];
+            curr = hashTable.Nexts[curr];
         }
 
         if (outHash) *outHash = hash;
@@ -84,7 +85,7 @@ namespace HashTableOps
     inline T GetValue(HashTable<T> hashTable, U64 key)
     {
         I32 index = IndexOf(hashTable, key);
-        return hashTable.values[index];
+        return hashTable.Values[index];
     }
 
     // Get value of entry with key
@@ -92,7 +93,7 @@ namespace HashTableOps
     inline T GetValue(HashTable<T> hashTable, U64 key, T defaultValue)
     {
         I32 index = IndexOf(hashTable, key);
-        return (index > -1) ? hashTable.values[index] : defaultValue;
+        return (index > -1) ? hashTable.Values[index] : defaultValue;
     }
 
     // Get value of entry with key. If entry exists return true, false otherwise.
@@ -104,7 +105,7 @@ namespace HashTableOps
         I32 index = IndexOf(hashTable, key);
         if (index > -1)
         {
-            *outValue = hashTable.values[index];
+            *outValue = hashTable.Values[index];
             return true;
         }
         else
@@ -126,25 +127,25 @@ namespace HashTableOps
 
         if (curr < 0)
         {
-            if (!hashTable->hashs)
+            if (hashTable->Hashs == nullptr)
             {
-                hashTable->hashs = (I32*)malloc(sizeof(I32) * hashTable->hashCount);
+                hashTable->Hashs = (I32*)MemoryAlloc(sizeof(I32) * hashTable->HashCount);
                 //assert(hashTable->hashs, "Out of memory");
 
-                for (I32 i = 0; i < hashTable->hashCount; i++)
+                for (I32 i = 0; i < hashTable->HashCount; i++)
                 {
-                    hashTable->hashs[i] = -1;
+                    hashTable->Hashs[i] = -1;
                 }
 
                 // Recalculate hash
                 prev = -1;
-                hash = (I32)(key % (U64)hashTable->hashCount);
+                hash = (I32)(key % (U64)hashTable->HashCount);
             }
 
-            if (hashTable->count + 1 > hashTable->capacity)
+            if (hashTable->Count + 1 > hashTable->Capacity)
             {
-                I32 oldSize = hashTable->capacity;
-                I32 newSize = oldSize | 32;
+                I32 oldSize = hashTable->Capacity;
+                I32 newSize = oldSize > 32 ? oldSize : 32;
 
                 newSize -= 1;
                 newSize |= newSize >> 1;
@@ -156,7 +157,7 @@ namespace HashTableOps
 
                 I32 oldBufferSize = oldSize * (sizeof(I32) + sizeof(U64) + sizeof(T));
                 I32 newBufferSize = newSize * (sizeof(I32) + sizeof(U64) + sizeof(T));
-                U8* buffer = (U8*)realloc(hashTable->nexts, newBufferSize);
+                U8* buffer = (U8*)MemoryRealloc(hashTable->Nexts, newBufferSize);
 
                 if (oldSize > 0)
                 {
@@ -175,29 +176,29 @@ namespace HashTableOps
                     );
                 }
 
-                hashTable->nexts    = (I32*)buffer;
-                hashTable->keys     = (U64*)(hashTable->nexts + newSize);
-                hashTable->values   = (T*)(hashTable->keys + newSize);
+                hashTable->Nexts    = (I32*)buffer;
+                hashTable->Keys     = (U64*)(hashTable->Nexts + newSize);
+                hashTable->Values   = (T*)(hashTable->Keys + newSize);
 
-                hashTable->capacity = newSize;
+                hashTable->Capacity = newSize;
             }
 
-            curr = hashTable->count;
+            curr = hashTable->Count;
             if (prev > -1)
             {
-                hashTable->nexts[prev] = curr;
+                hashTable->Nexts[prev] = curr;
             }
             else
             {
-                hashTable->hashs[hash] = curr;
+                hashTable->Hashs[hash] = curr;
             }
-            hashTable->nexts[curr] = -1;
-            hashTable->keys[curr] = key;
+            hashTable->Nexts[curr] = -1;
+            hashTable->Keys[curr] = key;
 
-            hashTable->count = hashTable->count + 1;
+            hashTable->Count = hashTable->Count + 1;
         }
 
-        *outValueSlot = &hashTable->values[curr];
+        *outValueSlot = &hashTable->Values[curr];
         return true;
     }
 
@@ -253,9 +254,9 @@ namespace HashTableOps
     {
         assert(hashTable);
 
-        if (index > -1 && index < hashTable->count)
+        if (index > -1 && index < hashTable->Count)
         {
-            return Remove(hashTable, hashTable->keys[index]);
+            return Remove(hashTable, hashTable->Keys[index]);
         }
         else
         {
@@ -273,32 +274,32 @@ namespace HashTableOps
         {
             if (prev > -1)
             {
-                hashTable->nexts[prev] = -1;
+                hashTable->Nexts[prev] = -1;
             }
             else
             {
-                hashTable->hashs[hash] = -1;
+                hashTable->Hashs[hash] = -1;
             }
 
             if (curr < hashTable->count - 1)
             {
                 I32 last = hashTable->count - 1;
-                hashTable->nexts[curr]  = hashTable->nexts[last];
-                hashTable->keys[curr]   = hashTable->keys[last];
-                hashTable->values[curr] = hashTable->values[last];
+                hashTable->Nexts[curr]  = hashTable->Nexts[last];
+                hashTable->Keys[curr]   = hashTable->Keys[last];
+                hashTable->Values[curr] = hashTable->Values[last];
 
-                IndexOf(*hashTable, hashTable->keys[curr], &hash, &prev);
+                IndexOf(*hashTable, hashTable->Keys[curr], &hash, &prev);
                 if (prev > -1)
                 {
-                    hashTable->nexts[prev] = curr;
+                    hashTable->Nexts[prev] = curr;
                 }
                 else
                 {
-                    hashTable->hashs[hash] = curr;
+                    hashTable->Hashs[hash] = curr;
                 }
             }
 
-            hashTable->count = hashTable->count - 1;
+            hashTable->Count = hashTable->Count - 1;
             return true;
         }
         else

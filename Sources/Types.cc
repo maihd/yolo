@@ -4,13 +4,15 @@
 
 U32 CalcHash32(const void* buffer, I32 length, U32 seed)
 {
-    U8* target = (U8*)buffer;
+    // Murmur hash: multiply (mu) and rotate (r) x2
+    constexpr U32 mul = 0xcc9e2d51;
+    constexpr U32 rot = 17; // should be prime number
 
-    U32 h = seed;
-
+    const U8* target = (U8*)buffer;
     const U32 l = (U32)length;
     const U32 n = (l >> 2) << 2;
 
+    U32 h = seed ^ (l | mul);
     for (U32 i = 0; i < n; i += 4)
     {
         U32 b0 = target[i + 0];
@@ -23,36 +25,40 @@ U32 CalcHash32(const void* buffer, I32 length, U32 seed)
         U32 k = (b0 << 24) | (b1 << 16) | (b2 << 8) | (b3 << 0);
 #endif
 
-        k ^= (k << 12);
-        k ^= (k >> 24);
-        k ^= (k << 15);
+        k *= mul;
+        k ^= (k >> rot);
+        k *= mul;
 
         h ^= k;
+        h *= mul;
     }
 
-    switch (l & 7)
+    switch (l & 3)
     {
     case 3: h ^= (U32)((target + n)[2]) << 16;   /* fall through */
     case 2: h ^= (U32)((target + n)[1]) << 8;   /* fall through */
     case 1: h ^= (U32)((target + n)[0]) << 0;   /* fall through */
     };
 
-    h ^= (h << 12);
-    h ^= (h >> 24);
-    h ^= (h << 15);
+    h *= mul;
+    h ^= (h >> rot);
+    h *= mul;
+    h ^= (h >> rot);
 
     return h;
 }
 
 U64 CalcHash64(const void* buffer, I32 length, U64 seed)
 {
-    U8* target = (U8*)buffer;
+    // Murmur hash: multiply (mu) and rotate (r) x2
+    constexpr U64 mul = 0xc6a4a7935bd1e995ULL;
+    constexpr U64 rot = 47; // should be prime number
 
-    U64 h = seed;
-
+    const U8* target = (U8*)buffer;
     const U32 l = (U32)length;
     const U32 n = (l >> 3) << 3;
 
+    U64 h = seed ^ (l | mul);
     for (U32 i = 0; i < n; i += 8)
     {
         U64 b0 = target[i + 0];
@@ -69,11 +75,12 @@ U64 CalcHash64(const void* buffer, I32 length, U64 seed)
         U64 k = (b0 << 56) | (b1 << 48) | (b2 << 40) | (b3 << 32) | (b4 << 24) | (b5 << 16) | (b6 << 8) | (b7 << 0);
 #endif
 
-        k ^= (k << 12);
-        k ^= (k >> 47);
-        k ^= (k << 25);
+        k *= mul;
+        k ^= (k >> rot);
+        k *= mul;
 
         h ^= k;
+        h *= mul;
     }
 
     switch (l & 7)
@@ -87,9 +94,10 @@ U64 CalcHash64(const void* buffer, I32 length, U64 seed)
     case 1: h ^= (U64)((target + n)[0]) <<  0;   /* fall through */
     };
 
-    h ^= (h << 12);
-    h ^= (h >> 47);
-    h ^= (h << 25);
+    h *= mul;
+    h ^= (h >> rot);
+    h *= mul;
+    h ^= (h >> rot);
 
     return h;
 }

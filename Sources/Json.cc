@@ -11,6 +11,7 @@
 #include <Yolo/Json.h>
 #include <Yolo/Array.h>
 #include <Yolo/String.h>
+#include <Yolo/Memory.h>
 #include <Yolo/HashTable.h>
 
 #define JSON_SUPEROF(ptr, T, member) (T*)((char*)ptr - offsetof(T, member))
@@ -19,25 +20,25 @@ namespace JsonOps
 {
     struct JsonState
     {
-        Json                root;
-        JsonState*          next;
+        Json                Root;
+        JsonState*          Next;
 
-        int                 line;
-        int                 column;
-        int                 cursor;
-        //JsonType            parsingType;
+        int                 Line;
+        int                 Column;
+        int                 Cursor;
+        //JsonType            ParsingType;
 
-        int                 length;         /* Reference only */
-        const char*         buffer;         /* Reference only */
+        int                 Length;         /* Reference only */
+        const char*         Buffer;         /* Reference only */
 
-        JsonError           errnum;
-        char*               errmsg;
-        jmp_buf             errjmp;
+        JsonError           ErrorCode;
+        char*               ErrorMessage;
+        jmp_buf             ErrorJump;
     };
 
     static void Json_SetErrorArgs(JsonState* state, JsonType type, JsonError code, const char* fmt, va_list valist)
     {
-        const int errmsg_size = 1024;
+        constexpr int ERROR_MESSAGE_SIZE = 1024;
 
         const char* type_name;
         switch (type)
@@ -71,18 +72,18 @@ namespace JsonOps
             break;
         }
 
-        state->errnum = code;
-        if (state->errmsg == NULL)
+        state->ErrorCode = code;
+        if (state->ErrorMessage == nullptr)
         {
-            state->errmsg = (char*)malloc(errmsg_size);
+            state->ErrorMessage = (char*)MemoryAlloc(ERROR_MESSAGE_SIZE);
         }
 
         char final_format[1024];
         char templ_format[1024] = "%s\n\tAt line %d, column %d. Parsing token: <%s>.";
 
 #if defined(_MSC_VER) && _MSC_VER >= 1200
-        sprintf_s(final_format, sizeof(final_format), templ_format, fmt, state->line, state->column, type_name);
-        sprintf_s(state->errmsg, errmsg_size, final_format, valist);
+        sprintf_s(final_format, sizeof(final_format), templ_format, fmt, state->Line, state->Column, type_name);
+        sprintf_s(state->ErrorMessage, ERROR_MESSAGE_SIZE, final_format, valist);
 #else
         sprintf(final_format, templ_format, fmt, state->line, state->column, type_name);
         sprintf(state->errmsg, final_format, valist);
@@ -106,7 +107,7 @@ namespace JsonOps
         Json_SetErrorArgs(state, type, code, fmt, varg);
         va_end(varg);
 
-        longjmp(state->errjmp, (int)code);
+        longjmp(state->ErrorJump, (int)code);
     }
 
     static void Json_ReleaseMemory(Json* value)
@@ -114,22 +115,22 @@ namespace JsonOps
         if (value)
         {
             int i, n;
-            switch (value->type)
+            switch (value->Type)
             {
             case JsonType::Array:
-                for (i = 0, n = value->array.count; i < n; i++)
+                for (i = 0, n = value->Array.Count; i < n; i++)
                 {
-                    Json_ReleaseMemory(&value->array.elements[i]);
+                    Json_ReleaseMemory(&value->Array.Items[i]);
                 }
-                ArrayFree(&value->array);
+                ArrayFree(&value->Array);
                 break;
 
             case JsonType::Object:
-                for (i = 0, n = value->object.count; i < n; i++)
+                for (i = 0, n = value->Object.Count; i < n; i++)
                 {
-                    Json_ReleaseMemory(&value->object.values[i]);
+                    Json_ReleaseMemory(&value->Object.Values[i]);
                 }
-                HashTableOps::Free(&value->object);
+                HashTableOps::Free(&value->Object);
                 break;
 
             case JsonType::String:
@@ -145,19 +146,19 @@ namespace JsonOps
     /* @funcdef: JsonState_Make */
     static JsonState* JsonState_Make(const char* json, int jsonLength)
     {
-        JsonState* state = (JsonState*)malloc(sizeof(JsonState));
+        JsonState* state = (JsonState*)MemoryAlloc(sizeof(JsonState));
         if (state)
         {
-            state->next = NULL;
+            state->Next         = nullptr;
 
-            state->line = 1;
-            state->column = 1;
-            state->cursor = 0;
-            state->buffer = json;
-            state->length = jsonLength;
+            state->Line         = 1;
+            state->Column       = 1;
+            state->Cursor       = 0;
+            state->Buffer       = json;
+            state->Length       = jsonLength;
 
-            state->errmsg = NULL;
-            state->errnum = JsonError::None;
+            state->ErrorCode    = JsonError::None;
+            state->ErrorMessage = nullptr;
         }
         return state;
     }
@@ -167,13 +168,13 @@ namespace JsonOps
     {
         if (state)
         {
-            Json* root = &state->root;
+            Json* root = &state->Root;
             Json_ReleaseMemory(root);
 
-            JsonState* next = state->next;
+            JsonState* next = state->Next;
 
-            free(state->errmsg);
-            free(state);
+            MemoryFree(state->ErrorMessage);
+            MemoryFree(state);
 
             JsonState_Free(next);
         }
@@ -182,13 +183,13 @@ namespace JsonOps
     /* @funcdef: Json_IsEOF */
     static int Json_IsEOF(JsonState* state)
     {
-        return state->cursor >= state->length || state->buffer[state->cursor] <= 0;
+        return state->Cursor >= state->Length || state->Buffer[state->Cursor] <= 0;
     }
 
     /* @funcdef: Json_PeekChar */
     static int Json_PeekChar(JsonState* state)
     {
-        return state->buffer[state->cursor];
+        return state->Buffer[state->Cursor];
     }
 
     /* @funcdef: Json_NextChar */
@@ -200,16 +201,16 @@ namespace JsonOps
         }
         else
         {
-            int c = state->buffer[++state->cursor];
+            int c = state->Buffer[++state->Cursor];
 
             if (c == '\n')
             {
-                state->line++;
-                state->column = 1;
+                state->Line++;
+                state->Column = 1;
             }
             else
             {
-                state->column = state->column + 1;
+                state->Column = state->Column + 1;
             }
 
             return c;
@@ -376,7 +377,7 @@ namespace JsonOps
             else
             {
                 Json value = { JsonType::Number };
-                value.number = sign * number;
+                value.Number = sign * number;
 
                 if (exp)
                 {
@@ -389,11 +390,11 @@ namespace JsonOps
 
                     if (expsgn < 0)
                     {
-                        value.number /= tmp;
+                        value.Number /= tmp;
                     }
                     else
                     {
-                        value.number *= tmp;
+                        value.Number *= tmp;
                     }
                 }
 
@@ -412,7 +413,7 @@ namespace JsonOps
             Array<Json> values = {};
             while (Json_SkipSpace(state) > 0 && Json_PeekChar(state) != ']')
             {
-                if (values.count > 0)
+                if (values.Count > 0)
                 {
                     Json_MatchChar(state, JsonType::Array, ',');
                 }
@@ -426,8 +427,8 @@ namespace JsonOps
             Json_SkipSpace(state);
             Json_MatchChar(state, JsonType::Array, ']');
 
-            outValue->type  = JsonType::Array;
-            outValue->array = values;
+            outValue->Type  = JsonType::Array;
+            outValue->Array = values;
         }
     }
 
@@ -468,20 +469,20 @@ namespace JsonOps
                     c = Json_NextChar(state);
                 }
 
-                const char* token = state->buffer + state->cursor - length;
+                const char* token = state->Buffer + state->Cursor - length;
                 if (length == 4 && strncmp(token, "true", 4) == 0)
                 {
-                    outValue->type = JsonType::Boolean;
-                    outValue->boolean = true;
+                    outValue->Type = JsonType::Boolean;
+                    outValue->Boolean = true;
                 }
                 else if (length == 4 && strncmp(token, "null", 4) == 0)
                 {
-                    outValue->type = JsonType::Null;
+                    outValue->Type = JsonType::Null;
                 }
                 else if (length == 5 && strncmp(token, "false", 5) == 0)
                 {
-                    outValue->type = JsonType::Boolean;
-                    outValue->boolean = false;
+                    outValue->Type = JsonType::Boolean;
+                    outValue->Boolean = false;
                 }
                 else
                 {
@@ -635,8 +636,8 @@ namespace JsonOps
             int length;
             const char* string = Json_ParseStringNoToken(state, &length);
 
-            outValue->type = JsonType::String;
-            outValue->string = string;
+            outValue->Type = JsonType::String;
+            outValue->String = RefString(string, length);
         }
     }
 
@@ -650,7 +651,7 @@ namespace JsonOps
             HashTable<Json> values = HashTableOps::New<Json>(64);
             while (Json_SkipSpace(state) > 0 && Json_PeekChar(state) != '}')
             {
-                if (values.count > 0)
+                if (values.Count > 0)
                 {
                     Json_MatchChar(state, JsonType::Object, ',');
                 }
@@ -675,8 +676,8 @@ namespace JsonOps
             Json_SkipSpace(state);
             Json_MatchChar(state, JsonType::Object, '}');
 
-            outValue->type   = JsonType::Object;
-            outValue->object = values;
+            outValue->Type   = JsonType::Object;
+            outValue->Object = values;
         }
     }
 
@@ -691,9 +692,9 @@ namespace JsonOps
 
         if (Json_SkipSpace(state) == '{')
         {
-            if (setjmp(state->errjmp) == 0)
+            if (setjmp(state->ErrorJump) == 0)
             {
-                Json_ParseObject(state, &state->root);
+                Json_ParseObject(state, &state->Root);
 
                 Json_SkipSpace(state);
                 if (!Json_IsEOF(state))
@@ -701,7 +702,7 @@ namespace JsonOps
                     Json_Panic(state, JsonType::Null, JsonError::Format, "JSON is not well-formed. JSON is start with <object>.");
                 }
 
-                return &state->root;
+                return &state->Root;
             }
             else
             {
@@ -710,9 +711,9 @@ namespace JsonOps
         }
         else if (Json_SkipSpace(state) == '[')
         {
-            if (setjmp(state->errjmp) == 0)
+            if (setjmp(state->ErrorJump) == 0)
             {
-                Json_ParseArray(state, &state->root);
+                Json_ParseArray(state, &state->Root);
 
                 Json_SkipSpace(state);
                 if (!Json_IsEOF(state))
@@ -720,7 +721,7 @@ namespace JsonOps
                     Json_Panic(state, JsonType::Null, JsonError::Format, "JSON is not well-formed. JSON is start with <array>.");
                 }
 
-                return &state->root;
+                return &state->Root;
             }
             else
             {
@@ -756,7 +757,7 @@ namespace JsonOps
     {
         if (rootValue)
         {
-            JsonState* state = JSON_SUPEROF(rootValue, JsonState, root);
+            JsonState* state = JSON_SUPEROF(rootValue, JsonState, Root);
             JsonState_Free(state);
         }
     }
@@ -765,8 +766,8 @@ namespace JsonOps
     {
         if (rootValue)
         {
-            JsonState* state = JSON_SUPEROF(rootValue, JsonState, root);
-            return state->errnum;
+            JsonState* state = JSON_SUPEROF(rootValue, JsonState, Root);
+            return state->ErrorCode;
         }
 
         return JsonError::None;
@@ -776,8 +777,8 @@ namespace JsonOps
     {
         if (rootValue)
         {
-            JsonState* state = JSON_SUPEROF(rootValue, JsonState, root);
-            return state->errmsg;
+            JsonState* state = JSON_SUPEROF(rootValue, JsonState, Root);
+            return state->ErrorMessage;
         }
 
         return "";
@@ -787,28 +788,28 @@ namespace JsonOps
     {
         int i, n;
 
-        if (a.type != b.type)
+        if (a.Type != b.Type)
         {
             return false;
         }
 
-        switch (a.type)
+        switch (a.Type)
         {
         case JsonType::Null:
             return true;
 
         case JsonType::Number:
-            return a.number == b.number;
+            return a.Number == b.Number;
 
         case JsonType::Boolean:
-            return a.boolean == b.boolean;
+            return a.Boolean == b.Boolean;
 
         case JsonType::Array:
-            if ((n = a.array.count) == b.array.count)
+            if ((n = a.Array.Count) == b.Array.Count)
             {
                 for (i = 0; i < n; i++)
                 {
-                    if (!Equals(a.array.elements[i], b.array.elements[i]))
+                    if (!Equals(a.Array.Items[i], b.Array.Items[i]))
                     {
                         return false;
                     }
@@ -817,16 +818,16 @@ namespace JsonOps
             return true;
 
         case JsonType::Object:
-            if ((n = a.object.count) == b.object.count)
+            if ((n = a.Object.Count) == b.Object.Count)
             {
                 for (i = 0; i < n; i++)
                 {
-                    if (a.object.keys[i] != b.object.keys[i])
+                    if (a.Object.Keys[i] != b.Object.Keys[i])
                     {
                         return false;
                     }
 
-                    if (!Equals(a.object.values[i], b.object.values[i]))
+                    if (!Equals(a.Object.Values[i], b.Object.Values[i]))
                     {
                         return false;
                     }
@@ -835,7 +836,7 @@ namespace JsonOps
             return true;
 
         case JsonType::String:
-            return a.string == b.string;
+            return a.String == b.String;
         }
 
         return false;
@@ -848,12 +849,12 @@ namespace JsonOps
 
     Json Find(Json obj, U64 hash)
     {
-        if (obj.type == JsonType::Object)
+        if (obj.Type == JsonType::Object)
         {
-            int index = HashTableOps::IndexOf(obj.object, hash);
+            int index = HashTableOps::IndexOf(obj.Object, hash);
             if (index > -1)
             {
-                return obj.object.values[index];
+                return obj.Object.Values[index];
             }
         }
 

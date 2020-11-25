@@ -54,7 +54,7 @@ namespace DrawSpriteBufferOps
     {
         drawSpriteBuffer->shouldUpdate = true;
 
-        U16 startIndex = (U16)drawSpriteBuffer->vertices.count;
+        U16 startIndex = (U16)drawSpriteBuffer->vertices.Count;
         ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
         ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
         ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
@@ -76,7 +76,7 @@ namespace DrawSpriteBufferOps
     {
         drawSpriteBuffer->shouldUpdate = true;
 
-        U16 startIndex = (U16)drawSpriteBuffer->vertices.count;
+        U16 startIndex = (U16)drawSpriteBuffer->vertices.Count;
         ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 0));
         ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 1));
         ArrayPush(&drawSpriteBuffer->indices, (U16)(startIndex + 2));
@@ -90,9 +90,9 @@ namespace DrawSpriteBufferOps
         ArrayPush(&drawSpriteBuffer->vertices, v3);
 
         bool addNewCommand = true;
-        if (drawSpriteBuffer->commands.count > 0)
+        if (drawSpriteBuffer->commands.Count > 0)
         {
-            DrawSpriteBuffer::Command* command = &drawSpriteBuffer->commands.elements[drawSpriteBuffer->commands.count - 1];
+            DrawSpriteBuffer::Command* command = &drawSpriteBuffer->commands.Items[drawSpriteBuffer->commands.Count - 1];
             if (ShouldAppendCommand(*command, texture))
             {
                 command->indexCount += 6;
@@ -124,12 +124,12 @@ namespace DrawSpriteBufferOps
 
     void AddTexture(DrawSpriteBuffer* drawSpriteBuffer, Texture texture, Vector2 position, float rotation, Vector2 scale, Vector4 color, Vector2 pivot)
     {
-        Matrix4 transform = Matrix4Transform2D(position, rotation, scale, pivot * Vector2{ (float)texture.width, (float)texture.height });
+        Matrix4 transform = Matrix4Transform2D(position, rotation, scale, pivot * Vector2{ (float)texture.Width, (float)texture.Height });
 
         Vector3 pos0 = mul(transform, Vector3{ 0, 0 });
-        Vector3 pos1 = mul(transform, Vector3{ 0, (float)texture.height });
-        Vector3 pos2 = mul(transform, Vector3{ (float)texture.width, (float)texture.height });
-        Vector3 pos3 = mul(transform, Vector3{ (float)texture.width, 0 });
+        Vector3 pos1 = mul(transform, Vector3{ 0, (float)texture.Height });
+        Vector3 pos2 = mul(transform, Vector3{ (float)texture.Width, (float)texture.Height });
+        Vector3 pos3 = mul(transform, Vector3{ (float)texture.Width, 0 });
 
         VertexColor v0 = {
             pos0,
@@ -155,7 +155,7 @@ namespace DrawSpriteBufferOps
             color,
         };
 
-        AddQuad(drawSpriteBuffer, v0, v1, v2, v3, texture.handle);
+        AddQuad(drawSpriteBuffer, v0, v1, v2, v3, texture.Handle);
     }
 
     void UpdateBuffers(DrawSpriteBuffer* drawSpriteBuffer)
@@ -166,8 +166,8 @@ namespace DrawSpriteBufferOps
         {
             drawSpriteBuffer->shouldUpdate = false;
 
-            VertexArrayOps::SetIndexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->indices.elements, ArraySizeInBytes(drawSpriteBuffer->indices), BufferUsage::StreamDraw);
-            VertexArrayOps::SetVertexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->vertices.elements, ArraySizeInBytes(drawSpriteBuffer->vertices), BufferUsage::StreamDraw);
+            VertexArrayOps::SetIndexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->indices.Items, ArraySizeInBytes(drawSpriteBuffer->indices), BufferUsage::StreamDraw);
+            VertexArrayOps::SetVertexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->vertices.Items, ArraySizeInBytes(drawSpriteBuffer->vertices), BufferUsage::StreamDraw);
         }
     }
 
@@ -177,17 +177,17 @@ namespace DrawSpriteBufferOps
 
         Matrix4 model = Matrix4Translation(0, 0, 0);
 
-        glUseProgram(shader.handle);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (float*)&model);
+        glUseProgram(shader.Handle);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Handle, "projection"), 1, false, (float*)&projection);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Handle, "model"), 1, false, (float*)&model);
 
-        glBindVertexArray(drawSpriteBuffer->vertexArray.handle);
-        glBindBuffer(GL_ARRAY_BUFFER, drawSpriteBuffer->vertexArray.vertexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawSpriteBuffer->vertexArray.indexBuffer);
+        glBindVertexArray(drawSpriteBuffer->vertexArray.Handle);
+        glBindBuffer(GL_ARRAY_BUFFER, drawSpriteBuffer->vertexArray.VertexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawSpriteBuffer->vertexArray.IndexBuffer);
 
-        for (I32 i = 0, n = drawSpriteBuffer->commands.count; i < n; i++)
+        for (I32 i = 0, n = drawSpriteBuffer->commands.Count; i < n; i++)
         {
-            DrawSpriteBuffer::Command command = drawSpriteBuffer->commands.elements[i];
+            DrawSpriteBuffer::Command command = drawSpriteBuffer->commands.Items[i];
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, command.textureHandle);

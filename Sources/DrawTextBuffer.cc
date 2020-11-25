@@ -80,11 +80,11 @@ void DrawTextBuffer::UpdateBuffers(DrawTextBuffer* drawBuffer)
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, drawBuffer->vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, ArraySizeInBytes(drawBuffer->vertices), drawBuffer->vertices.elements, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, ArraySizeInBytes(drawBuffer->vertices), drawBuffer->vertices.Items, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer->indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, ArraySizeInBytes(drawBuffer->indices), drawBuffer->indices.elements, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, ArraySizeInBytes(drawBuffer->indices), drawBuffer->indices.Items, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }
@@ -102,17 +102,17 @@ void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, const char* text, F
             drawTextBuffer->shouldUpdate = true;
 
             I32 c = text[i];
-            if (c > 0 && c < font.glyphs.count)
+            if (c > 0 && c < font.Glyphs.Count)
             {
-                FontGlyph glyph = font.glyphs.elements[c];
+                FontGlyph glyph = font.Glyphs.Items[c];
 
-                Vector2 pos0 = Vector2{ advanceX + glyph.x0, advanceY + glyph.y0 };
-                Vector2 pos1 = Vector2{ advanceX + glyph.x1, advanceY + glyph.y1 };
+                Vector2 pos0 = Vector2{ advanceX + glyph.X0, advanceY + glyph.Y0 };
+                Vector2 pos1 = Vector2{ advanceX + glyph.X1, advanceY + glyph.Y1 };
 
-                Vector2 uv0 = Vector2{ glyph.u0, glyph.v0 };
-                Vector2 uv1 = Vector2{ glyph.u1, glyph.v1 };
+                Vector2 uv0 = Vector2{ glyph.U0, glyph.V0 };
+                Vector2 uv1 = Vector2{ glyph.U1, glyph.V1 };
 
-                const U16 startIndex = (U16)drawTextBuffer->vertices.count;
+                const U16 startIndex = (U16)drawTextBuffer->vertices.Count;
                 ArrayPush(&drawTextBuffer->indices, (U16)(startIndex + 0));
                 ArrayPush(&drawTextBuffer->indices, (U16)(startIndex + 1));
                 ArrayPush(&drawTextBuffer->indices, (U16)(startIndex + 2));
@@ -125,7 +125,7 @@ void DrawTextBuffer::AddText(DrawTextBuffer* drawTextBuffer, const char* text, F
                 ArrayPush(&drawTextBuffer->vertices, Vertex{ pos1.x, pos1.y, 0.0f, uv1.x, uv1.y });
                 ArrayPush(&drawTextBuffer->vertices, Vertex{ pos1.x, pos0.y, 0.0f, uv1.x, uv0.y });
 
-                advanceX += glyph.advance;
+                advanceX += glyph.Advance;
                 advanceY += 0;
             }
         }

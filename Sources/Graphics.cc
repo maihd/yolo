@@ -316,15 +316,15 @@ namespace Graphics
 
         Matrix4 model = Matrix4Translation(0, 0);
 
-        glUseProgram(shader.handle);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (float*)&model);
+        glUseProgram(shader.Handle);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Handle, "projection"), 1, false, (float*)&projection);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Handle, "model"), 1, false, (float*)&model);
 
-        glBindVertexArray(drawBuffer.VertexArray.handle);
-        glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.VertexArray.vertexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.VertexArray.indexBuffer);
+        glBindVertexArray(drawBuffer.VertexArray.Handle);
+        glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.VertexArray.VertexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.VertexArray.IndexBuffer);
 
-        GLsizei indexCount = drawBuffer.Indices.count;
+        GLsizei indexCount = drawBuffer.Indices.Count;
         glDrawElements(drawMode, indexCount, GL_UNSIGNED_SHORT, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -449,10 +449,10 @@ namespace Graphics
 
         Matrix4 model = mul(Matrix4Translation(position), Matrix4Scalation(1.0f, -1.0f));
 
-        glUseProgram(fontShader.handle);
+        glUseProgram(fontShader.Handle);
 
-        I32 projectionLocation = glGetUniformLocation(shader.handle, "projection");
-        I32 modelLocation = glGetUniformLocation(shader.handle, "model");
+        I32 projectionLocation = glGetUniformLocation(shader.Handle, "projection");
+        I32 modelLocation = glGetUniformLocation(shader.Handle, "model");
         glUniformMatrix4fv(projectionLocation, 1, false, (float*)&projection);
         glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
 
@@ -461,9 +461,9 @@ namespace Graphics
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawTextBuffer.indexBuffer);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, font.texture.handle);
+        glBindTexture(GL_TEXTURE_2D, font.Texture.Handle);
 
-        I32 indexCount = drawTextBuffer.indices.count;
+        I32 indexCount = drawTextBuffer.indices.Count;
         glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0);
 
         glBindTexture(GL_TEXTURE_2D, 0);

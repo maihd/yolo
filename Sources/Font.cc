@@ -99,9 +99,9 @@ namespace FontOps
     {
         assert(font);
 
-        ArrayFree(&font->glyphs);
-        TextureOps::Free(&font->texture);
+        ArrayFree(&font->Glyphs);
+        TextureOps::Free(&font->Texture);
 
-        font->size = 0;
+        font->Size = 0;
     }
 }

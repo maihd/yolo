@@ -85,10 +85,10 @@ namespace TextureOps
     {
         assert(texture);
 
-        glDeleteTextures(1, &texture->handle);
+        glDeleteTextures(1, &texture->Handle);
 
-        texture->width = 0;
-        texture->height = 0;
-        texture->handle = 0;
+        texture->Width  = 0;
+        texture->Height = 0;
+        texture->Handle = 0;
     }
 }

@@ -35,7 +35,7 @@ void DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v
 {
     assert(drawBuffer);
 
-    U16 startIndex = (U16)drawBuffer->Vertices.count;
+    U16 startIndex = (U16)drawBuffer->Vertices.Count;
     ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 0u));
     ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 1u));
     ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 2u));
@@ -51,7 +51,7 @@ void DrawBufferAddTriangle(DrawBuffer* drawBuffer, Array<VertexShape> vertices)
 {
     assert(drawBuffer);
 
-    DrawBufferAddTriangle(drawBuffer, vertices.elements, vertices.count);
+    DrawBufferAddTriangle(drawBuffer, vertices.Items, vertices.Count);
 }
 
 void DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, I32 count)
@@ -84,8 +84,8 @@ void DrawBufferUpdateBuffers(DrawBuffer* drawBuffer)
     {
         drawBuffer->ShouldUpdate = false;
 
-        VertexArrayOps::SetIndexData(drawBuffer->VertexArray, drawBuffer->Indices.elements, ArraySizeInBytes(drawBuffer->Indices), BufferUsage::StreamDraw);
-        VertexArrayOps::SetVertexData(drawBuffer->VertexArray, drawBuffer->Vertices.elements, ArraySizeInBytes(drawBuffer->Vertices), BufferUsage::StreamDraw);
+        VertexArrayOps::SetIndexData(drawBuffer->VertexArray, drawBuffer->Indices.Items, ArraySizeInBytes(drawBuffer->Indices), BufferUsage::StreamDraw);
+        VertexArrayOps::SetVertexData(drawBuffer->VertexArray, drawBuffer->Vertices.Items, ArraySizeInBytes(drawBuffer->Vertices), BufferUsage::StreamDraw);
     }
 }
 
@@ -136,7 +136,7 @@ void DrawBufferAddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float ra
             { position.x + cosf(angle) * radius, position.y + sinf(angle) * radius },
         };
 
-        const U16 index = (U16)drawBuffer->Vertices.count;
+        const U16 index = (U16)drawBuffer->Vertices.Count;
         ArrayPush(&drawBuffer->Indices, index);
         ArrayPush(&drawBuffer->Vertices, v);
     }
@@ -160,7 +160,7 @@ void DrawBufferAddRectangle(DrawBuffer* drawBuffer, Vector2 position, Vector2 si
         { position.x + size.x, position.y },
     };
 
-    const U16 startIndex = (U16)drawBuffer->Vertices.count;
+    const U16 startIndex = (U16)drawBuffer->Vertices.Count;
     ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 0u));
     ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 1u));
     ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 2u));
@@ -194,7 +194,7 @@ void DrawBufferAddRectangleLines(DrawBuffer* drawBuffer, Vector2 position, Vecto
         { position.x + size.x, position.y },
     };
 
-    const U16 startIndex = (U16)drawBuffer->Vertices.count;
+    const U16 startIndex = (U16)drawBuffer->Vertices.Count;
     ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 0u));
     ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 1u));
     ArrayPush(&drawBuffer->Indices, (U16)(startIndex + 2u));

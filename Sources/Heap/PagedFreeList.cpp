@@ -42,3 +42,9 @@ void PagedFreeList::Free(void* ptr)
     *((void**)ptr) = FreeItem;
     FreeItem = ptr;
 }
+
+int PagedFreeList::GetSize(void* ptr) const
+{
+    DebugAssert(false, "NOT IMPLEMENTED");
+    return 0;
+}
