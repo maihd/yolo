@@ -7,7 +7,8 @@
 // Main functions
 // -------------------------------
 
-String MakeString(void* buffer, int bufferSize, const char* content);
+String MakeString(void* buffer, int bufferSize);
+String MakeString(void* buffer, int bufferSize, const char* source);
 
 String SaveString(String source);
 String SaveString(const char* source);

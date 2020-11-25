@@ -134,7 +134,7 @@ namespace JsonOps
                 break;
 
             case JsonType::String:
-                //free((void*)value->string);
+                FreeString(&value->String);
                 break;
 
             default:
@@ -508,7 +508,8 @@ namespace JsonOps
         int i;
         int c0, c1;
 
-        //JsonTempArray(char, 2048) buffer = JsonTempArray_Init(NULL);
+        char buffer[2048];
+        int length = 0;
         while (!Json_IsEOF(state) && (c0 = Json_PeekChar(state)) != '"')
         {
             if (c0 == '\\')
@@ -517,27 +518,27 @@ namespace JsonOps
                 switch (c0)
                 {
                 case 'n':
-                    //JsonTempArray_Push(&buffer, '\n', &state->allocator);
+                    buffer[length++] = '\n';
                     break;
 
                 case 't':
-                    //JsonTempArray_Push(&buffer, '\t', &state->allocator);
+                    buffer[length++] = '\t';
                     break;
 
                 case 'r':
-                    //JsonTempArray_Push(&buffer, '\r', &state->allocator);
+                    buffer[length++] = '\r';
                     break;
 
                 case 'b':
-                    //JsonTempArray_Push(&buffer, '\b', &state->allocator);
+                    buffer[length++] = '\b';
                     break;
 
                 case '\\':
-                    //JsonTempArray_Push(&buffer, '\\', &state->allocator);
+                    buffer[length++] = '\\';
                     break;
 
                 case '"':
-                    //JsonTempArray_Push(&buffer, '\"', &state->allocator);
+                    buffer[length++] = '\"';
                     break;
 
                 case 'u':
@@ -550,29 +551,29 @@ namespace JsonOps
                         }
                         else
                         {
-                            //Json_Panic(state, JsonType::String, JSON_ERROR_UNKNOWN, "Expected hexa character in unicode character");
+                            Json_Panic(state, JsonType::String, JsonError::UnknownToken, "Expected hexa character in unicode character");
                         }
                     }
 
                     if (c1 <= 0x7F)
                     {
-                        //JsonTempArray_Push(&buffer, (char)c1, &state->allocator);
+                        buffer[length++] = c1;
                     }
                     else if (c1 <= 0x7FF)
                     {
                         char c2 = (char)(0xC0 | (c1 >> 6));            /* 110xxxxx */
                         char c3 = (char)(0x80 | (c1 & 0x3F));          /* 10xxxxxx */
-                        //JsonTempArray_Push(&buffer, c2, &state->allocator);
-                        //JsonTempArray_Push(&buffer, c3, &state->allocator);
+                        buffer[length++] = c2;
+                        buffer[length++] = c3;
                     }
                     else if (c1 <= 0xFFFF)
                     {
                         char c2 = (char)(0xE0 | (c1 >> 12));           /* 1110xxxx */
                         char c3 = (char)(0x80 | ((c1 >> 6) & 0x3F));   /* 10xxxxxx */
                         char c4 = (char)(0x80 | (c1 & 0x3F));          /* 10xxxxxx */
-                        //JsonTempArray_Push(&buffer, c2, &state->allocator);
-                        //JsonTempArray_Push(&buffer, c3, &state->allocator);
-                        //JsonTempArray_Push(&buffer, c4, &state->allocator);
+                        buffer[length++] = c2;
+                        buffer[length++] = c3;
+                        buffer[length++] = c4;
                     }
                     else if (c1 <= 0x10FFFF)
                     {
@@ -580,15 +581,15 @@ namespace JsonOps
                         char c3 = 0x80 | ((c1 >> 12) & 0x3F);  /* 10xxxxxx */
                         char c4 = 0x80 | ((c1 >> 6) & 0x3F);   /* 10xxxxxx */
                         char c5 = 0x80 | (c1 & 0x3F);          /* 10xxxxxx */
-                        //JsonTempArray_Push(&buffer, c2, &state->allocator);
-                        //JsonTempArray_Push(&buffer, c3, &state->allocator);
-                        //JsonTempArray_Push(&buffer, c4, &state->allocator);
-                        //JsonTempArray_Push(&buffer, c5, &state->allocator);
+                        buffer[length++] = c2;
+                        buffer[length++] = c3;
+                        buffer[length++] = c4;
+                        buffer[length++] = c5;
                     }
                     break;
 
                 default:
-                    //Json_Panic(state, JsonType::String, JSON_ERROR_UNKNOWN, "Unknown escape character");
+                    Json_Panic(state, JsonType::String, JsonError::UnknownToken, "Unknown escape character");
                     break;
                 }
             }
@@ -598,11 +599,11 @@ namespace JsonOps
                 {
                 case '\r':
                 case '\n':
-                    //Json_Panic(state, JsonType::String, JsonError::UnexpectedToken, "Unexpected newline characters '%c'", c0);
+                    Json_Panic(state, JsonType::String, JsonError::UnexpectedToken, "Unexpected newline characters '%c'", c0);
                     break;
 
                 default:
-                    //JsonTempArray_Push(&buffer, (char)c0, &state->allocator);
+                    buffer[length++] = (char)c0;
                     break;
                 }
             }
@@ -611,21 +612,22 @@ namespace JsonOps
         }
 
         Json_MatchChar(state, JsonType::String, '"');
-        //if (buffer.count > 0)
-        //{
-        //    if (outLength) *outLength = JsonTempArray_GetCount(&buffer);
-        //    JsonTempArray_Push(&buffer, 0, &state->allocator);
-        //
-        //    char* string = (char*)JsonTempArray_ToBuffer(&buffer, &state->allocator);
-        //    JsonTempArray_Free(&buffer, &state->allocator);
-        //
-        //    return string;
-        //}
-        //else
-        //{
-        //    if (outLength) *outLength = 0;
-        //    return NULL;
-        //}
+        if (length > 0)
+        {
+            buffer[length++] = '\0';
+
+            if (outLength) *outLength = length;
+            
+            char* string = (char*)MemoryAlloc(length + 1);
+            memcpy(string, buffer, length + 1);
+        
+            return string;
+        }
+        else
+        {
+            if (outLength) *outLength = 0;
+            return "";
+        }
     }
 
     /* @funcdef: Json_ParseString */
@@ -634,10 +636,10 @@ namespace JsonOps
         if (Json_SkipSpace(state) > 0)
         {
             int length;
-            const char* string = Json_ParseStringNoToken(state, &length);
+            char* string = Json_ParseStringNoToken(state, &length);
 
             outValue->Type = JsonType::String;
-            outValue->String = RefString(string, length);
+            outValue->String = MakeString(string, length);
         }
     }
 
