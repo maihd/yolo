@@ -2,26 +2,41 @@
 
 #include <Yolo/Types.h>
 
-namespace FileOps
-{
-    void        AddSearchPath(const char* path);
-    void        RemoveSearchPath(const char* path);
+// ------------------------------
+// File system
+// ------------------------------
 
-    bool        Exists(const char* path, bool useSearchPath = true);
-    const char* GetFullPath(const char* expectPath);
+void        AddFileSearchPath(const char* path);
+void        RemoveFileSearchPath(const char* path);
 
-    File        Open(const char* path, FileMode mode);
-    void        Close(File file);
+bool        FileExists(const char* path, bool useSearchPath = true);
+const char* GetFullPath(const char* expectPath);
 
-    I32         GetSize(File file);
-    I32         GetSize(const char* path);
+// ------------------------------
+// Bassic on files
+// ------------------------------
 
-    I64         GetSize64(File file);
-    I64         GetSize64(const char* path);
+File        OpenFile(const char* path, FileMode mode);
+void        CloseFile(File file);
 
-    I32         Read(File file, void* buffer, I32 length);
-    I32         Write(File file, const void* buffer, I32 length);
+I32         GetFileSize(File file);
+I32         GetFileSize(const char* path);
 
-    I32         Read64(File file, void* buffer, I64 length);
-    I32         Write64(File file, const void* buffer, I64 length);
-}
+I64         GetFileSize64(File file);
+I64         GetFileSize64(const char* path);
+
+I32         FileRead(File file, void* buffer, I32 length);
+I32         FileWrite(File file, const void* buffer, I32 length);
+
+I64         FileRead64(File file, void* buffer, I64 length);
+I64         FileWrite64(File file, const void* buffer, I64 length);
+
+// ------------------------------
+// Extensions & helpers
+// ------------------------------
+
+Buffer      LoadFileData(File file);
+Buffer      LoadFileData(const char* path);
+
+Buffer64    LoadFileData64(File file);
+Buffer64    LoadFileData64(const char* path);

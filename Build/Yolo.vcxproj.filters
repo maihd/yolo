@@ -254,9 +254,6 @@
     <ClCompile Include="..\Sources\Time.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Types.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\VertexArray.cc">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -267,6 +264,9 @@
       <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Memory.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Core.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

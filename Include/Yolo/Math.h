@@ -10,27 +10,27 @@
 #define MATH_TYPES_DEFINED
 struct Vector2
 {
-    float x, y;
+    float       x, y;
 };
 
 struct Vector3
 {
-    float x, y, z;
+    float       x, y, z;
 };
 
 struct Vector4
 {
-    float x, y, z, w;
+    float       x, y, z, w;
 };
 
 struct Quaternion
 {
-    float x, y, z, w;
+    float       x, y, z, w;
 };
 
 struct Matrix4
 {
-    float data[4][4];
+    float       data[4][4];
 };
 #endif
 

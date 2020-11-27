@@ -259,7 +259,7 @@
     <ClCompile Include="..\Sources\String.cc" />
     <ClCompile Include="..\Sources\Texture.cc" />
     <ClCompile Include="..\Sources\Time.cc" />
-    <ClCompile Include="..\Sources\Types.cc" />
+    <ClCompile Include="..\Sources\Core.cpp" />
     <ClCompile Include="..\Sources\VertexArray.cc" />
     <ClCompile Include="..\Sources\Window.cc" />
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />

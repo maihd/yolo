@@ -41,17 +41,20 @@
 // ----------------------
 
 #ifndef NDEBUG
-#define DebugAssert(test, format, ...)                                                  \
-    do {                                                                                \
-        if (!(test)) {                                                                  \
-            DebugPrint(#test, __FUNCTION__, __FILE__, __LINE__, format, ##__VA_ARGS__); \
-            __debugbreak();                                                             \
-        }                                                                               \
+#define DebugPrint(format, ...) DebugPrintInternal(__FUNCTION__, __FILE__, __LINE__, format, ##__VA_ARGS__)
+#define DebugAssert(test, format, ...)                                                          \
+    do {                                                                                        \
+        if (!(test)) {                                                                          \
+            DebugAssertReport(#test, __FUNCTION__, __FILE__, __LINE__, format, ##__VA_ARGS__);  \
+            __debugbreak();                                                                     \
+        }                                                                                       \
     } while (0)
 
-void DebugPrint(const char* test, const char* func, const char* file, int line, const char* format, ...);
+void DebugAssertReport(const char* test, const char* func, const char* file, int line, const char* format, ...);
+void DebugPrintInternal(const char* func, const char* file, int line, const char* format, ...);
 #else
-#define DebugAssert(test, format, ...) ((void)0)
+#define DebugPrint(format, ...)         ((void)0)
+#define DebugAssert(test, format, ...)  ((void)0)
 #endif
 
 // ----------------------
@@ -90,53 +93,112 @@ using ArgList = va_list;
 #define MATH_TYPES_DEFINED
 struct Vector2
 {
-    float x, y;
+    float       x, y;
 };
 
 struct Vector3
 {
-    float x, y, z;
+    float       x, y, z;
 };
 
 struct Vector4
 {
-    float x, y, z, w;
+    float       x, y, z, w;
 };
 
 struct Quaternion
 {
-    float x, y, z, w;
+    float       x, y, z, w;
 };
 
 struct Matrix4
 {
-    float data[4][4];
+    float       data[4][4];
 };
 #endif
 
 struct Rectangle
 {
-    float x;
-    float y;
-    float width;
-    float height;
+    float       x;
+    float       y;
+    float       width;
+    float       height;
 };
 
 // ----------------------
 // Common types
 // ----------------------
 
-// String containers
+struct Buffer
+{
+    U8*         Data;
+    I32         Size;
+};
+
+struct Buffer64
+{
+    U8*         Data;
+    I64         Size;
+};
+
+// String buffer container
 // Useful for storing string data in other structure
 // and manage ownership, checking for memory location
 struct String
 {
     const char* Buffer;
-    int         Length;
+    I32         Length;
 
-    int         Alloced : 30;
-    int         IsOwned : 1;
-    int         IsStatic : 1;
+    I32         Alloced : 30;
+    I32         IsOwned : 1;
+    I32         IsStatic : 1;
+};
+
+// Const string wrapper
+struct ConstCharPtr
+{
+    const char* Data;
+    
+    inline ConstCharPtr(const char* data)
+        : Data(data)
+    {
+    }
+};
+
+// String reference
+// Useful for storing string data in other structure
+// and manage ownership, checking for memory location
+struct StringRef
+{
+    const char* Buffer;
+    I32         Length : 30;
+    I32         IsOwned : 1;
+    I32         IsStatic : 1;
+
+    template <I32 length>
+    constexpr StringRef(const char(&buffer)[length])
+        : Buffer(buffer)
+        , Length(length)
+        , IsOwned(false)
+        , IsStatic(true)
+    {
+    }
+
+    inline StringRef(ConstCharPtr buffer)
+        : Buffer(buffer.Data)
+        , Length(-1)
+        , IsOwned(false)
+        , IsStatic(false)
+    {
+    }
+
+    inline StringRef(String string)
+        : Buffer(string.Buffer)
+        , Length(string.Length)
+        , IsOwned(string.IsOwned)
+        , IsStatic(string.IsStatic)
+    {
+    }
 };
 
 // ----------------------
@@ -146,21 +208,21 @@ struct String
 template <typename T>
 struct Array
 {
-    T*  Items;
-    int Count;
-    int Capacity;
+    T*          Items;
+    I32         Count;
+    I32         Capacity;
 };
 
 template <typename T>
 struct HashTable
 {
-    int         Count;
-    int         Capacity;
+    I32         Count;
+    I32         Capacity;
 
-    int*        Hashs;
-    int         HashCount;
+    I32*        Hashs;
+    I32         HashCount;
 
-    int*        Nexts;
+    I32*        Nexts;
     U64*        Keys;
     T*          Values;
 };
@@ -168,8 +230,8 @@ struct HashTable
 template <typename TKey, typename TValue>
 struct OrderedTable
 {
-    int         Count;
-    int         Capacity;
+    I32         Count;
+    I32         Capacity;
 
     TKey*       Keys;
     TValue*     Values;
@@ -375,7 +437,7 @@ constexpr I32 CountOf(const T(&_)[count])
     return count;
 }
 
-inline I32 NextPOT(I32 x)
+inline I32 NextPOTwosI32(I32 x)
 {
     I32 result = x - 1;
 
@@ -388,7 +450,7 @@ inline I32 NextPOT(I32 x)
     return result + 1;
 }
 
-inline I64 NextPOT(I64 x)
+inline I64 NextPOTwosI64(I64 x)
 {
     I64 result = x - 1;
 

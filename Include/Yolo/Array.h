@@ -178,7 +178,7 @@ inline bool ArrayResize(Array<T>* array, int capacity)
     }
 
     int oldCapacity = array->Capacity;
-    int newCapacity = capacity < ARRAY_MIN_CAPACITY ? ARRAY_MIN_CAPACITY : NextPOT(capacity);
+    int newCapacity = capacity < ARRAY_MIN_CAPACITY ? ARRAY_MIN_CAPACITY : NextPOTwosI32(capacity);
 
     T* items = (T*)MemoryRealloc(array->Items, newCapacity * sizeof(T));
     if (items)

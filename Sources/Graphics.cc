@@ -208,21 +208,21 @@ namespace Graphics
 
     void ApplyDefaultSettings(void) 
     {
-        //glEnable(GL_BLEND);
-        //glEnable(GL_TEXTURE);
+        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE);
         //glEnable(GL_DEPTH_TEST);
         //glEnable(GL_STENCIL_TEST);
 
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //glEnable(GL_LINE_SMOOTH);
-        //glEnable(GL_POLYGON_SMOOTH);
+        glEnable(GL_LINE_SMOOTH);
+        glEnable(GL_POLYGON_SMOOTH);
 
-        //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-        //glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
         SetVSync(true);
-        //SetLineWidth(1.0f);
+        SetLineWidth(1.0f);
     }
 
     void CreateDefaultObjects(void)

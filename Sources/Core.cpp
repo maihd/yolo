@@ -102,7 +102,19 @@ U64 CalcHash64(const void* buffer, I32 length, U64 seed)
     return h;
 }
 
-void DebugPrint(const char* test, const char* func, const char* file, int line, const char* format, ...)
+void DebugPrintInternal(const char* func, const char* file, int line, const char* format, ...)
+{
+    printf("[%s:%d:%s] ", file, line, func);
+
+    ArgList arglist;
+    ArgListBegin(arglist, format);
+    vprintf(format, arglist);
+    ArgListEnd(arglist);
+
+    printf("\n");
+}
+
+void DebugAssertReport(const char* test, const char* func, const char* file, int line, const char* format, ...)
 {
     printf("Assertion failed: %s\n", test);
     printf("At %s:%d:%s\n\n", file, line, func);
@@ -111,4 +123,6 @@ void DebugPrint(const char* test, const char* func, const char* file, int line, 
     ArgListBegin(arglist, format);
     vprintf(format, arglist);
     ArgListEnd(arglist);
+
+    printf("\n");
 }
