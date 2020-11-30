@@ -8,7 +8,7 @@
 
 #include <Yolo/File.h>
 #include <Yolo/String.h>
-#include <Yolo/Texture.h>
+#include <Yolo/Graphics.h>
 #include <Yolo/HashTable.h>
 
 static HashTable<Texture> loadedTextures = MakeHashTable<Texture>(64);

@@ -1,7 +1,5 @@
 #include <Yolo/Math.h>
 #include <Yolo/Time.h>
-#include <Yolo/Font.h>
-#include <Yolo/Texture.h>
 
 #include <Yolo/String.h>
 #include <Yolo/Window.h>

@@ -7,10 +7,9 @@
 #include <stb_truetype.h>
 
 #include <Yolo/File.h>
-#include <Yolo/Font.h>
 #include <Yolo/Array.h>
 #include <Yolo/Memory.h>
-#include <Yolo/Texture.h>
+#include <Yolo/Graphics.h>
 
 Font LoadFont(const char* path, float size)
 {

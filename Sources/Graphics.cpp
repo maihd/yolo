@@ -1,10 +1,8 @@
-#include <Yolo/Graphics.h>
-
 #include <Yolo/Math.h>
 #include <Yolo/Time.h>
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
-#include <Yolo/Shader.h>
+#include <Yolo/Graphics.h>
 
 #include "./Internal.h"
 #include "./SpriteMesh.h"
@@ -149,10 +147,10 @@ namespace Graphics
         float height = (float)WindowHeight();
 
         projection = Matrix4Ortho(0, width, 0, height, 0.0f, 100.0f);
-        shader = ShaderOps::Compile(vshaderSource, fshaderSource);
+        shader = CompileShader(vshaderSource, fshaderSource);
 
-        fontShader = ShaderOps::Compile(fontVertexSource, fontPixelSource);
-        spriteShader = ShaderOps::Compile(spriteVertexSource, spritePixelSource);
+        fontShader = CompileShader(fontVertexSource, fontPixelSource);
+        spriteShader = CompileShader(spriteVertexSource, spritePixelSource);
 
         spriteMesh = SpriteMesh::New();
         drawBuffer = DrawBufferNew();

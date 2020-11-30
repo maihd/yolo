@@ -2,6 +2,17 @@
 
 #include <Yolo/Core.h>
 
+Texture MakeTexture(const void* pixels, I32 width, I32 height, PixelFormat pixelsFormat = PixelFormat::RGBA, PixelFormat textureFormat = PixelFormat::RGBA);
+Texture LoadTexture(const char* path);
+void    FreeTexture(Texture* texture);
+
+Font    LoadFont(const char* path, float fontSize);
+void    FreeFont(Font* font);
+
+Shader  LoadShader(const char* vertexFile, const char* pixelsFile);
+Shader  CompileShader(const char* vertexSource, const char* pixelsSource);
+void    FreeShader(Shader* shader);
+
 namespace Graphics
 {
     void    Clear(void);

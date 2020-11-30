@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Yolo/Core.h>
-#include <Yolo/Shader.h>
 
 #include <GL/glew.h>
 

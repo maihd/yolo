@@ -171,7 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Tests\Main.cc" />
+    <ClCompile Include="..\Tests\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Yolo.vcxproj">

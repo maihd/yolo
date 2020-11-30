@@ -42,9 +42,6 @@
     <ClInclude Include="..\Include\Yolo\File.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Font.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Graphics.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -93,9 +90,6 @@
     <ClInclude Include="..\Include\Yolo\Random.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Shader.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Shapes.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -106,9 +100,6 @@
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\String.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Texture.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\Time.h">
@@ -218,9 +209,6 @@
     <ClCompile Include="..\Sources\Random.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Shader.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\Sprite.cc">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -260,13 +248,16 @@
     <ClCompile Include="..\Sources\Json.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Texture.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\Font.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\File.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Graphics_Texture.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Graphics_Font.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Graphics_Shader.cc">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
