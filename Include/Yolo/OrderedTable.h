@@ -2,8 +2,3 @@
 
 #include <Yolo/Types.h>
 
-namespace OrderedTableOps
-{
-
-};
-

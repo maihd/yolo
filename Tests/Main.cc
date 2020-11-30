@@ -56,12 +56,12 @@ int main(void)
     float posX = 0;
     Texture texture2 = TextureOps::Load("../Assets/character.png");
 
-    HashTable<int> hashTable = HashTableOps::New<int>();
-    HashTableOps::SetValue(&hashTable, ConstHash64("ten"), 10);
+    HashTable<int> hashTable = MakeHashTable<int>();
+    HashTableSetValue(&hashTable, ConstHash64("ten"), 10);
 
-    int value = HashTableOps::GetValue(hashTable, ConstHash64("ten"));
+    int value = HashTableGetValue(hashTable, ConstHash64("ten"));
 
-    HashTableOps::Free(&hashTable);
+    FreeHashTable(&hashTable);
 
     Graphics::SetVSync(true);
 
@@ -93,6 +93,7 @@ int main(void)
         TimeUpdateAndSleep(60);
     }
 
+    FontOps::Free(&font);
     Graphics::Quit();
     CloseWindow();
     return 0;

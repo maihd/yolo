@@ -43,7 +43,7 @@ constexpr String ConstString(const char(&buffer)[LENGTH])
     result.Buffer   = buffer;
     result.Length   = LENGTH;
     result.IsOwned  = false;
-    result.IsStatic = true;
+    result.IsConst = true;
     result.Alloced  = 0;
     return result;
 }

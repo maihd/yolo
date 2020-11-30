@@ -129,7 +129,7 @@ namespace JsonOps
                 {
                     Json_ReleaseMemory(&value->object.values[i]);
                 }
-                HashTableOps::Free(&value->object);
+                FreeHashTable(&value->object);
                 break;
 
             case JsonType::String:
@@ -647,7 +647,7 @@ namespace JsonOps
         {
             Json_MatchChar(state, JsonType::Object, '{');
 
-            HashTable<Json> values = HashTableOps::New<Json>(64);
+            HashTable<Json> values = MakeHashTable<Json>(64);
             while (Json_SkipSpace(state) > 0 && Json_PeekChar(state) != '}')
             {
                 if (values.count > 0)
@@ -669,7 +669,7 @@ namespace JsonOps
                 Json value;
                 Json_ParseSingle(state, &value);
 
-                HashTableOps::SetValue(&values, CalcHash64(name, nameLength), value);
+                HashTableSetValue(&values, CalcHash64(name, nameLength), value);
             }
 
             Json_SkipSpace(state);
@@ -850,7 +850,7 @@ namespace JsonOps
     {
         if (obj.type == JsonType::Object)
         {
-            int index = HashTableOps::IndexOf(obj.object, hash);
+            int index = HashTableIndexOf(obj.object, hash);
             if (index > -1)
             {
                 return obj.object.values[index];

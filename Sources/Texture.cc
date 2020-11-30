@@ -13,7 +13,7 @@
 
 namespace TextureOps
 {
-    static HashTable<Texture> loadedTextures = HashTableOps::New<Texture>(64);
+    static HashTable<Texture> loadedTextures = MakeHashTable<Texture>(64);
 
     static GLenum PixelFormatToGLenum(PixelFormat value)
     {
@@ -58,7 +58,7 @@ namespace TextureOps
         U64 textureHash = CalcHash64(fullPath, (int)strlen(fullPath));
 
         Texture cachedTexture;
-        if (HashTableOps::TryGetValue(loadedTextures, textureHash, &cachedTexture))
+        if (HashTableTryGetValue(loadedTextures, textureHash, &cachedTexture))
         {
             return cachedTexture;
         }
@@ -77,7 +77,7 @@ namespace TextureOps
 
         stbi_image_free(pixels);
 
-        HashTableOps::SetValue(&loadedTextures, textureHash, texture);
+        HashTableSetValue(&loadedTextures, textureHash, texture);
         return texture;
     }
 

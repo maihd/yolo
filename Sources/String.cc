@@ -24,7 +24,7 @@ String MakeString(void* buffer, int bufferSize, const char* source = "")
 
 String SaveString(String source)
 {
-    if (source.IsStatic)
+    if (source.IsConst)
     {
         return source;
     }
@@ -167,7 +167,7 @@ String SubString(String source, I32 start, I32 end)
 
     if (end < 0)
     {
-        return { source.Buffer + start, source.Length - start, source.IsOwned, source.Alloced, source.IsStatic };
+        return { source.Buffer + start, source.Length - start, source.IsOwned, source.Alloced, source.IsConst };
     }
     else
     {

@@ -136,7 +136,7 @@ struct String
 
     int         Alloced : 30;
     int         IsOwned : 1;
-    int         IsStatic : 1;
+    int         IsConst : 1;
 };
 
 // ----------------------
