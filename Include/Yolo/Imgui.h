@@ -42,7 +42,7 @@ Index of this file:
 // Configuration
 //-----------------------------------------------------------------------------
 
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 #include <Yolo/Memory.h>
 
 #define IM_ASSERT(_EXPR) DebugAssert(_EXPR, "Imgui assertion.")

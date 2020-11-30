@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 #include <GL/wglew.h>
 
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 #include <Yolo/Input.h>
 
 #include <SDL2/SDL.h>

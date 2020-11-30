@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string.h>
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 
 // -------------------------------
 // Main functions

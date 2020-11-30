@@ -1,4 +1,4 @@
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 #include <Yolo/Heap/PagedHeap.h>
 
 #include <math.h>

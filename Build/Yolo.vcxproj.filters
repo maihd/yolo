@@ -117,9 +117,6 @@
     <ClInclude Include="..\Include\Yolo\Tween.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Types.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Vertex.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -167,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SpriteMesh.h">
       <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Core.h">
+      <Filter>Include\Yolo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

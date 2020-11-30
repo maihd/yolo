@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 #include <Yolo/Vertex.h>
 
 struct DrawSpriteBuffer

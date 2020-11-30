@@ -4,7 +4,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 #include <Yolo/Memory.h>
 
 // --------------------------------------

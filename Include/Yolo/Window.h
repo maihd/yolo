@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 
 bool    OpenWindow(const char* title, int width, int height);
 void    CloseWindow(void);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 
 U64         GetCpuCounter(void);
 U64         GetCpuFrequency(void);

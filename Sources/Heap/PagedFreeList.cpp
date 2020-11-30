@@ -1,4 +1,4 @@
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 #include <Yolo/Heap/PagedFreeList.h>
 
 #if defined(_WIN32)

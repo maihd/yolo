@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 #include <Yolo/Vertex.h>
 
 struct DrawBuffer
