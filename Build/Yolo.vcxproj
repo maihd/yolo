@@ -234,8 +234,8 @@
     <ClCompile Include="..\Sources\DrawBuffer.cpp" />
     <ClCompile Include="..\Sources\DrawSpriteBuffer.cc" />
     <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
-    <ClCompile Include="..\Sources\File.cc" />
-    <ClCompile Include="..\Sources\Font.cc" />
+    <ClCompile Include="..\Sources\File.cpp" />
+    <ClCompile Include="..\Sources\Font.cpp" />
     <ClCompile Include="..\Sources\Graphics.cpp" />
     <ClCompile Include="..\Sources\Heap\PagedFreeList.cpp" />
     <ClCompile Include="..\Sources\Heap\PagedHeap.cpp" />
@@ -248,7 +248,7 @@
     <ClCompile Include="..\Sources\Input.cc" />
     <ClCompile Include="..\Sources\Internal.cc" />
     <ClCompile Include="..\Sources\Job.cc" />
-    <ClCompile Include="..\Sources\Json.cc" />
+    <ClCompile Include="..\Sources\Json.cpp" />
     <ClCompile Include="..\Sources\Memory.cpp" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
@@ -257,7 +257,7 @@
     <ClCompile Include="..\Sources\SpriteBatch.cc" />
     <ClCompile Include="..\Sources\SpriteMesh.cc" />
     <ClCompile Include="..\Sources\String.cc" />
-    <ClCompile Include="..\Sources\Texture.cc" />
+    <ClCompile Include="..\Sources\Texture.cpp" />
     <ClCompile Include="..\Sources\Time.cc" />
     <ClCompile Include="..\Sources\Core.cpp" />
     <ClCompile Include="..\Sources\VertexArray.cc" />

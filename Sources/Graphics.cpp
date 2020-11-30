@@ -131,11 +131,13 @@ namespace Graphics
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glEnable(GL_LINE_SMOOTH);
-        glEnable(GL_POLYGON_SMOOTH);
+        //glEnable(GL_LINE_SMOOTH);
+        //glEnable(GL_POLYGON_SMOOTH);
 
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+        //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+        //glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         SetVSync(true);
         SetLineWidth(1.0f);
@@ -270,7 +272,7 @@ namespace Graphics
 
     void SetWireframe(bool enable)
     {
-        glPolygonMode(GL_FRONT_AND_BACK, enable ? GL_LINE : GL_FILL);
+        //glPolygonMode(GL_FRONT_AND_BACK, enable ? GL_LINE : GL_FILL);
     }
 
     float GetLineWidth(void)

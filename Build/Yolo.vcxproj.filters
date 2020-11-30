@@ -179,12 +179,6 @@
     <ClCompile Include="..\Sources\DrawTextBuffer.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\File.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\Font.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\Heap\PagedFreeList.cpp">
       <Filter>Sources\Heap</Filter>
     </ClCompile>
@@ -218,9 +212,6 @@
     <ClCompile Include="..\Sources\Job.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Json.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\OpenGL.cc">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -240,9 +231,6 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\String.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\Texture.cc">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Time.cc">
@@ -267,6 +255,18 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\DrawBuffer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Json.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Texture.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Font.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\File.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

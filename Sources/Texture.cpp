@@ -20,7 +20,7 @@ static GLenum PixelFormatToGLenum(PixelFormat value)
     return enums[(I32)value];
 }
 
-Texture NewTexture(const void* pixels, I32 width, I32 height, PixelFormat pixelsFormat, PixelFormat textureFormat)
+Texture MakeTexture(const void* pixels, I32 width, I32 height, PixelFormat pixelsFormat, PixelFormat textureFormat)
 {
     GLuint handle = 0;
     glGenTextures(1, &handle);
@@ -71,13 +71,13 @@ Texture LoadTexture(const char* path)
     PixelFormat pixelsFormat = channel == 4 ? PixelFormat::RGBA : PixelFormat::RGB;
     PixelFormat textureFormat = PixelFormat::RGBA;
 
-    Texture texture = NewTexture(pixels, width, height, pixelsFormat, textureFormat);
+    Texture texture = MakeTexture(pixels, width, height, pixelsFormat, textureFormat);
 
     stbi_image_free(pixels);
 
-        HashTableSetValue(&loadedTextures, textureHash, texture);
-        return texture;
-    }
+    HashTableSetValue(&loadedTextures, textureHash, texture);
+    return texture;
+}
 
 void FreeTexture(Texture* texture)
 {

@@ -46,18 +46,18 @@ struct Json
     };
 };
 
-namespace JsonOps
-{
-    Json*       Parse(const char* content);
-    Json*       Parse(const char* content, int contentLength);
 
-    void        Release(Json* rootValue);
+Json*       LoadJson(const char* filePath);
 
-    JsonError   GetError(const Json* rootValue);
-    const char* GetErrorString(const Json* rootValue);
+Json*       ParseJson(const char* content);
+Json*       ParseJson(const char* content, int contentLength);
 
-    bool        Equals(Json a, Json b);
+void        FreeJson(Json* rootValue);
 
-    Json        Find(Json x, const char* name);
-    Json        Find(Json x, U64 hash);
-}
+JsonError   JsonGetError(const Json* rootValue);
+const char* JsonGetErrorString(const Json* rootValue);
+
+bool        JsonEquals(Json a, Json b);
+
+Json        JsonFind(Json x, const char* name);
+Json        JsonFind(Json x, U64 hash);
