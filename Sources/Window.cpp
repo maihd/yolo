@@ -3,6 +3,7 @@
 
 #include "./Internal.h"
 #include "./Imgui/imgui_impl_sdl.h"
+#include "./Imgui/imgui_impl_opengl3.h"
 
 static KeyCode s_keyCodeMap[2048];
 static KeyCode ConvertKeyCode(int nativeKey)
@@ -154,6 +155,12 @@ static KeyCode ConvertKeyCode(int nativeKey)
     }
 }
 
+namespace Graphics
+{
+    void ApplyDefaultSettings(void);
+    void CreateDefaultObjects(void);
+}
+
 bool OpenWindow(const char* title, int width, int height)
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
@@ -168,13 +175,90 @@ bool OpenWindow(const char* title, int width, int height)
         return false;
     }
 
-    Runtime.MainWindow = window;
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
+    SDL_GLContext graphicsContext = SDL_GL_CreateContext(window);
+    if (!graphicsContext)
+    {
+        SDL_DestroyWindow(window);
+        return false;
+    }
+
+    if (SDL_GL_MakeCurrent(window, graphicsContext) != 0)
+    {
+        SDL_GL_DeleteContext(graphicsContext);
+        SDL_DestroyWindow(window);
+        return false;
+    }
+
+    glewExperimental = false;
+    GLenum glewState = glewInit();
+    if (glewState != GLEW_OK)
+    {
+        SDL_GL_DeleteContext(graphicsContext);
+        SDL_DestroyWindow(window);
+        return false;
+    }
+
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;        // Enable Gamepad Controls
+
+    // Setup Platform/Renderer backends
+    if (!ImGui_ImplSDL2_InitForOpenGL(window, graphicsContext))
+    {
+        SDL_GL_DeleteContext(graphicsContext);
+        SDL_DestroyWindow(window);
+        return false;
+    }
+
+    if (!ImGui_ImplOpenGL3_Init("#version 330"))
+    {
+        SDL_GL_DeleteContext(graphicsContext);
+        SDL_DestroyWindow(window);
+        return false;
+    }
+
     Runtime.ShouldQuit = false;
+    Runtime.MainWindow = window;
+    Runtime.GraphicsContext = graphicsContext;
+
+    // Default settings
+    Graphics::ApplyDefaultSettings();
+    Graphics::CreateDefaultObjects();
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsClassic();
+
+    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
     return true;
 }
 
 void CloseWindow(void)
 {
+    SDL_GL_DeleteContext(Runtime.GraphicsContext);
+    Runtime.GraphicsContext = nullptr;
+
     SDL_DestroyWindow(Runtime.MainWindow);
     Runtime.MainWindow = nullptr;
 }

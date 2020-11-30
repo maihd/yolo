@@ -14,19 +14,19 @@
 constexpr int ARRAY_MIN_CAPACITY = 16;
 
 template <typename T>
-Array<T> ArrayNew(int capacity = 0);
+Array<T> MakeArray(int capacity = 0);
 
 template <typename T>
-Array<T> ArrayNew(const T* buffer, int count);
+Array<T> MakeArray(const T* buffer, int count);
 
 template <typename T>
-T* ArrayNew(const Array<T> array);
+T* MakeArray(const Array<T> array);
 
 template <typename T>
-Array<T> ArrayFill(int capacity, T value);
+Array<T> MakeArray(int capacity, T value);
 
 template <typename T>
-inline void ArrayFree(Array<T>* array);
+void FreeArray(Array<T>* array);
 
 template <typename T>
 int ArraySizeInBytes(const Array<T> array);
@@ -84,7 +84,7 @@ bool ArrayUnorderedRemoveLast(Array<T>* array, T value);
 // --------------------------------------
 
 template <typename T>
-inline Array<T> ArrayNew(int capacity)
+inline Array<T> MakeArray(int capacity)
 {
     if (capacity <= 0)
     {
@@ -97,7 +97,7 @@ inline Array<T> ArrayNew(int capacity)
 }
 
 template <typename T>
-inline Array<T> ArrayNew(const T* buffer, int count)
+inline Array<T> MakeArray(const T* buffer, int count)
 {
     if (!buffer || count <= 0)
     {
@@ -113,7 +113,7 @@ inline Array<T> ArrayNew(const T* buffer, int count)
 }
 
 template <typename T>
-inline T* ArrayNew(const Array<T> array)
+inline T* MakeArray(const Array<T> array)
 {
     if (array.count == 0)
     {
@@ -129,7 +129,7 @@ inline T* ArrayNew(const Array<T> array)
 }
 
 template <typename T>
-inline Array<T> ArrayFill(int capacity, T value)
+inline Array<T> MakeArray(int capacity, T value)
 {
     T* array = Empty();
     if (ArrayEnsure(&array, capacity))
@@ -144,27 +144,27 @@ inline Array<T> ArrayFill(int capacity, T value)
 }
 
 template <typename T>
-inline void ArrayFree(Array<T>* array)
+inline void FreeArray(Array<T>* array)
 {
     DebugAssert(array != nullptr, "The input array is nullptr");
 
-    MemoryFree(array->elements);
+    MemoryFree(array->Items);
 
-    array->count = 0;
-    array->capacity = 0;
-    array->elements = 0;
+    array->Items    = nullptr;
+    array->Count    = 0;
+    array->Capacity = 0;
 }
 
 template <typename T>
 inline int ArraySizeInBytes(const Array<T> array)
 {
-    return array.count * sizeof(T);
+    return array.Count * sizeof(T);
 }
 
 template <typename T>
 inline bool ArrayIsEmpty(const Array<T> array)
 {
-    return array.count == 0;
+    return array.Count == 0;
 }
 
 template <typename T>
@@ -172,19 +172,19 @@ inline bool ArrayResize(Array<T>* array, int capacity)
 {
     DebugAssert(array != nullptr, "The input array is nullptr");
 
-    if (capacity <= array->capacity)
+    if (capacity <= array->Capacity)
     {
         return true;
     }
 
-    int oldCapacity = array->capacity;
-    int newCapacity = capacity < ARRAY_MIN_CAPACITY ? ARRAY_MIN_CAPACITY : NextPOT(capacity);
+    int oldCapacity = array->Capacity;
+    int newCapacity = capacity < ARRAY_MIN_CAPACITY ? ARRAY_MIN_CAPACITY : NextPOTwosI32(capacity);
 
-    T* elements = (T*)MemoryRealloc(array->elements, newCapacity * sizeof(T));
-    if (elements)
+    T* items = (T*)MemoryRealloc(array->Items, newCapacity * sizeof(T));
+    if (items)
     {
-        array->capacity = newCapacity;
-        array->elements = elements;
+        array->Items    = items;
+        array->Capacity = newCapacity;
 
         return true;
     }
@@ -199,25 +199,25 @@ inline bool ArrayEnsure(Array<T>* array, int capacity)
 {
     DebugAssert(array != nullptr, "The input array is nullptr");
 
-    return (array->capacity < capacity) ? ArrayResize(array, capacity) : true;
+    return (array->Capacity < capacity) ? ArrayResize(array, capacity) : true;
 }
 
 template <typename T>
 inline bool ArrayEnsure(const Array<T> array, int capacity)
 {
-    return (array.capacity >= capacity);
+    return (array.Capacity >= capacity);
 }
 
 template <typename T>
-inline int ArrayPush(Array<T>* array, T element)
+inline int ArrayPush(Array<T>* array, T item)
 {
     DebugAssert(array != nullptr, "The input array is nullptr");
 
-    if (ArrayEnsure(array, array->count + 1))
+    if (ArrayEnsure(array, array->Count + 1))
     {
-        int index = array->count++;
-        array->elements[index] = element;
-
+        int index = array->Count;
+        array->Items[index] = item;
+        array->Count++;
         return index;
     }
 
@@ -228,9 +228,9 @@ template <typename T>
 inline T ArrayPop(Array<T>* array)
 {
     DebugAssert(array != nullptr, "The input array is nullptr");
-    DebugAssert(array->count > 0, "Attempt to pop last item from empty array");
+    DebugAssert(array->Count > 0, "Attempt to pop last item from empty array");
 
-    return array->elements[--array->count];
+    return array->Items[--array->Count];
 }
 
 template <typename T>
@@ -238,15 +238,15 @@ inline void ArrayClear(Array<T>* array)
 {
     DebugAssert(array != nullptr, "The input array is nullptr");
 
-    array->count = 0;
+    array->Count = 0;
 }
 
 template <typename T>
 inline int ArrayIndexOf(Array<T> array, T value)
 {
-    for (int i = 0, n = array.count; i < n; i++)
+    for (int i = 0, n = array.Count; i < n; i++)
     {
-        if (array.elements[i] == value)
+        if (array.Items[i] == value)
         {
             return i;
         }
@@ -259,9 +259,9 @@ template <typename T>
 inline int ArrayLastIndexOf(Array<T> array, T value)
 {
     int index = -1;
-    for (int i = 0, n = array.length; i < n; i++)
+    for (int i = 0, n = array.Count; i < n; i++)
     {
-        if (elements[i] == value)
+        if (array.Items[i] == value)
         {
             index = i;
         }
@@ -273,18 +273,20 @@ inline int ArrayLastIndexOf(Array<T> array, T value)
 template <typename T>
 inline bool ArrayErase(Array<T>* array, int index)
 {
-    if (index < 0 || index >= array->count)
+    if (index < 0 || index >= array->Count)
     {
         return false;
     }
     else
     {
-        array->count--;
-        if (index < array->count)
+        if (index < array->Count - 1)
         {
-            memcpy(&array->elements[index], &array->elements[index + 1], (array->count - index - 1) * sizeof(T));
-        }
+            int rangeCount = array->Count - index - 1;
+            int moveCount = rangeCount - 1;
 
+            memmove(&array->Items[index], &array->Items[index + 1], moveCount * sizeof(T));
+        }
+        array->Count--;
         return true;
     }
 }
@@ -293,7 +295,7 @@ template <typename T>
 inline bool ArrayErase(Array<T>* array, int start, int end)
 {
     start = start > -1 ? start : 0;
-    end = end > array->count ? array->count : end;
+    end = (end > array->Count) ? array->Count : end;
 
     int eraseCount = (end - start);
     if (eraseCount <= 0)
@@ -302,12 +304,11 @@ inline bool ArrayErase(Array<T>* array, int start, int end)
     }
     else
     {
-        if (array->count - end > 0)
+        if ((array->Count - end) > 0)
         {
-            memcpy(&array->elements[start], &array->elements[end - 1], (array->count - end) * sizeof(T));
+            memcpy(&array->Items[start], &array->Items[end - 1], (array->Count - end) * sizeof(T));
         }
-        array->count = array->count - eraseCount;
-
+        array->Count = array->Count - eraseCount;
         return true;
     }
 }
@@ -315,18 +316,18 @@ inline bool ArrayErase(Array<T>* array, int start, int end)
 template <typename T>
 inline bool ArrayUnorderedErase(Array<T>* array, int index)
 {
-    if (index < 0 || index >= array->count)
+    if (index < 0 || index >= array->Count)
     {
         return false;
     }
     else
     {
-        array->count--;
-        if (index < array->count)
+        int lastIndex = array->Count - 1;
+        if (index < lastIndex)
         {
-            array->elements[index] = array->elements[array->count];
+            array->Items[index] = array->Items[lastIndex];
         }
-
+        array->Count--;
         return true;
     }
 }

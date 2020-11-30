@@ -189,6 +189,11 @@
     <ClInclude Include="..\Include\Yolo\Font.h" />
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
+    <ClInclude Include="..\Include\Yolo\Heap\CrtMalloc.h" />
+    <ClInclude Include="..\Include\Yolo\Heap\PagedFreeList.h" />
+    <ClInclude Include="..\Include\Yolo\Heap\PagedHeap.h" />
+    <ClInclude Include="..\Include\Yolo\Heap\SizeHeap.h" />
+    <ClInclude Include="..\Include\Yolo\Heap\StrictSegHeap.h" />
     <ClInclude Include="..\Include\Yolo\HotDylib.h" />
     <ClInclude Include="..\Include\Yolo\Imgui.h" />
     <ClInclude Include="..\Include\Yolo\Input.h" />
@@ -226,12 +231,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\Audio.cc" />
-    <ClCompile Include="..\Sources\DrawBuffer.cc" />
+    <ClCompile Include="..\Sources\DrawBuffer.cpp" />
     <ClCompile Include="..\Sources\DrawSpriteBuffer.cc" />
     <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
     <ClCompile Include="..\Sources\File.cc" />
     <ClCompile Include="..\Sources\Font.cc" />
-    <ClCompile Include="..\Sources\Graphics.cc" />
+    <ClCompile Include="..\Sources\Graphics.cpp" />
+    <ClCompile Include="..\Sources\Heap\PagedFreeList.cpp" />
+    <ClCompile Include="..\Sources\Heap\PagedHeap.cpp" />
     <ClCompile Include="..\Sources\HotDylib.cc" />
     <ClCompile Include="..\Sources\Imgui\imgui.cpp" />
     <ClCompile Include="..\Sources\Imgui\imgui_draw.cpp" />
@@ -242,7 +249,7 @@
     <ClCompile Include="..\Sources\Internal.cc" />
     <ClCompile Include="..\Sources\Job.cc" />
     <ClCompile Include="..\Sources\Json.cc" />
-    <ClCompile Include="..\Sources\Memory.cc" />
+    <ClCompile Include="..\Sources\Memory.cpp" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
     <ClCompile Include="..\Sources\Shader.cc" />
@@ -252,9 +259,9 @@
     <ClCompile Include="..\Sources\String.cc" />
     <ClCompile Include="..\Sources\Texture.cc" />
     <ClCompile Include="..\Sources\Time.cc" />
-    <ClCompile Include="..\Sources\Types.cc" />
+    <ClCompile Include="..\Sources\Core.cpp" />
     <ClCompile Include="..\Sources\VertexArray.cc" />
-    <ClCompile Include="..\Sources\Window.cc" />
+    <ClCompile Include="..\Sources\Window.cpp" />
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

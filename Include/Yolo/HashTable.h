@@ -4,21 +4,23 @@
 #include <assert.h>
 
 #include <Yolo/Types.h>
+#include <Yolo/Memory.h>
 
 template <typename T>
 inline HashTable<T> MakeHashTable(I32 hashCount = 64)
 {
-    return HashTable<T>{
+    HashTable<T> result = {
         0,
-            0,
+        0,
 
-            0,
-            hashCount,
+        0,
+        hashCount,
 
-            0,
-            0,
-            0,
+        0,
+        0,
+        0,
     };
+    return result;
 }
 
 template <typename T>
@@ -26,10 +28,10 @@ inline void FreeHashTable(HashTable<T>* hashTable)
 {
     assert(hashTable);
 
-    free(hashTable->nexts);
-    free(hashTable->hashs);
+    MemoryFree(hashTable->Nexts);
+    MemoryFree(hashTable->Hashs);
 
-    *hashTable = MakeHashTable<T>(hashTable->hashCount);
+    *hashTable = MakeHashTable<T>(hashTable->HashCount);
 }
 
 // Clean memory usage
@@ -38,31 +40,31 @@ inline void HashTableClear(HashTable<T>* hashTable)
 {
     assert(hashTable);
 
-    hashTable->count = 0;
+    hashTable->Count = 0;
 }
 
 // Find index of entry with key
 template <typename T>
 inline I32 HashTableIndexOf(HashTable<T> hashTable, U64 key, I32* outHash = 0, I32* outPrev = 0)
 {
-    if (!hashTable.hashs || !hashTable.count)
+    if (!hashTable.Hashs || !hashTable.Count)
     {
         return -1;
     }
 
-    I32 hash = (I32)(key % (U64)hashTable.hashCount);
-    I32 curr = hashTable.hashs[hash];
+    I32 hash = (I32)(key % (U64)hashTable.HashCount);
+    I32 curr = hashTable.Hashs[hash];
     I32 prev = -1;
 
     while (curr > -1)
     {
-        if (hashTable.keys[curr] == key)
+        if (hashTable.Keys[curr] == key)
         {
             break;
         }
 
         prev = curr;
-        curr = hashTable.nexts[curr];
+        curr = hashTable.Nexts[curr];
     }
 
     if (outHash) *outHash = hash;
@@ -82,15 +84,15 @@ template <typename T>
 inline T HashTableGetValue(HashTable<T> hashTable, U64 key)
 {
     I32 index = HashTableIndexOf(hashTable, key);
-    return hashTable.values[index];
+    return hashTable.Values[index];
 }
 
 // Get value of entry with key
 template <typename T>
 inline T HashTableGetValue(HashTable<T> hashTable, U64 key, T defaultValue)
 {
-    I32 index = IndexOf(hashTable, key);
-    return (index > -1) ? hashTable.values[index] : defaultValue;
+    I32 index = HashTableIndexOf(hashTable, key);
+    return (index > -1) ? hashTable.Values[index] : defaultValue;
 }
 
 // Get value of entry with key. If entry exists return true, false otherwise.
@@ -102,7 +104,7 @@ inline bool HashTableTryGetValue(HashTable<T> hashTable, U64 key, T* outValue)
     I32 index = HashTableIndexOf(hashTable, key);
     if (index > -1)
     {
-        *outValue = hashTable.values[index];
+        *outValue = hashTable.Values[index];
         return true;
     }
     else
@@ -123,24 +125,24 @@ inline bool HashTableGetValueOrNewSlot(HashTable<T>* hashTable, U64 key, T** out
     I32 curr = HashTableIndexOf(*hashTable, key, &hash, &prev);
     if (curr < 0)
     {
-        if (!hashTable->hashs)
+        if (!hashTable->Hashs)
         {
-            hashTable->hashs = (I32*)malloc(sizeof(I32) * hashTable->hashCount);
+            hashTable->Hashs = (I32*)MemoryAlloc(sizeof(I32) * hashTable->HashCount);
             //assert(hashTable->hashs, "Out of memory");
 
-            for (I32 i = 0; i < hashTable->hashCount; i++)
+            for (I32 i = 0; i < hashTable->HashCount; i++)
             {
-                hashTable->hashs[i] = -1;
+                hashTable->Hashs[i] = -1;
             }
 
             // Recalculate hash
             prev = -1;
-            hash = (I32)(key % (U64)hashTable->hashCount);
+            hash = (I32)(key % (U64)hashTable->HashCount);
         }
 
-        if (hashTable->count + 1 > hashTable->capacity)
+        if (hashTable->Count + 1 > hashTable->Capacity)
         {
-            I32 oldSize = hashTable->capacity;
+            I32 oldSize = hashTable->Capacity;
             I32 newSize = oldSize | 32;
 
             newSize -= 1;
@@ -153,7 +155,7 @@ inline bool HashTableGetValueOrNewSlot(HashTable<T>* hashTable, U64 key, T** out
 
             I32 oldBufferSize = oldSize * (sizeof(I32) + sizeof(U64) + sizeof(T));
             I32 newBufferSize = newSize * (sizeof(I32) + sizeof(U64) + sizeof(T));
-            U8* buffer = (U8*)realloc(hashTable->nexts, newBufferSize);
+            U8* buffer = (U8*)MemoryRealloc(hashTable->Nexts, newBufferSize);
 
             if (oldSize > 0)
             {
@@ -172,29 +174,29 @@ inline bool HashTableGetValueOrNewSlot(HashTable<T>* hashTable, U64 key, T** out
                 );
             }
 
-            hashTable->nexts = (I32*)buffer;
-            hashTable->keys = (U64*)(hashTable->nexts + newSize);
-            hashTable->values = (T*)(hashTable->keys + newSize);
+            hashTable->Nexts = (I32*)buffer;
+            hashTable->Keys = (U64*)(hashTable->Nexts + newSize);
+            hashTable->Values = (T*)(hashTable->Keys + newSize);
 
-            hashTable->capacity = newSize;
+            hashTable->Capacity = newSize;
         }
 
-        curr = hashTable->count;
+        curr = hashTable->Count;
         if (prev > -1)
         {
-            hashTable->nexts[prev] = curr;
+            hashTable->Nexts[prev] = curr;
         }
         else
         {
-            hashTable->hashs[hash] = curr;
+            hashTable->Hashs[hash] = curr;
         }
-        hashTable->nexts[curr] = -1;
-        hashTable->keys[curr] = key;
+        hashTable->Nexts[curr] = -1;
+        hashTable->Keys[curr] = key;
 
-        hashTable->count = hashTable->count + 1;
+        hashTable->Count = hashTable->Count + 1;
     }
 
-    *outValueSlot = &hashTable->values[curr];
+    *outValueSlot = &hashTable->Values[curr];
     return true;
 }
 
@@ -240,8 +242,8 @@ bool HashTableRemove(HashTable<T>* hashTable, U64 key)
 
     I32 prev;
     I32 hash;
-    I32 curr = IndexOf(*hashTable, key, &hash, &prev);
-    return Erase(hashTable, curr, hash, prev);
+    I32 curr = HashTableIndexOf(*hashTable, key, &hash, &prev);
+    return HashTableErase(hashTable, curr, hash, prev);
 }
 
 // Remove the entry at given index
@@ -252,7 +254,7 @@ inline bool HashTableErase(HashTable<T>* hashTable, I32 index)
 
     if (index > -1 && index < hashTable->count)
     {
-        return Remove(hashTable, hashTable->keys[index]);
+        return HashTableRemove(hashTable, hashTable->keys[index]);
     }
     else
     {
@@ -270,32 +272,32 @@ bool HashTableErase(HashTable<T>* hashTable, I32 curr, I32 hash, I32 prev)
     {
         if (prev > -1)
         {
-            hashTable->nexts[prev] = -1;
+            hashTable->Nexts[prev] = -1;
         }
         else
         {
-            hashTable->hashs[hash] = -1;
+            hashTable->Hashs[hash] = -1;
         }
 
-        if (curr < hashTable->count - 1)
+        if (curr < hashTable->Count - 1)
         {
-            I32 last = hashTable->count - 1;
-            hashTable->nexts[curr] = hashTable->nexts[last];
-            hashTable->keys[curr] = hashTable->keys[last];
-            hashTable->values[curr] = hashTable->values[last];
+            I32 last = hashTable->Count - 1;
+            hashTable->Nexts[curr] = hashTable->Nexts[last];
+            hashTable->Keys[curr] = hashTable->Keys[last];
+            hashTable->Values[curr] = hashTable->Values[last];
 
             IndexOf(*hashTable, hashTable->keys[curr], &hash, &prev);
             if (prev > -1)
             {
-                hashTable->nexts[prev] = curr;
+                hashTable->Nexts[prev] = curr;
             }
             else
             {
-                hashTable->hashs[hash] = curr;
+                hashTable->Nashs[hash] = curr;
             }
         }
 
-        hashTable->count = hashTable->count - 1;
+        hashTable->Count = hashTable->Count - 1;
         return true;
     }
     else

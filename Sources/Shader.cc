@@ -45,18 +45,18 @@ namespace ShaderOps
 
         Shader shader = { glCreateProgram() };
 
-        glAttachShader(shader.handle, vertexShader);
-        glAttachShader(shader.handle, pixelsShader);
-        glLinkProgram(shader.handle);
+        glAttachShader(shader.Handle, vertexShader);
+        glAttachShader(shader.Handle, pixelsShader);
+        glLinkProgram(shader.Handle);
 
         int programStatus;
-        glGetProgramiv(shader.handle, GL_LINK_STATUS, &programStatus);
+        glGetProgramiv(shader.Handle, GL_LINK_STATUS, &programStatus);
         if (!programStatus)
         {
             char infoLog[1024] = "";
-            glGetProgramInfoLog(shader.handle, sizeof(infoLog), 0, infoLog);
-            glDeleteProgram(shader.handle);
-            shader.handle = 0;
+            glGetProgramInfoLog(shader.Handle, sizeof(infoLog), 0, infoLog);
+            glDeleteProgram(shader.Handle);
+            shader.Handle = 0;
         }
 
         glDeleteShader(vertexShader);

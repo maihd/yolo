@@ -4,9 +4,6 @@
 
 namespace Graphics
 {
-    bool    Init(void);
-    void    Quit(void);
-
     void    Clear(void);
 
     Vector4 GetClearColor(void);

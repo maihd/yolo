@@ -17,14 +17,14 @@ namespace JobOps
 
     void UpdateJobs(void)
     {
-        int n = jobs.count;
+        int n = jobs.Count;
         for (int i = 0; i < n; i++)
         {
-            Job job = jobs.elements[i];
+            Job job = jobs.Items[i];
             job.Execute(job.Data);
         }
 
-        if (n == jobs.count)
+        if (n == jobs.Count)
         {
             ArrayClear(&jobs);
         }

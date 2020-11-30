@@ -34,15 +34,15 @@ namespace AudioBufferOps
     AudioBuffer New(const void* data, I32 size, I32 frequency, AudioFormat format)
     {
         AudioBuffer buffer;
-        alGenBuffers(1, &buffer.handle);
-        alBufferData(buffer.handle, ConvertAudioFormat(format), data, size, frequency);
+        alGenBuffers(1, &buffer.Handle);
+        alBufferData(buffer.Handle, ConvertAudioFormat(format), data, size, frequency);
         return buffer;
     }
 
     void Free(AudioBuffer* source)
     {
-        alDeleteBuffers(1, &source->handle);
-        source->handle = 0;
+        alDeleteBuffers(1, &source->Handle);
+        source->Handle = 0;
     }
 }
 
@@ -51,52 +51,52 @@ namespace AudioSourceOps
     AudioSource New(void)
     {
         AudioSource source;
-        alGenSources(1, &source.handle);
+        alGenSources(1, &source.Handle);
 
-        alSourcef(source.handle, AL_GAIN, 1.0f);
-        alSourcef(source.handle, AL_PITCH, 1.0f);
-        alSourcei(source.handle, AL_LOOPING, false);
-        alSource3f(source.handle, AL_POSITION, 0, 0, 0);
-        alSource3f(source.handle, AL_VELOCITY, 0, 0, 0);
+        alSourcef(source.Handle, AL_GAIN, 1.0f);
+        alSourcef(source.Handle, AL_PITCH, 1.0f);
+        alSourcei(source.Handle, AL_LOOPING, false);
+        alSource3f(source.Handle, AL_POSITION, 0, 0, 0);
+        alSource3f(source.Handle, AL_VELOCITY, 0, 0, 0);
 
         return source;
     }
 
     void Free(AudioSource* source)
     {
-        alDeleteSources(1, &source->handle);
+        alDeleteSources(1, &source->Handle);
 
-        source->handle = 0;
+        source->Handle = 0;
     }
 
     void SetGain(AudioSource source, float value)
     {
-        alSourcef(source.handle, AL_GAIN, value);
+        alSourcef(source.Handle, AL_GAIN, value);
     }
 
     void SetPitch(AudioSource source, float value)
     {
-        alSourcef(source.handle, AL_PITCH, value);
+        alSourcef(source.Handle, AL_PITCH, value);
     }
 
     void SetLooping(AudioSource source, bool value)
     {
-        alSourcei(source.handle, AL_LOOPING, value);
+        alSourcei(source.Handle, AL_LOOPING, value);
     }
 
     void SetPosition(AudioSource source, float x, float y, float z)
     {
-        alSource3f(source.handle, AL_POSITION, x, y, z);
+        alSource3f(source.Handle, AL_POSITION, x, y, z);
     }
 
     void SetVelocity(AudioSource source, float x, float y, float z)
     {
-        alSource3f(source.handle, AL_VELOCITY, x, y, z);
+        alSource3f(source.Handle, AL_VELOCITY, x, y, z);
     }
 
     void SetBuffer(AudioSource source, AudioBuffer buffer)
     {
-        alSourcei(source.handle, AL_BUFFER, buffer.handle);
+        alSourcei(source.Handle, AL_BUFFER, buffer.Handle);
 
         ALenum error = alGetError();
         if (error != AL_NO_ERROR)
@@ -107,22 +107,22 @@ namespace AudioSourceOps
 
     void Play(AudioSource source)
     {
-        alSourcePlay(source.handle);
+        alSourcePlay(source.Handle);
     }
 
     void Stop(AudioSource source)
     {
-        alSourceStop(source.handle);
+        alSourceStop(source.Handle);
     }
 
     void Pause(AudioSource source)
     {
-        alSourcePause(source.handle);
+        alSourcePause(source.Handle);
     }
 
     void Resume(AudioSource source)
     {
-        alSourcePlay(source.handle);
+        alSourcePlay(source.Handle);
     }
 }
 

@@ -17,8 +17,6 @@
 
 namespace Graphics
 {
-    static SDL_GLContext    glContext;
-    
     static float            lineWidth;
     static Vector4          clearColor;
 
@@ -35,31 +33,29 @@ namespace Graphics
 
     constexpr const char* vshaderSource =
         "#version 330 core\n"
+
         "layout (location = 0) in vec3 pos;"
-        "layout (location = 1) in vec2 uv;"
-        "layout (location = 2) in vec4 color;"
-        "out vec2 fragUV;"
+        "layout (location = 1) in vec4 color;"
         "out vec4 fragColor;"
+
         "uniform mat4 model;"
         "uniform mat4 projection;"
+
         "void main() {"
-        "fragUV = uv;"
         "fragColor = color;"
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
     constexpr const char* fshaderSource =
-        "#version 330\n"
+        "#version 330 core\n"
 
         "in vec2 fragUV;"
         "in vec4 fragColor;"
 
-        "uniform vec4 color;"
-
         "out vec4 resultColor;"
 
         "void main() {"
-        "resultColor = vec4(1.0);"
+        "resultColor = fragColor;"
         "}";
 
     constexpr const char* spriteVertexSource =
@@ -126,103 +122,23 @@ namespace Graphics
         "resultColor = vec4(1.0, 1.0, 1.0, alpha);"
         "}";
 
-    void ApplyDefaultSettings(void);
-    void CreateDefaultObjects(void);
-   
-    bool Init(void)
-    {
-        // Make sure window is initialized
-        if (!Runtime.MainWindow)
-        {
-            return false;
-        }
-
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-
-        SDL_GLContext context = SDL_GL_CreateContext(Runtime.MainWindow);
-        if (!context)
-        {
-            return false;
-        }
-
-        if (SDL_GL_MakeCurrent(Runtime.MainWindow, context) != 0)
-        {
-            SDL_GL_DeleteContext(context);
-            return false;
-        }
-
-        glewExperimental = false;
-        GLenum glewState = glewInit();
-        if (glewState != GLEW_OK)
-        {
-            SDL_GL_DeleteContext(context);
-            return false;
-        }
-
-        glContext = context;
-
-        // Default settings
-        ApplyDefaultSettings();
-        CreateDefaultObjects();
-
-        // Setup Dear ImGui context
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-        // Setup Dear ImGui style
-        ImGui::StyleColorsDark();
-        //ImGui::StyleColorsClassic();
-
-        // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-        ImGuiStyle& style = ImGui::GetStyle();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            style.WindowRounding = 0.0f;
-            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-        }
-
-        // Setup Platform/Renderer backends
-        ImGui_ImplSDL2_InitForOpenGL(Runtime.MainWindow, glContext);
-        ImGui_ImplOpenGL3_Init("#version 130");
-
-        return true;
-    }
-
-    void Quit(void)
-    {
-        SDL_GL_DeleteContext(glContext);
-        glContext = nullptr;
-    }
-
     void ApplyDefaultSettings(void) 
     {
-        //glEnable(GL_BLEND);
-        //glEnable(GL_TEXTURE);
-        //glEnable(GL_DEPTH_TEST);
-        //glEnable(GL_STENCIL_TEST);
+        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_STENCIL_TEST);
 
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //glEnable(GL_LINE_SMOOTH);
-        //glEnable(GL_POLYGON_SMOOTH);
+        glEnable(GL_LINE_SMOOTH);
+        glEnable(GL_POLYGON_SMOOTH);
 
-        //glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-        //glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
         SetVSync(true);
-        //SetLineWidth(1.0f);
+        SetLineWidth(1.0f);
     }
 
     void CreateDefaultObjects(void)
@@ -250,7 +166,7 @@ namespace Graphics
         glViewport(0, 0, windowWidth, windowHeight);
 
         glClearColor(0, 0, 0, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         // Clear buffers
         DrawSpriteBufferOps::Clear(&drawSpriteBuffer);
@@ -316,15 +232,15 @@ namespace Graphics
 
         Matrix4 model = Matrix4Translation(0, 0);
 
-        glUseProgram(shader.handle);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "projection"), 1, false, (float*)&projection);
-        glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, false, (float*)&model);
+        glUseProgram(shader.Handle);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Handle, "projection"), 1, false, (float*)&projection);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Handle, "model"), 1, false, (float*)&model);
 
-        glBindVertexArray(drawBuffer.VertexArray.handle);
-        glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.VertexArray.vertexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.VertexArray.indexBuffer);
+        glBindVertexArray(drawBuffer.VertexArray.Handle);
+        glBindBuffer(GL_ARRAY_BUFFER, drawBuffer.VertexArray.VertexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawBuffer.VertexArray.IndexBuffer);
 
-        GLsizei indexCount = drawBuffer.Indices.count;
+        GLsizei indexCount = drawBuffer.Indices.Count;
         glDrawElements(drawMode, indexCount, GL_UNSIGNED_SHORT, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -449,10 +365,10 @@ namespace Graphics
 
         Matrix4 model = mul(Matrix4Translation(position), Matrix4Scalation(1.0f, -1.0f));
 
-        glUseProgram(fontShader.handle);
+        glUseProgram(fontShader.Handle);
 
-        I32 projectionLocation = glGetUniformLocation(shader.handle, "projection");
-        I32 modelLocation = glGetUniformLocation(shader.handle, "model");
+        I32 projectionLocation = glGetUniformLocation(shader.Handle, "projection");
+        I32 modelLocation = glGetUniformLocation(shader.Handle, "model");
         glUniformMatrix4fv(projectionLocation, 1, false, (float*)&projection);
         glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
 
@@ -461,9 +377,9 @@ namespace Graphics
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawTextBuffer.indexBuffer);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, font.texture.handle);
+        glBindTexture(GL_TEXTURE_2D, font.Texture.Handle);
 
-        I32 indexCount = drawTextBuffer.indices.count;
+        I32 indexCount = drawTextBuffer.indices.Count;
         glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0);
 
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -479,6 +395,8 @@ namespace Graphics
 
     void DrawFramerate(Font font, Vector2 position)
     {
+        //DrawRectangle(DrawMode::Fill, position, Vector2{ 100.0f, 50.0f }, Vector4{ 0, 0, 0, 0.2f });
+
         char buffer[1024];
         float framerate = GetFramerate();
         String text = StringFormat(buffer, sizeof(buffer), "FPS: %.2f", framerate);

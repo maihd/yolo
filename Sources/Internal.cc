@@ -1,7 +1,5 @@
 #include "./Internal.h"
 
-RuntimeState Runtime;
-
 #ifdef _WIN32
 #   pragma comment(lib, "OpenGL32.lib")
 #   pragma comment(lib, "SetupAPI.lib")
@@ -9,3 +7,5 @@ RuntimeState Runtime;
 #   pragma comment(lib, "Imm32.lib")
 #   pragma comment(lib, "Winmm.lib")
 #endif
+
+RuntimeState Runtime;

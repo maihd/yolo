@@ -11,13 +11,24 @@
 #include <Yolo/Random.h>
 #include <Yolo/HashTable.h>
 
-String MakeString(void* buffer, int bufferSize, const char* source = "")
+String MakeString(void* buffer, int bufferSize)
+{
+    DebugAssert(buffer != nullptr, "Invalid buffer");
+    DebugAssert(bufferSize > 0, "Invalid bufferSize, which must be > 0");
+
+    return { (char*)buffer, 0, bufferSize, true, false };
+}
+
+String MakeString(void* buffer, int bufferSize, const char* source)
 {
     DebugAssert(buffer != nullptr, "Invalid buffer");
     DebugAssert(bufferSize > 0, "Invalid bufferSize, which must be > 0");
 
     char* content = (char*)buffer;
-    strcpy(content, source);
+    if (source)
+    {
+        strcpy(content, source);
+    }
 
     return { content, 0, bufferSize, true, false };
 }

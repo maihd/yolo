@@ -2,28 +2,24 @@
 #include <Yolo/ImGui.h>
 #include <Yolo/Memory.h>
 
+#include <Yolo/Heap/SizeHeap.h>
+#include <Yolo/Heap/PagedHeap.h>
+#include <Yolo/Heap/PagedFreeList.h>
+#include <Yolo/Heap/StrictSegHeap.h>
+
 #include <time.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
-#if !defined(NDEBUG)
+static StrictSegHeap<10, StrictSegHeapTraits, SizeHeap<PagedFreeList>, SizeHeap<PagedHeap>> GlobalHeap;
 
-#if defined(_WIN32)
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#endif
+#if !defined(NDEBUG)
 
 // ----------------------
 // Internal types
 // ----------------------
-
-typedef struct SysFreeList
-{
-    int     ItemSize;
-    void*   FreeItem;
-} SysFreeList;
 
 typedef struct AllocDesc
 {
@@ -43,37 +39,6 @@ typedef struct AllocDesc
     struct AllocDesc*   Next;
 } AllocDesc;
 
-static void SysFreeListCollect(SysFreeList* freeList, void* item)
-{
-    *(void**)item = freeList->FreeItem;
-    freeList->FreeItem = item;
-}
-
-static void* SysFreeListAcquire(SysFreeList* freeList)
-{
-    if (!freeList->FreeItem)
-    {
-        const int itemSize = freeList->ItemSize;
-        const int allocSize = 64 * 1024;
-        const int itemsPerBatch = allocSize / itemSize;
-
-#if defined(_WIN32)
-        void* allocBatch = VirtualAlloc(nullptr, (SIZE_T)allocSize, MEM_COMMIT, PAGE_READWRITE);
-#else
-        void* allocBatch = malloc(allocSize);
-#endif
-
-        for (int i = 0; i < itemsPerBatch; i++)
-        {
-            SysFreeListCollect(freeList, (uint8_t*)allocBatch + i * itemSize);
-        }
-    }
-
-    void* result = freeList->FreeItem;
-    freeList->FreeItem = *((void**)result);
-    return result;
-}
-
 // ----------------------------
 // Tracking memory helpers
 // ----------------------------
@@ -81,19 +46,19 @@ static void* SysFreeListAcquire(SysFreeList* freeList)
 constexpr int ALLOC_DESC_COUNT = 64;
 static struct
 {
-    SysFreeList FreeAllocDescs = { sizeof(AllocDesc), nullptr };
-    AllocDesc*  HashAllocDescs[ALLOC_DESC_COUNT];
+    PagedFreeList   FreeAllocDescs;
+    AllocDesc*      HashAllocDescs[ALLOC_DESC_COUNT];
 
-    int         AllocSize = 0;
-    int         Allocations = 0;
-    int         AllocCalled = 0;
-    int         ReallocCalled = 0;
-    int         FreeCalled = 0;
+    int             AllocSize = 0;
+    int             Allocations = 0;
+    int             AllocCalled = 0;
+    int             ReallocCalled = 0;
+    int             FreeCalled = 0;
 } AllocStore;
 
 static void AddAlloc(void* ptr, int size, const char* func, const char* file, int line)
 {
-    AllocDesc* allocDesc = (AllocDesc*)SysFreeListAcquire(&AllocStore.FreeAllocDescs);
+    AllocDesc* allocDesc = (AllocDesc*)AllocStore.FreeAllocDescs.Alloc(sizeof(AllocDesc));
 
     allocDesc->Ptr  = ptr;
     allocDesc->Size = size;
@@ -171,7 +136,7 @@ static void RemoveAlloc(void* ptr, const char* func, const char* file, int line)
     }
 
     DebugAssert(allocDesc != nullptr, "This block is not allocated by our system! Are you attempt to double-free?");
-    SysFreeListCollect(&AllocStore.FreeAllocDescs, allocDesc);
+    AllocStore.FreeAllocDescs.Free(allocDesc);
 
     if (prevAllocDesc)
     {
@@ -192,7 +157,7 @@ void* MemoryAllocDebug(int size, const char* func, const char* file, int line)
 
     AllocStore.AllocCalled++;
 
-    void* ptr = malloc((size_t)size);
+    void* ptr = GlobalHeap.Alloc(size);
     AddAlloc(ptr, size, func, file, line);
     return ptr;
 }
@@ -203,7 +168,7 @@ void* MemoryReallocDebug(void* ptr, int size, const char* func, const char* file
 
     AllocStore.ReallocCalled++;
 
-    void* newPtr = realloc(ptr, (size_t)size);
+    void* newPtr = GlobalHeap.Realloc(ptr, size);
     if (ptr == nullptr)
     {
         AddAlloc(newPtr, size, func, file, line);
@@ -223,7 +188,7 @@ void MemoryFreeDebug(void* ptr, const char* func, const char* file, int line)
     if (ptr)
     {
         RemoveAlloc(ptr, func, file, line);
-        free(ptr);
+        GlobalHeap.Free(ptr);
     }
 }
 
@@ -319,17 +284,17 @@ void ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags flags)
 #else
 void* MemoryAlloc(int size)
 {
-    return malloc((size_t)size);
+    return GlobalHeap.Alloc(size);
 }
 
 void* MemoryRealloc(void* ptr, int size)
 {
-    return realloc(ptr, (size_t)size);
+    return GlobalHeap.Realloc(ptr, size);
 }
 
 void MemoryFree(void* ptr)
 {
-    free(ptr);
+    GlobalHeap.Free(ptr);
 }
 
 void MemoryDumpAllocs(void)
@@ -347,3 +312,30 @@ void ImGui::DumpMemoryAllocs(void)
 }
 #endif
 
+// ------------------------------------
+// Memory system information functions
+// ------------------------------------
+
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+int MemoryPageSize(void)
+{
+    SYSTEM_INFO systemInfo;
+    GetSystemInfo(&systemInfo);
+    return (int)systemInfo.dwPageSize;
+}
+
+#elif defined(__unix__)
+#include <unistd.h>
+int MemoryPageSize(void)
+{
+    return getpagesize();
+}
+#else
+int MemoryPageSize(void)
+{
+    return 4096;
+}
+#endif

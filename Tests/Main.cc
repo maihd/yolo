@@ -43,18 +43,17 @@ int main(void)
     }
 
     OpenWindow("Yolo Window", 1280, 720);
-    Graphics::Init();
 
-    Font font = FontOps::Load("../Assets/OpenSans_Regular.ttf", 32.0f);
+    Font font = LoadFont("../Assets/OpenSans_Regular.ttf", 32.0f);
 
     int width = WindowWidth();
     int height = WindowHeight();
 
     float angle = 0.0f;
 
-    Texture texture = TextureOps::Load("../Assets/character.png");
+    Texture texture = LoadTexture("../Assets/character.png");
     float posX = 0;
-    Texture texture2 = TextureOps::Load("../Assets/character.png");
+    Texture texture2 = LoadTexture("../Assets/character.png");
 
     HashTable<int> hashTable = MakeHashTable<int>();
     HashTableSetValue(&hashTable, ConstHash64("ten"), 10);
@@ -70,20 +69,19 @@ int main(void)
         //Graphics::ClearColor(1, 1, 1);
         Graphics::NewFrame();
 
-        //Graphics::SetLineWidth(4.0f);
-        //Graphics::DrawRectangle(DrawMode::Fill, { 400, 300 }, { 50, 50 }, { 0.5, 0.5, 0.5, 1 });
-        //Graphics::DrawCircle(DrawMode::Line, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
+        Graphics::SetLineWidth(4.0f);
+        Graphics::DrawRectangle(DrawMode::Fill, { 400, 300 }, { 50, 50 }, { 0.5, 0.5, 0.5, 1 });
+        Graphics::DrawCircle(DrawMode::Line, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
 
-        //Graphics::DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
-        //Graphics::DrawTexture(texture, { width * 0.5f, height * 0.5f }, GetTotalTime());
-        //Graphics::DrawTexture(texture, { width * 0.25f, height * 0.25f }, GetTotalTime() * 0.5f, Vector2{ 1, 1 }, Vector4{ 0.5f, 0.5f, 0.5f, 1.0f }, Vector2{ 1.0f, 1.0f });
-        //Graphics::DrawFramerate(font, { 0.0f, (float)height - font.size });
+        Graphics::DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
+        Graphics::DrawTexture(texture, { width * 0.5f, height * 0.5f }, GetTotalTime());
+        Graphics::DrawTexture(texture, { width * 0.25f, height * 0.25f }, GetTotalTime() * 0.5f, Vector2{ 1, 1 }, Vector4{ 0.5f, 0.5f, 0.5f, 1.0f }, Vector2{ 1.0f, 1.0f });
+        Graphics::DrawFramerate(font, { 0.0f, (float)height - font.Size });
 
         ImGui::Begin("Debug");
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
 
-        // 4. Tracking your memory allocations
         ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags_OpenWindow);
 
         Graphics::Present();
@@ -93,8 +91,7 @@ int main(void)
         TimeUpdateAndSleep(60);
     }
 
-    FontOps::Free(&font);
-    Graphics::Quit();
+    //FreeFont(&font);
     CloseWindow();
     return 0;
 }
