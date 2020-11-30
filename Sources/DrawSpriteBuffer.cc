@@ -24,9 +24,9 @@ namespace DrawSpriteBufferOps
             false,
             vertexArray,
 
-            ArrayNew<VertexColor>(),
-            ArrayNew<U16>(),
-            ArrayNew<DrawSpriteBuffer::Command>(),
+            MakeArray<VertexColor>(),
+            MakeArray<U16>(),
+            MakeArray<DrawSpriteBuffer::Command>(),
         };
     }
 
@@ -36,9 +36,9 @@ namespace DrawSpriteBufferOps
         
         VertexArrayOps::Free(&drawSpriteBuffer->vertexArray);
 
-        ArrayFree(&drawSpriteBuffer->commands);
-        ArrayFree(&drawSpriteBuffer->indices);
-        ArrayFree(&drawSpriteBuffer->vertices);
+        FreeArray(&drawSpriteBuffer->commands);
+        FreeArray(&drawSpriteBuffer->indices);
+        FreeArray(&drawSpriteBuffer->vertices);
     }
 
     void Clear(DrawSpriteBuffer* drawSpriteBuffer)

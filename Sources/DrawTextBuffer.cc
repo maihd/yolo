@@ -13,8 +13,8 @@ DrawTextBuffer DrawTextBuffer::New()
         0, 
         0, 
         0, 
-        ArrayNew<Vertex>(), 
-        ArrayNew<U16>(),
+        MakeArray<Vertex>(), 
+        MakeArray<U16>(),
     };
 }
 
@@ -30,8 +30,8 @@ void DrawTextBuffer::Free(DrawTextBuffer* drawBuffer)
     drawBuffer->indexBuffer = 0;
     drawBuffer->vertexArray = 0;
 
-    ArrayFree(&drawBuffer->vertices);
-    ArrayFree(&drawBuffer->indices);
+    FreeArray(&drawBuffer->vertices);
+    FreeArray(&drawBuffer->indices);
 }
 
 void DrawTextBuffer::Clear(DrawTextBuffer* drawBuffer)

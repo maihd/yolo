@@ -166,15 +166,15 @@ namespace WorldOps
     
     void Free(World* world)
     {
-        ArrayFree(&world->bullets);
-        ArrayFree(&world->seekers);
-        ArrayFree(&world->wanderers);
-        ArrayFree(&world->blackHoles);
+        FreeArray(&world->bullets);
+        FreeArray(&world->seekers);
+        FreeArray(&world->wanderers);
+        FreeArray(&world->blackHoles);
 
-        ArrayFree(&world->freeBullets);
-        ArrayFree(&world->freeSeekers);
-        ArrayFree(&world->freeWanderers);
-        ArrayFree(&world->freeBlackHoles);
+        FreeArray(&world->freeBullets);
+        FreeArray(&world->freeSeekers);
+        FreeArray(&world->freeWanderers);
+        FreeArray(&world->freeBlackHoles);
 
         world = {};
     }

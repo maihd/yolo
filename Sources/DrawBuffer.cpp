@@ -9,13 +9,14 @@
 DrawBuffer DrawBufferNew()
 {
     VertexArray vertexArray = VertexArrayOps::New();
-    VertexArrayOps::DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexShape), offsetof(VertexShape, position));
+    VertexArrayOps::DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexShapeColor), offsetof(VertexShapeColor, position));
+    VertexArrayOps::DefineAttribute(vertexArray, 1, DataType::Vector4, sizeof(VertexShapeColor), offsetof(VertexShapeColor, color));
 
     DrawBuffer drawBuffer = {
         false,
         vertexArray,
-        ArrayNew<VertexShape>(),
-        ArrayNew<U16>()
+        MakeArray<VertexShapeColor>(),
+        MakeArray<U16>()
     };
 
     return drawBuffer;
@@ -27,11 +28,11 @@ void DrawBufferFree(DrawBuffer* drawBuffer)
 
     VertexArrayOps::Free(&drawBuffer->VertexArray);
 
-    ArrayFree(&drawBuffer->Vertices);
-    ArrayFree(&drawBuffer->Indices);
+    FreeArray(&drawBuffer->Vertices);
+    FreeArray(&drawBuffer->Indices);
 }
 
-void DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v1, VertexShape v2)
+void DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShapeColor v0, VertexShapeColor v1, VertexShapeColor v2)
 {
     assert(drawBuffer);
 
@@ -47,22 +48,22 @@ void DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShape v0, VertexShape v
     drawBuffer->ShouldUpdate = true;
 }
 
-void DrawBufferAddTriangle(DrawBuffer* drawBuffer, Array<VertexShape> vertices)
+void DrawBufferAddTriangle(DrawBuffer* drawBuffer, Array<VertexShapeColor> vertices)
 {
     assert(drawBuffer);
 
     DrawBufferAddTriangle(drawBuffer, vertices.Items, vertices.Count);
 }
 
-void DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShape* vertices, I32 count)
+void DrawBufferAddTriangle(DrawBuffer* drawBuffer, VertexShapeColor* vertices, I32 count)
 {
     assert(drawBuffer);
 
     for (I32 i = 0; i < count; i += 3)
     {
-        VertexShape v0 = vertices[i + 0];
-        VertexShape v1 = vertices[i + 1];
-        VertexShape v2 = vertices[i + 2];
+        VertexShapeColor v0 = vertices[i + 0];
+        VertexShapeColor v1 = vertices[i + 1];
+        VertexShapeColor v2 = vertices[i + 2];
 
         DrawBufferAddTriangle(drawBuffer, v0, v1, v2);
     }
@@ -102,16 +103,19 @@ void DrawBufferAddCircle(DrawBuffer* drawBuffer, Vector2 position, float radius,
         float angle0 = step * i;
         float angle1 = step * (i + 1);
 
-        const VertexShape v0 = {
+        const VertexShapeColor v0 = {
             { position.x + cosf(angle0) * radius, position.y + sinf(angle0) * radius },
+            color
         };
 
-        const VertexShape v1 = {
+        const VertexShapeColor v1 = {
             { position.x + cosf(angle1) * radius, position.y + sinf(angle1) * radius },
+            color
         };
 
-        const VertexShape v2 = {
+        const VertexShapeColor v2 = {
             { position.x, position.y },
+            color
         };
 
         DrawBufferAddTriangle(drawBuffer, v0, v1, v2);
@@ -132,8 +136,9 @@ void DrawBufferAddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float ra
     {
         float angle = step * i;
 
-        const VertexShape v = {
+        const VertexShapeColor v = {
             { position.x + cosf(angle) * radius, position.y + sinf(angle) * radius },
+            color
         };
 
         const U16 index = (U16)drawBuffer->Vertices.Count;
@@ -144,20 +149,24 @@ void DrawBufferAddCircleLines(DrawBuffer* drawBuffer, Vector2 position, float ra
 
 void DrawBufferAddRectangle(DrawBuffer* drawBuffer, Vector2 position, Vector2 size, Vector4 color)
 {
-    const VertexShape v0 = {
+    const VertexShapeColor v0 = {
         { position.x, position.y },
+        color
     };
 
-    const VertexShape v1 = {
+    const VertexShapeColor v1 = {
         { position.x, position.y + size.y },
+        color
     };
 
-    const VertexShape v2 = {
+    const VertexShapeColor v2 = {
         { position.x + size.x, position.y + size.y },
+        color
     };
 
-    const VertexShape v3 = {
+    const VertexShapeColor v3 = {
         { position.x + size.x, position.y },
+        color
     };
 
     const U16 startIndex = (U16)drawBuffer->Vertices.Count;
@@ -178,20 +187,24 @@ void DrawBufferAddRectangle(DrawBuffer* drawBuffer, Vector2 position, Vector2 si
 
 void DrawBufferAddRectangleLines(DrawBuffer* drawBuffer, Vector2 position, Vector2 size, Vector4 color)
 {
-    const VertexShape v0 = {
+    const VertexShapeColor v0 = {
         { position.x, position.y },
+        color
     };
 
-    const VertexShape v1 = {
+    const VertexShapeColor v1 = {
         { position.x, position.y + size.y },
+        color
     };
 
-    const VertexShape v2 = {
+    const VertexShapeColor v2 = {
         { position.x + size.x, position.y + size.y },
+        color
     };
 
-    const VertexShape v3 = {
+    const VertexShapeColor v3 = {
         { position.x + size.x, position.y },
+        color
     };
 
     const U16 startIndex = (U16)drawBuffer->Vertices.Count;

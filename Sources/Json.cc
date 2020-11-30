@@ -122,7 +122,7 @@ namespace JsonOps
                 {
                     Json_ReleaseMemory(&value->Array.Items[i]);
                 }
-                ArrayFree(&value->Array);
+                FreeArray(&value->Array);
                 break;
 
             case JsonType::Object:

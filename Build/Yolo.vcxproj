@@ -231,7 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\Audio.cc" />
-    <ClCompile Include="..\Sources\DrawBuffer.cc" />
+    <ClCompile Include="..\Sources\DrawBuffer.cpp" />
     <ClCompile Include="..\Sources\DrawSpriteBuffer.cc" />
     <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
     <ClCompile Include="..\Sources\File.cc" />

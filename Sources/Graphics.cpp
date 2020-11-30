@@ -33,31 +33,29 @@ namespace Graphics
 
     constexpr const char* vshaderSource =
         "#version 330 core\n"
+
         "layout (location = 0) in vec3 pos;"
-        "layout (location = 1) in vec2 uv;"
-        "layout (location = 2) in vec4 color;"
-        "out vec2 fragUV;"
+        "layout (location = 1) in vec4 color;"
         "out vec4 fragColor;"
+
         "uniform mat4 model;"
         "uniform mat4 projection;"
+
         "void main() {"
-        "fragUV = uv;"
         "fragColor = color;"
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
     constexpr const char* fshaderSource =
-        "#version 330\n"
+        "#version 330 core\n"
 
         "in vec2 fragUV;"
         "in vec4 fragColor;"
 
-        "uniform vec4 color;"
-
         "out vec4 resultColor;"
 
         "void main() {"
-        "resultColor = vec4(1.0);"
+        "resultColor = fragColor;"
         "}";
 
     constexpr const char* spriteVertexSource =
@@ -397,6 +395,8 @@ namespace Graphics
 
     void DrawFramerate(Font font, Vector2 position)
     {
+        //DrawRectangle(DrawMode::Fill, position, Vector2{ 100.0f, 50.0f }, Vector4{ 0, 0, 0, 0.2f });
+
         char buffer[1024];
         float framerate = GetFramerate();
         String text = StringFormat(buffer, sizeof(buffer), "FPS: %.2f", framerate);
