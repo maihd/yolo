@@ -14,19 +14,19 @@
 constexpr int ARRAY_MIN_CAPACITY = 16;
 
 template <typename T>
-Array<T> ArrayNew(int capacity = 0);
+Array<T> MakeArray(int capacity = 0);
 
 template <typename T>
-Array<T> ArrayNew(const T* buffer, int count);
+Array<T> MakeArray(const T* buffer, int count);
 
 template <typename T>
-T* ArrayNew(const Array<T> array);
+T* MakeArray(const Array<T> array);
 
 template <typename T>
-Array<T> ArrayFill(int capacity, T value);
+Array<T> MakeArray(int capacity, T value);
 
 template <typename T>
-inline void ArrayFree(Array<T>* array);
+void FreeArray(Array<T>* array);
 
 template <typename T>
 int ArraySizeInBytes(const Array<T> array);
@@ -84,7 +84,7 @@ bool ArrayUnorderedRemoveLast(Array<T>* array, T value);
 // --------------------------------------
 
 template <typename T>
-inline Array<T> ArrayNew(int capacity)
+inline Array<T> MakeArray(int capacity)
 {
     if (capacity <= 0)
     {
@@ -97,7 +97,7 @@ inline Array<T> ArrayNew(int capacity)
 }
 
 template <typename T>
-inline Array<T> ArrayNew(const T* buffer, int count)
+inline Array<T> MakeArray(const T* buffer, int count)
 {
     if (!buffer || count <= 0)
     {
@@ -113,7 +113,7 @@ inline Array<T> ArrayNew(const T* buffer, int count)
 }
 
 template <typename T>
-inline T* ArrayNew(const Array<T> array)
+inline T* MakeArray(const Array<T> array)
 {
     if (array.count == 0)
     {
@@ -129,7 +129,7 @@ inline T* ArrayNew(const Array<T> array)
 }
 
 template <typename T>
-inline Array<T> ArrayFill(int capacity, T value)
+inline Array<T> MakeArray(int capacity, T value)
 {
     T* array = Empty();
     if (ArrayEnsure(&array, capacity))
@@ -144,7 +144,7 @@ inline Array<T> ArrayFill(int capacity, T value)
 }
 
 template <typename T>
-inline void ArrayFree(Array<T>* array)
+inline void FreeArray(Array<T>* array)
 {
     DebugAssert(array != nullptr, "The input array is nullptr");
 

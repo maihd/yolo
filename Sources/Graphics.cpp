@@ -17,8 +17,6 @@
 
 namespace Graphics
 {
-    static SDL_GLContext    glContext;
-    
     static float            lineWidth;
     static Vector4          clearColor;
 
@@ -126,92 +124,12 @@ namespace Graphics
         "resultColor = vec4(1.0, 1.0, 1.0, alpha);"
         "}";
 
-    void ApplyDefaultSettings(void);
-    void CreateDefaultObjects(void);
-   
-    bool Init(void)
-    {
-        // Make sure window is initialized
-        if (!Runtime.MainWindow)
-        {
-            return false;
-        }
-
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-
-        SDL_GLContext context = SDL_GL_CreateContext(Runtime.MainWindow);
-        if (!context)
-        {
-            return false;
-        }
-
-        if (SDL_GL_MakeCurrent(Runtime.MainWindow, context) != 0)
-        {
-            SDL_GL_DeleteContext(context);
-            return false;
-        }
-
-        glewExperimental = false;
-        GLenum glewState = glewInit();
-        if (glewState != GLEW_OK)
-        {
-            SDL_GL_DeleteContext(context);
-            return false;
-        }
-
-        glContext = context;
-
-        // Default settings
-        ApplyDefaultSettings();
-        CreateDefaultObjects();
-
-        // Setup Dear ImGui context
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-        // Setup Dear ImGui style
-        ImGui::StyleColorsDark();
-        //ImGui::StyleColorsClassic();
-
-        // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-        ImGuiStyle& style = ImGui::GetStyle();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            style.WindowRounding = 0.0f;
-            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-        }
-
-        // Setup Platform/Renderer backends
-        ImGui_ImplSDL2_InitForOpenGL(Runtime.MainWindow, glContext);
-        ImGui_ImplOpenGL3_Init("#version 130");
-
-        return true;
-    }
-
-    void Quit(void)
-    {
-        SDL_GL_DeleteContext(glContext);
-        glContext = nullptr;
-    }
-
     void ApplyDefaultSettings(void) 
     {
         glEnable(GL_BLEND);
         glEnable(GL_TEXTURE);
-        //glEnable(GL_DEPTH_TEST);
-        //glEnable(GL_STENCIL_TEST);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_STENCIL_TEST);
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -250,7 +168,7 @@ namespace Graphics
         glViewport(0, 0, windowWidth, windowHeight);
 
         glClearColor(0, 0, 0, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         // Clear buffers
         DrawSpriteBufferOps::Clear(&drawSpriteBuffer);

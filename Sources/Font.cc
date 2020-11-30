@@ -41,7 +41,7 @@ Font LoadFont(const char* path, float size)
 
         float ipw = 1.0f / TEXTURE_WIDTH, iph = 1.0f / TEXTURE_HEIGHT;
 
-        Array<FontGlyph> glyphs = ArrayNew<FontGlyph>(GLYPHS_COUNT);
+        Array<FontGlyph> glyphs = MakeArray<FontGlyph>(GLYPHS_COUNT);
         for (I32 i = 0; i < GLYPHS_COUNT; i++)
         {
             const stbtt_bakedchar bakedChar = bakedChars[i];
@@ -98,7 +98,7 @@ void FreeFont(Font* font)
 {
     assert(font);
 
-    ArrayFree(&font->Glyphs);
+    FreeArray(&font->Glyphs);
     FreeTexture(&font->Texture);
 
     font->Size = 0;

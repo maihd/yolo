@@ -236,7 +236,7 @@
     <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
     <ClCompile Include="..\Sources\File.cc" />
     <ClCompile Include="..\Sources\Font.cc" />
-    <ClCompile Include="..\Sources\Graphics.cc" />
+    <ClCompile Include="..\Sources\Graphics.cpp" />
     <ClCompile Include="..\Sources\Heap\PagedFreeList.cpp" />
     <ClCompile Include="..\Sources\Heap\PagedHeap.cpp" />
     <ClCompile Include="..\Sources\HotDylib.cc" />
@@ -261,7 +261,7 @@
     <ClCompile Include="..\Sources\Time.cc" />
     <ClCompile Include="..\Sources\Core.cpp" />
     <ClCompile Include="..\Sources\VertexArray.cc" />
-    <ClCompile Include="..\Sources\Window.cc" />
+    <ClCompile Include="..\Sources\Window.cpp" />
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

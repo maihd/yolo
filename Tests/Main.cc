@@ -43,7 +43,6 @@ int main(void)
     }
 
     OpenWindow("Yolo Window", 1280, 720);
-    Graphics::Init();
 
     Font font = LoadFont("../Assets/OpenSans_Regular.ttf", 32.0f);
 
@@ -92,7 +91,6 @@ int main(void)
         TimeUpdateAndSleep(60);
     }
 
-    Graphics::Quit();
     CloseWindow();
     return 0;
 }

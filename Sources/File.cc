@@ -17,17 +17,19 @@
 
 static Array<String> SearchPaths;
 
-void AddFileSearchPath(String path)
+void AddFileSearchPath(const char* path)
 {
-    if (ArrayIndexOf(SearchPaths, path) == -1)
+    String savedPath = RefString(path);
+    if (ArrayIndexOf(SearchPaths, savedPath) == -1)
     {
-        ArrayPush(&SearchPaths, path);
+        ArrayPush(&SearchPaths, savedPath);
     }
 }
 
-void RemoveFileSearchPath(String path)
+void RemoveFileSearchPath(const char* path)
 {
-    ArrayRemove(&SearchPaths, path);
+    String savedPath = RefString(path);
+    ArrayRemove(&SearchPaths, savedPath);
 }
 
 bool FileExists(const char* path, bool useSearchPath)

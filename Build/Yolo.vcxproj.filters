@@ -188,9 +188,6 @@
     <ClCompile Include="..\Sources\Font.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Graphics.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\Heap\PagedFreeList.cpp">
       <Filter>Sources\Heap</Filter>
     </ClCompile>
@@ -257,9 +254,6 @@
     <ClCompile Include="..\Sources\VertexArray.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Window.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c">
       <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
     </ClCompile>
@@ -267,6 +261,12 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Core.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Window.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Graphics.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
