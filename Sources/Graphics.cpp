@@ -293,114 +293,113 @@ namespace Graphics
     {
         Graphics::projection = projection;
     }
+}
 
-    void DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, I32 segments)
+void DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, I32 segments)
+{
+    DrawBufferClear(&Graphics::drawBuffer);
+
+    if (mode == DrawMode::Line)
     {
-        DrawBufferClear(&drawBuffer);
-
-        if (mode == DrawMode::Line)
-        {
-            DrawBufferAddCircleLines(&drawBuffer, position, radius, color, segments);
-            PresentDrawBuffer(GL_LINE_STRIP);
-        }
-        else
-        {
-            DrawBufferAddCircle(&drawBuffer, position, radius, color, segments);
-            PresentDrawBuffer(GL_TRIANGLES);
-        }
+        DrawBufferAddCircleLines(&Graphics::drawBuffer, position, radius, color, segments);
+        Graphics::PresentDrawBuffer(GL_LINE_STRIP);
     }
-
-    void DrawRectangle(DrawMode mode, Vector2 position, Vector2 size, Vector4 color)
+    else
     {
-        DrawBufferClear(&drawBuffer);
-        if (mode == DrawMode::Line)
-        {
-            DrawBufferAddRectangleLines(&drawBuffer, position, size, color);
-            PresentDrawBuffer(GL_LINE_STRIP);
-        }
-        else
-        {
-            DrawBufferAddRectangle(&drawBuffer, position, size, color);
-            PresentDrawBuffer(GL_TRIANGLES);
-        }
-    }
-
-    void DrawTexture(Texture texture, Vector2 position, float rotation, Vector2 scale, Vector4 color, Vector2 pivot)
-    {
-#if 0
-        Matrix4 model = mul(Matrix4::Translation(position), Matrix4::Scalation(size));
-        
-        I32 projectionLocation = glGetUniformLocation(shader.handle, "projection");
-        I32 modelLocation = glGetUniformLocation(shader.handle, "model");
-
-        glUseProgram(spriteShader.handle);
-        glUniformMatrix4fv(projectionLocation, 1, false, (float*)&projection);
-        glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
-
-        glBindVertexArray(spriteMesh.vertexArray);
-        glBindBuffer(GL_ARRAY_BUFFER, spriteMesh.vertexArray);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture.handle);
-
-        //I32 textureLocation = glGetUniformLocation(spriteShader.handle, "image");
-        //glUniform1i(textureLocation, 0);
-
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-        glUseProgram(0);
-#endif
-        DrawSpriteBufferOps::AddTexture(&drawSpriteBuffer, texture, position, rotation, scale, color, pivot);
-    }
-
-#undef DrawText
-    void DrawText(const char* text, Font font, Vector2 position)
-    {
-        DrawTextBuffer::AddText(&drawTextBuffer, text, font);
-        DrawTextBuffer::UpdateBuffers(&drawTextBuffer);
-
-        Matrix4 model = mul(Matrix4Translation(position), Matrix4Scalation(1.0f, -1.0f));
-
-        glUseProgram(fontShader.Handle);
-
-        I32 projectionLocation = glGetUniformLocation(shader.Handle, "projection");
-        I32 modelLocation = glGetUniformLocation(shader.Handle, "model");
-        glUniformMatrix4fv(projectionLocation, 1, false, (float*)&projection);
-        glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
-
-        glBindVertexArray(drawTextBuffer.vertexArray);
-        glBindBuffer(GL_ARRAY_BUFFER, drawTextBuffer.vertexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawTextBuffer.indexBuffer);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, font.Texture.Handle);
-
-        I32 indexCount = drawTextBuffer.indices.Count;
-        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0);
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-
-        glUseProgram(0);
-
-        DrawTextBuffer::Clear(&drawTextBuffer);
-    }
-
-    void DrawFramerate(Font font, Vector2 position)
-    {
-        //DrawRectangle(DrawMode::Fill, position, Vector2{ 100.0f, 50.0f }, Vector4{ 0, 0, 0, 0.2f });
-
-        char buffer[1024];
-        float framerate = GetFramerate();
-        String text = StringFormat(buffer, sizeof(buffer), "FPS: %.2f", framerate);
-        DrawText(text.Buffer, font, position);
+        DrawBufferAddCircle(&Graphics::drawBuffer, position, radius, color, segments);
+        Graphics::PresentDrawBuffer(GL_TRIANGLES);
     }
 }
 
+void DrawRectangle(DrawMode mode, Vector2 position, Vector2 size, Vector4 color)
+{
+    DrawBufferClear(&Graphics::drawBuffer);
+    if (mode == DrawMode::Line)
+    {
+        DrawBufferAddRectangleLines(&Graphics::drawBuffer, position, size, color);
+        Graphics::PresentDrawBuffer(GL_LINE_STRIP);
+    }
+    else
+    {
+        DrawBufferAddRectangle(&Graphics::drawBuffer, position, size, color);
+        Graphics::PresentDrawBuffer(GL_TRIANGLES);
+    }
+}
+
+void DrawTexture(Texture texture, Vector2 position, float rotation, Vector2 scale, Vector4 color, Vector2 pivot)
+{
+#if 0
+    Matrix4 model = mul(Matrix4::Translation(position), Matrix4::Scalation(size));
+
+    I32 projectionLocation = glGetUniformLocation(shader.handle, "projection");
+    I32 modelLocation = glGetUniformLocation(shader.handle, "model");
+
+    glUseProgram(spriteShader.handle);
+    glUniformMatrix4fv(projectionLocation, 1, false, (float*)&projection);
+    glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
+
+    glBindVertexArray(spriteMesh.vertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, spriteMesh.vertexArray);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture.handle);
+
+    //I32 textureLocation = glGetUniformLocation(spriteShader.handle, "image");
+    //glUniform1i(textureLocation, 0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    glUseProgram(0);
+#endif
+    DrawSpriteBufferOps::AddTexture(&Graphics::drawSpriteBuffer, texture, position, rotation, scale, color, pivot);
+}
+
+#undef DrawText
+void DrawText(const char* text, Font font, Vector2 position)
+{
+    DrawTextBuffer::AddText(&Graphics::drawTextBuffer, text, font);
+    DrawTextBuffer::UpdateBuffers(&Graphics::drawTextBuffer);
+
+    Matrix4 model = mul(Matrix4Translation(position), Matrix4Scalation(1.0f, -1.0f));
+
+    glUseProgram(Graphics::fontShader.Handle);
+
+    I32 projectionLocation = glGetUniformLocation(Graphics::fontShader.Handle, "projection");
+    I32 modelLocation = glGetUniformLocation(Graphics::fontShader.Handle, "model");
+    glUniformMatrix4fv(projectionLocation, 1, false, (float*)&Graphics::projection);
+    glUniformMatrix4fv(modelLocation, 1, false, (float*)&model);
+
+    glBindVertexArray(Graphics::drawTextBuffer.vertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, Graphics::drawTextBuffer.vertexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Graphics::drawTextBuffer.indexBuffer);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, font.Texture.Handle);
+
+    I32 indexCount = Graphics::drawTextBuffer.indices.Count;
+    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    glUseProgram(0);
+
+    DrawTextBuffer::Clear(&Graphics::drawTextBuffer);
+}
+
+void DrawFramerate(Font font, Vector2 position)
+{
+    //DrawRectangle(DrawMode::Fill, position, Vector2{ 100.0f, 50.0f }, Vector4{ 0, 0, 0, 0.2f });
+
+    char buffer[1024];
+    float framerate = GetFramerate();
+    String text = StringFormat(buffer, sizeof(buffer), "FPS: %.2f", framerate);
+    DrawText(text.Buffer, font, position);
+}

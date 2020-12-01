@@ -13,6 +13,14 @@ Shader  LoadShader(const char* vertexFile, const char* pixelsFile);
 Shader  CompileShader(const char* vertexSource, const char* pixelsSource);
 void    FreeShader(Shader* shader);
 
+void    DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, int segments = 30);
+void    DrawRectangle(DrawMode mode, Vector2 position, Vector2 size, Vector4 color);
+
+void    DrawTexture(Texture texture, Vector2 position, float rotation = 0.0f, Vector2 scale = Vector2{ 1, 1 }, Vector4 color = Vector4{ 1, 1, 1, 1 }, Vector2 pivot = Vector2{ 0.5f, 0.5f });
+
+void    DrawText(const char* text, Font font, Vector2 position);
+void    DrawFramerate(Font font, Vector2 position);
+
 namespace Graphics
 {
     void    Clear(void);
@@ -36,12 +44,4 @@ namespace Graphics
 
     float   GetLineWidth(void);
     void    SetLineWidth(float width);
-
-    void    DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, int segments = 30);
-    void    DrawRectangle(DrawMode mode, Vector2 position, Vector2 size, Vector4 color);
-
-    void    DrawTexture(Texture texture, Vector2 position, float rotation = 0.0f, Vector2 scale = Vector2{ 1, 1 }, Vector4 color = Vector4{ 1, 1, 1, 1 }, Vector2 pivot = Vector2{ 0.5f, 0.5f });
-
-    void    DrawText(const char* text, Font font, Vector2 position);
-    void    DrawFramerate(Font font, Vector2 position);
 }

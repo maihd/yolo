@@ -11,7 +11,7 @@
 #include <Yolo/Graphics.h>
 #include <Yolo/HashTable.h>
 
-static HashTable<Texture> loadedTextures = MakeHashTable<Texture>(64);
+static HashTable<Texture> LoadedTextures = MakeHashTable<Texture>(64);
 
 static GLenum PixelFormatToGLenum(PixelFormat value)
 {
@@ -56,7 +56,7 @@ Texture LoadTexture(const char* path)
     U64 textureHash = CalcHash64(fullPath, (int)strlen(fullPath));
 
         Texture cachedTexture;
-        if (HashTableTryGetValue(loadedTextures, textureHash, &cachedTexture))
+        if (HashTableTryGetValue(LoadedTextures, textureHash, &cachedTexture))
         {
             return cachedTexture;
         }
@@ -75,7 +75,7 @@ Texture LoadTexture(const char* path)
 
     stbi_image_free(pixels);
 
-    HashTableSetValue(&loadedTextures, textureHash, texture);
+    HashTableSetValue(&LoadedTextures, textureHash, texture);
     return texture;
 }
 
