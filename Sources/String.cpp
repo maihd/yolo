@@ -48,11 +48,16 @@ String SaveString(String source)
     }
 }
 
-String SaveString(const char* source)
+String SaveString(StringView source)
 {
-    int length = (int)strlen(source);
+    if (source.IsConst)
+    {
+        return { source.Buffer, source.Length, 0, false, true };
+    }
+
+    int length = source.Length >= 0 ? source.Length : (int)strlen(source.Buffer);
     char* buffer = (char*)MemoryAlloc(length + 1);
-    memcpy(buffer, source, length + 1);
+    memcpy(buffer, source.Buffer, length + 1);
 
     return { buffer, length, length + 1, true, false };
 }
@@ -78,7 +83,7 @@ I32 StringCompare(String str0, String str1)
     return strncmp(str0.Buffer, str1.Buffer, min(str0.Length, str1.Length));
 }
 
-String StringFormat(I32 bufferSize, const char* format, ...)
+String StringFormat(I32 bufferSize, StringView format, ...)
 {
     ArgList argv;
     ArgListBegin(argv, format);
@@ -87,13 +92,13 @@ String StringFormat(I32 bufferSize, const char* format, ...)
     return result;
 }
 
-String StringFormatArgv(I32 bufferSize, const char* format, ArgList argv)
+String StringFormatArgv(I32 bufferSize, StringView format, ArgList argv)
 {
     void* buffer = MemoryAlloc(bufferSize);
     return StringFormatArgv(buffer, bufferSize, format, argv);
 }
 
-String StringFormat(void* buffer, I32 bufferSize, const char* format, ...)
+String StringFormat(void* buffer, I32 bufferSize, StringView format, ...)
 {
     ArgList argv;
     ArgListBegin(argv, format);
@@ -102,9 +107,9 @@ String StringFormat(void* buffer, I32 bufferSize, const char* format, ...)
     return result;
 }
 
-String StringFormatArgv(void* buffer, I32 bufferSize, const char* format, ArgList argv)
+String StringFormatArgv(void* buffer, I32 bufferSize, StringView format, ArgList argv)
 {
-    int length = vsnprintf((char*)buffer, bufferSize, format, argv);
+    int length = vsnprintf((char*)buffer, bufferSize, format.Buffer, argv);
     if (length < -1)
     {
         return { "", 0, 0, false, true };

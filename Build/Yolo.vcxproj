@@ -253,7 +253,7 @@
     <ClCompile Include="..\Sources\Sprite.cc" />
     <ClCompile Include="..\Sources\SpriteBatch.cc" />
     <ClCompile Include="..\Sources\SpriteMesh.cc" />
-    <ClCompile Include="..\Sources\String.cc" />
+    <ClCompile Include="..\Sources\String.cpp" />
     <ClCompile Include="..\Sources\Graphics_Texture.cpp" />
     <ClCompile Include="..\Sources\Time.cc" />
     <ClCompile Include="..\Sources\Core.cpp" />

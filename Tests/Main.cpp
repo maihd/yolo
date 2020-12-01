@@ -24,8 +24,8 @@ int main(void)
     String string2 = string1;
     printf("string 2: %s\n", string2.Buffer);
 
-    StringRef stringref = "Hello world";
-    printf("stringref: %s\n", stringref.Buffer);
+    StringView viewOfHelloWorld = "Hello world";
+    printf("viewOfHelloWorld: %s\n", viewOfHelloWorld.Buffer);
 
     int intArray[4];
     intArray[0] = rand();

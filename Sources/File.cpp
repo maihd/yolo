@@ -19,7 +19,7 @@ static Array<String> SearchPaths;
 
 void AddFileSearchPath(const char* path)
 {
-    String savedPath = RefString(path);
+    String savedPath = RefString(path, (int)strlen(path));
     if (ArrayIndexOf(SearchPaths, savedPath) == -1)
     {
         ArrayPush(&SearchPaths, savedPath);
@@ -28,7 +28,7 @@ void AddFileSearchPath(const char* path)
 
 void RemoveFileSearchPath(const char* path)
 {
-    String savedPath = RefString(path);
+    String savedPath = RefString(path, (int)strlen(path));
     ArrayRemove(&SearchPaths, savedPath);
 }
 

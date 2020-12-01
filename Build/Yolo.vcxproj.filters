@@ -218,9 +218,6 @@
     <ClCompile Include="..\Sources\SpriteMesh.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\String.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\Time.cc">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -258,6 +255,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Graphics_Shader.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\String.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,23 +3,22 @@
 #include <string.h>
 #include <Yolo/Core.h>
 
-// -------------------------------
+// -----------------------------------
 // Main functions
-// -------------------------------
+// -----------------------------------
 
 String MakeString(void* buffer, int bufferSize);
-String MakeString(void* buffer, int bufferSize, const char* source);
+String MakeString(void* buffer, int bufferSize, StringView source);
 
-String SaveString(String source);
-String SaveString(const char* source);
+String SaveString(StringView source);
 
 void   FreeString(String* source);
 
-String StringFormat(I32 bufferSize, const char* format, ...);
-String StringFormatArgv(I32 bufferSize, const char* format, ArgList argv);
+String StringFormat(I32 bufferSize, StringView format, ...);
+String StringFormatArgv(I32 bufferSize, StringView format, ArgList argv);
 
-String StringFormat(void* buffer, I32 bufferSize, const char* format, ...);
-String StringFormatArgv(void* buffer, I32 bufferSize, const char* format, ArgList argv);
+String StringFormat(void* buffer, I32 bufferSize, StringView format, ...);
+String StringFormatArgv(void* buffer, I32 bufferSize, StringView format, ArgList argv);
 
 bool   IsStringEmpty(String target);
 
@@ -49,9 +48,9 @@ constexpr String ConstString(const char(&buffer)[LENGTH])
     return result;
 }
 
-inline String RefString(const char* source)
+inline String RefString(StringView source)
 {
-    return { source, (int)strlen(source), 0, false, false };
+    return { source.Buffer, source.Length, 0, false, false };
 }
 
 inline String RefString(const char* source, int length)

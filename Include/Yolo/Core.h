@@ -155,6 +155,9 @@ struct String
 };
 
 // Const string wrapper
+// Useful when overloading functions that
+// have both const char[] and const char* versions
+// See more at struct StringRef for example
 struct ConstCharPtr
 {
     const char* Data;
@@ -168,7 +171,7 @@ struct ConstCharPtr
 // String reference
 // Useful for storing string data in other structure
 // and manage ownership, checking for memory location
-struct StringRef
+struct StringView
 {
     const char* const Buffer;
     I32         const Length : 30;
@@ -176,7 +179,7 @@ struct StringRef
     I32         const IsConst : 1;
 
     template <I32 length>
-    constexpr StringRef(const char(&buffer)[length])
+    constexpr StringView(const char(&buffer)[length])
         : Buffer(buffer)
         , Length(length)
         , IsOwned(false)
@@ -184,7 +187,7 @@ struct StringRef
     {
     }
 
-    inline StringRef(ConstCharPtr buffer)
+    inline StringView(ConstCharPtr buffer)
         : Buffer(buffer.Data)
         , Length(-1)
         , IsOwned(false)
@@ -192,7 +195,7 @@ struct StringRef
     {
     }
 
-    inline StringRef(String string)
+    inline StringView(String string)
         : Buffer(string.Buffer)
         , Length(string.Length)
         , IsOwned(string.IsOwned)
