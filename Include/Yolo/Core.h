@@ -170,10 +170,10 @@ struct ConstCharPtr
 // and manage ownership, checking for memory location
 struct StringRef
 {
-    const char* Buffer;
-    I32         Length : 30;
-    I32         IsOwned : 1;
-    I32         IsConst : 1;
+    const char* const Buffer;
+    I32         const Length : 30;
+    I32         const IsOwned : 1;
+    I32         const IsConst : 1;
 
     template <I32 length>
     constexpr StringRef(const char(&buffer)[length])
