@@ -20,15 +20,15 @@ String StringFormatArgv(I32 bufferSize, StringView format, ArgList argv);
 String StringFormat(void* buffer, I32 bufferSize, StringView format, ...);
 String StringFormatArgv(void* buffer, I32 bufferSize, StringView format, ArgList argv);
 
-I32    StringCompare(String str0, String str1);
+I32    StringCompare(StringView str0, StringView str1);
 
-I32    StringIndexOf(String target, I32 charCode);
-I32    StringIndexOf(String target, String substring);
+I32    StringIndexOf(StringView target, I32 charCode);
+I32    StringIndexOf(StringView target, StringView substring);
 
-I32    StringLastIndexOf(String target, I32 charCode);
-I32    StringLastIndexOf(String target, String substring);
+I32    StringLastIndexOf(StringView target, I32 charCode);
+I32    StringLastIndexOf(StringView target, StringView substring);
 
-String SubString(String source, I32 start, I32 end = -1);
+String SubString(StringView source, I32 start, I32 end = -1);
 
 // -----------------------------------
 // Constructor functions
@@ -41,7 +41,7 @@ constexpr String ConstString(const char(&buffer)[LENGTH])
     result.Buffer   = buffer;
     result.Length   = LENGTH;
     result.IsOwned  = false;
-    result.IsConst = true;
+    result.IsConst  = true;
     result.Alloced  = 0;
     return result;
 }
@@ -95,6 +95,16 @@ inline bool operator==(String a, String b)
 }
 
 inline bool operator!=(String a, String b)
+{
+    return StringCompare(a, b) != 0;
+}
+
+inline bool operator==(StringView a, StringView b)
+{
+    return StringCompare(a, b) == 0;
+}
+
+inline bool operator!=(StringView a, StringView b)
 {
     return StringCompare(a, b) != 0;
 }

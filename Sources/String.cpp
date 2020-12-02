@@ -73,7 +73,7 @@ void FreeString(String* source)
     }
 }
 
-I32 StringCompare(String str0, String str1)
+I32 StringCompare(StringView str0, StringView str1)
 {
     return strncmp(str0.Buffer, str1.Buffer, min(str0.Length, str1.Length));
 }
@@ -113,7 +113,7 @@ String StringFormatArgv(void* buffer, I32 bufferSize, StringView format, ArgList
     return { (char*)buffer, length, bufferSize, false, false };
 }
 
-I32 StringIndexOf(String target, I32 charCode)
+I32 StringIndexOf(StringView target, I32 charCode)
 {
     I32 length = target.Length;
     for (I32 i = 0; i < length; i++)
@@ -127,7 +127,7 @@ I32 StringIndexOf(String target, I32 charCode)
     return -1;
 }
 
-I32 StringIndexOf(String target, String substring)
+I32 StringIndexOf(StringView target, String substring)
 {
     I32 substringLength = substring.Length;
     for (I32 i = 0, n = target.Length - substringLength; i < n; i++)
@@ -141,7 +141,7 @@ I32 StringIndexOf(String target, String substring)
     return -1;
 }
 
-I32 StringLastIndexOf(String target, I32 charCode)
+I32 StringLastIndexOf(StringView target, I32 charCode)
 {
     I32 length = target.Length;
     for (I32 i = length - 1; i > -1; i--)
@@ -155,7 +155,7 @@ I32 StringLastIndexOf(String target, I32 charCode)
     return -1;
 }
 
-I32 StringLastIndexOf(String target, String substring)
+I32 StringLastIndexOf(StringView target, StringView substring)
 {
     I32 substringLength = substring.Length;
     for (I32 i = target.Length - substringLength - 1; i > -1; i--)
@@ -169,16 +169,16 @@ I32 StringLastIndexOf(String target, String substring)
     return -1;
 }
 
-String SubString(String source, I32 start, I32 end)
+String SubString(StringView source, I32 start, I32 end)
 {
-    if (start < 0)
+    if (start < 0 || start >= source.Length)
     {
         return String();
     }
 
     if (end < 0)
     {
-        return { source.Buffer + start, source.Length - start, source.IsOwned, source.Alloced, source.IsConst };
+        return { source.Buffer + start, source.Length - start, false, 0, source.IsConst };
     }
     else
     {

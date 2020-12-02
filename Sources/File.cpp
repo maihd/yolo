@@ -374,7 +374,7 @@ Buffer LoadFileData(File file)
     return { nullptr, 0 };
 }
 
-Buffer LoadFileData(const char* path)
+Buffer LoadFileData(StringView path)
 {
     return { nullptr, 0 };
 }
@@ -384,7 +384,7 @@ Buffer64 LoadFileData64(File file)
     return { nullptr, 0 };
 }
 
-Buffer64 LoadFileData64(const char* path)
+Buffer64 LoadFileData64(StringView path)
 {
     return { nullptr, 0 };
 }
