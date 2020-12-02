@@ -1,4 +1,3 @@
-#include <Yolo/Timer.h>
 #include <Yolo/Window.h>
 #include <Yolo/Graphics.h>
 

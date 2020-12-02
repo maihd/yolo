@@ -72,9 +72,6 @@
     <ClInclude Include="..\Include\Yolo\OrderedTable.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Random.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Shapes.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -206,9 +203,6 @@
     <ClCompile Include="..\Sources\OpenGL.cc">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Random.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\Sprite.cc">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -227,11 +221,11 @@
     <ClCompile Include="..\Sources\Window.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c">
-      <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\Window_Timer.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c">
+      <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

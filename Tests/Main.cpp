@@ -1,5 +1,4 @@
 #include <Yolo/Math.h>
-#include <Yolo/Timer.h>
 
 #include <Yolo/String.h>
 #include <Yolo/Window.h>

@@ -197,7 +197,6 @@
     <ClInclude Include="..\Include\Yolo\Math.h" />
     <ClInclude Include="..\Include\Yolo\Memory.h" />
     <ClInclude Include="..\Include\Yolo\OrderedTable.h" />
-    <ClInclude Include="..\Include\Yolo\Random.h" />
     <ClInclude Include="..\Include\Yolo\Shapes.h" />
     <ClInclude Include="..\Include\Yolo\Sort.h" />
     <ClInclude Include="..\Include\Yolo\Sprite.h" />
@@ -243,14 +242,13 @@
     <ClCompile Include="..\Sources\Json.cpp" />
     <ClCompile Include="..\Sources\Memory.cpp" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
-    <ClCompile Include="..\Sources\Random.cc" />
     <ClCompile Include="..\Sources\Sprite.cc" />
     <ClCompile Include="..\Sources\SpriteBatch.cc" />
     <ClCompile Include="..\Sources\SpriteMesh.cc" />
     <ClCompile Include="..\Sources\String.cpp" />
-    <ClCompile Include="..\Sources\Window_Timer.cpp" />
     <ClCompile Include="..\Sources\VertexArray.cc" />
     <ClCompile Include="..\Sources\Window.cpp" />
+    <ClCompile Include="..\Sources\Window_Timer.cpp" />
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

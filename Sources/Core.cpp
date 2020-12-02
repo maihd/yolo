@@ -1,6 +1,7 @@
-#include <Yolo/Core.h>
-
+#include <time.h>
 #include <stdio.h>
+
+#include <Yolo/Core.h>
 
 U32 CalcHash32(const void* buffer, I32 length, U32 seed)
 {
@@ -125,4 +126,54 @@ void DebugAssertReport(const char* test, const char* func, const char* file, int
     ArgListEnd(arglist);
 
     printf("\n");
+}
+
+I32 RandomNextI32()
+{
+    I32 result = (I32)time(nullptr);
+
+    result ^= (result >> 13);
+    result ^= (result << 17);
+    result ^= (result >> 5);
+
+    return result;
+}
+
+I64 RandomNextI64()
+{
+    I64 result = (I64)time(nullptr);
+
+    result ^= (result >> 13);
+    result ^= (result << 17);
+    result ^= (result >> 5);
+    result ^= (result >> 23);
+    result ^= (result << 37);
+    result ^= (result >> 11);
+
+    return result;
+}
+
+U32 RandomNextU32()
+{
+    U32 result = (U32)time(nullptr);
+
+    result ^= (result >> 13);
+    result ^= (result << 17);
+    result ^= (result >> 5);
+
+    return result;
+}
+
+U64 RandomNextU64()
+{
+    U64 result = (U64)time(nullptr);
+
+    result ^= (result >> 13);
+    result ^= (result << 17);
+    result ^= (result >> 5);
+    result ^= (result >> 23);
+    result ^= (result << 37);
+    result ^= (result >> 11);
+
+    return result;
 }
