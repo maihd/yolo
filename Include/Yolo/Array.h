@@ -333,15 +333,19 @@ inline bool ArrayUnorderedErase(Array<T>* array, int index)
 }
 
 template <typename T>
-inline bool ArrayRemove(Array<T>* array, T value)
+inline int ArrayRemove(Array<T>* array, T value)
 {
-    return ArrayErase(array, ArrayIndexOf(*array, value));
+    int index = ArrayIndexOf(*array, value);
+    ArrayErase(array, index);
+    return index;
 }
 
 template <typename T>
-inline bool ArrayRemoveLast(Array<T>* array, T value)
+inline int ArrayRemoveLast(Array<T>* array, T value)
 {
-    return ArrayErase(array, ArrayLastIndexOf(*array, value));
+    int index = ArrayLastIndexOf(*array, value);
+    ArrayErase(array, index);
+    return index;
 }
 
 template <typename T>

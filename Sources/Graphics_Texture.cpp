@@ -45,15 +45,15 @@ Texture MakeTexture(const void* pixels, I32 width, I32 height, PixelFormat pixel
     };
 }
 
-Texture LoadTexture(const char* path)
+Texture LoadTexture(StringView path)
 {
-    const char* fullPath = GetFullPath(path);
-    if (fullPath == "")
+    String fullPath = GetFullPath(path);
+    if (IsStringEmpty(fullPath))
     {
         return {};
     }
 
-    U64 textureHash = CalcHash64(fullPath, (int)strlen(fullPath));
+    U64 textureHash = CalcHash64(fullPath.Buffer, fullPath.Length);
 
         Texture cachedTexture;
         if (HashTableTryGetValue(LoadedTextures, textureHash, &cachedTexture))
@@ -62,7 +62,7 @@ Texture LoadTexture(const char* path)
         }
 
     I32 width, height, channel;
-    void* pixels = stbi_load(fullPath, &width, &height, &channel, 0);
+    void* pixels = stbi_load(fullPath.Buffer, &width, &height, &channel, 0);
     if (!pixels)
     {
         return {};

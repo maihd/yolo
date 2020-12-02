@@ -6,24 +6,24 @@
 // File system
 // ------------------------------
 
-void        AddFileSearchPath(const char* path);
-void        RemoveFileSearchPath(const char* path);
+void        AddFileSearchPath(StringView path);
+void        RemoveFileSearchPath(StringView path);
 
-bool        FileExists(const char* path, bool useSearchPath = true);
-const char* GetFullPath(const char* expectPath);
+bool        FileExists(StringView path, bool useSearchPath = true);
+String      GetFullPath(StringView expectPath);
 
 // ------------------------------
 // Bassic on files
 // ------------------------------
 
-File        OpenFile(const char* path, FileMode mode);
+File        OpenFile(StringView path, FileMode mode);
 void        CloseFile(File file);
 
 I32         GetFileSize(File file);
-I32         GetFileSize(const char* path);
+I32         GetFileSize(StringView path);
 
 I64         GetFileSize64(File file);
-I64         GetFileSize64(const char* path);
+I64         GetFileSize64(StringView path);
 
 I32         FileRead(File file, void* buffer, I32 length);
 I32         FileWrite(File file, const void* buffer, I32 length);
@@ -36,7 +36,7 @@ I64         FileWrite64(File file, const void* buffer, I64 length);
 // ------------------------------
 
 Buffer      LoadFileData(File file);
-Buffer      LoadFileData(const char* path);
+Buffer      LoadFileData(StringView path);
 
 Buffer64    LoadFileData64(File file);
-Buffer64    LoadFileData64(const char* path);
+Buffer64    LoadFileData64(StringView path);

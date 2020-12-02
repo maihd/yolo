@@ -11,7 +11,7 @@
 #include <Yolo/Memory.h>
 #include <Yolo/Graphics.h>
 
-Font LoadFont(const char* path, float size)
+Font LoadFont(StringView path, float size)
 {
     constexpr I32 TEXTURE_WIDTH = 1024;
     constexpr I32 TEXTURE_HEIGHT = 1024;

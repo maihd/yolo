@@ -26,15 +26,15 @@ static Handle CreateGLShader(GLenum shaderType, const char* source)
     return shader;
 }
 
-Shader LoadShader(const char* vertexFile, const char* pixelsFile)
+Shader LoadShader(StringView vertexFile, StringView pixelsFile)
 {
     return Shader{ 0 };
 }
 
-Shader CompileShader(const char* vertexSource, const char* pixelsSource)
+Shader CompileShader(StringView vertexSource, StringView pixelsSource)
 {
-    Handle vertexShader = CreateGLShader(GL_VERTEX_SHADER, vertexSource);
-    Handle pixelsShader = CreateGLShader(GL_FRAGMENT_SHADER, pixelsSource);
+    Handle vertexShader = CreateGLShader(GL_VERTEX_SHADER, vertexSource.Buffer);
+    Handle pixelsShader = CreateGLShader(GL_FRAGMENT_SHADER, pixelsSource.Buffer);
 
     if (!vertexShader || !pixelsShader)
     {

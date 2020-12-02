@@ -73,11 +73,6 @@ void FreeString(String* source)
     }
 }
 
-bool IsStringEmpty(String target)
-{
-    return target.Length == 0;
-}
-
 I32 StringCompare(String str0, String str1)
 {
     return strncmp(str0.Buffer, str1.Buffer, min(str0.Length, str1.Length));

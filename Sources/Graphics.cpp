@@ -29,7 +29,7 @@ namespace Graphics
     static DrawTextBuffer   drawTextBuffer;
     static DrawSpriteBuffer drawSpriteBuffer;
 
-    constexpr const char* vshaderSource =
+    constexpr StringView vshaderSource =
         "#version 330 core\n"
 
         "layout (location = 0) in vec3 pos;"
@@ -44,7 +44,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    constexpr const char* fshaderSource =
+    constexpr StringView fshaderSource =
         "#version 330 core\n"
 
         "in vec2 fragUV;"
@@ -56,7 +56,7 @@ namespace Graphics
         "resultColor = fragColor;"
         "}";
 
-    constexpr const char* spriteVertexSource =
+    constexpr StringView spriteVertexSource =
         "#version 330 core\n"
 
         "layout (location = 0) in vec3 pos;"
@@ -75,7 +75,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    constexpr const char* spritePixelSource =
+    constexpr StringView spritePixelSource =
         "#version 330 core\n"
 
         "in vec2 uv;"
@@ -90,7 +90,7 @@ namespace Graphics
         "}";
 
 
-    constexpr const char* fontVertexSource =
+    constexpr StringView fontVertexSource =
         "#version 330 core\n"
 
         "layout (location = 0) in vec3 pos;"
@@ -106,7 +106,7 @@ namespace Graphics
         "gl_Position = projection * model * vec4(pos, 1);"
         "}";
 
-    constexpr const char* fontPixelSource =
+    constexpr StringView fontPixelSource =
         "#version 330 core\n"
 
         "in vec2 uv;"
@@ -359,9 +359,9 @@ void DrawTexture(Texture texture, Vector2 position, float rotation, Vector2 scal
 }
 
 #undef DrawText
-void DrawText(const char* text, Font font, Vector2 position)
+void DrawText(StringView text, Font font, Vector2 position)
 {
-    DrawTextBuffer::AddText(&Graphics::drawTextBuffer, text, font);
+    DrawTextBuffer::AddText(&Graphics::drawTextBuffer, text.Buffer, font);
     DrawTextBuffer::UpdateBuffers(&Graphics::drawTextBuffer);
 
     Matrix4 model = mul(Matrix4Translation(position), Matrix4Scalation(1.0f, -1.0f));
@@ -401,5 +401,5 @@ void DrawFramerate(Font font, Vector2 position)
     char buffer[1024];
     float framerate = GetFramerate();
     String text = StringFormat(buffer, sizeof(buffer), "FPS: %.2f", framerate);
-    DrawText(text.Buffer, font, position);
+    DrawText(text, font, position);
 }

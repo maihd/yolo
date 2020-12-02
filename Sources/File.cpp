@@ -17,24 +17,30 @@
 
 static Array<String> SearchPaths;
 
-void AddFileSearchPath(const char* path)
+void AddFileSearchPath(StringView path)
 {
-    String savedPath = RefString(path, (int)strlen(path));
+    String savedPath = SaveString(path);
     if (ArrayIndexOf(SearchPaths, savedPath) == -1)
     {
         ArrayPush(&SearchPaths, savedPath);
     }
 }
 
-void RemoveFileSearchPath(const char* path)
+void RemoveFileSearchPath(StringView path)
 {
-    String savedPath = RefString(path, (int)strlen(path));
-    ArrayRemove(&SearchPaths, savedPath);
+    int index = ArrayIndexOf(SearchPaths, RefString(path));
+    if (index > -1)
+    {
+        String savedPath = SearchPaths.Items[index];
+        ArrayErase(&SearchPaths, index);
+
+        FreeString(&savedPath);
+    }
 }
 
-bool FileExists(const char* path, bool useSearchPath)
+bool FileExists(StringView path, bool useSearchPath)
 {
-    if (!PathFileExistsA(path))
+    if (!PathFileExistsA(path.Buffer))
     {
         if (useSearchPath)
         {
@@ -43,7 +49,7 @@ bool FileExists(const char* path, bool useSearchPath)
             {
                 String searchPath = SearchPaths.Items[i];
 
-                ::sprintf(pathBuffer, "%s/%s", searchPath.Buffer, path);
+                ::sprintf(pathBuffer, "%s/%s", searchPath.Buffer, path.Buffer);
                 if (!PathFileExistsA(pathBuffer))
                 {
                     return true;
@@ -59,7 +65,7 @@ bool FileExists(const char* path, bool useSearchPath)
     }
 }
 
-const char* GetFullPath(const char* path)
+String GetFullPath(StringView path)
 {
     thread_local char pathBuffer[2048];
 
@@ -69,18 +75,18 @@ const char* GetFullPath(const char* path)
         {
             String searchPath = SearchPaths.Items[i];
 
-            sprintf(pathBuffer, "%s/%s", searchPath.Buffer, path);
+            int length = sprintf(pathBuffer, "%s/%s", searchPath.Buffer, path.Buffer);
             if (FileExists(pathBuffer, false))
             {
-                return pathBuffer;
+                return RefString(pathBuffer, length);
             }
         }
 
-        return "";
+        return ConstString("");
     }
     else
     {
-        return path;
+        return RefString(path);
     }
 }
 
@@ -88,10 +94,10 @@ const char* GetFullPath(const char* path)
 // Bassic on files
 // ------------------------------
 
-File OpenFile(const char* path, FileMode mode)
+File OpenFile(StringView path, FileMode mode)
 {
-    const char* fullPath = GetFullPath(path);
-    if (fullPath == "")
+    String fullPath = GetFullPath(path);
+    if (IsStringEmpty(fullPath))
     {
         return 0;
     }
@@ -251,7 +257,7 @@ File OpenFile(const char* path, FileMode mode)
         //attributes |= FILE_FLAG_OVERLAPPED;
     }
 
-    HANDLE handle = CreateFileA(path,
+    HANDLE handle = CreateFileA(path.Buffer,
         access,
         shared,
         NULL,
@@ -292,7 +298,7 @@ I32 GetFileSize(File file)
     return (I32)::GetFileSize((HANDLE)(intptr_t)file, 0);
 }
 
-I32 GetFileSize(const char* path)
+I32 GetFileSize(StringView path)
 {
     File file = OpenFile(path, FileMode::Read);
     I32  size = ::GetFileSize(file);
@@ -314,7 +320,7 @@ I64 GetFileSize64(File file)
     }
 }
 
-I64 GetFileSize64(const char* path)
+I64 GetFileSize64(StringView path)
 {
     File file = OpenFile(path, FileMode::Read);
     I64  size = GetFileSize64(file);

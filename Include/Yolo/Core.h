@@ -154,20 +154,6 @@ struct String
     I32         IsConst : 1;
 };
 
-// Const string wrapper
-// Useful when overloading functions that
-// have both const char[] and const char* versions
-// See more at struct StringRef for example
-struct ConstCharPtr
-{
-    const char* Data;
-    
-    inline ConstCharPtr(const char* data)
-        : Data(data)
-    {
-    }
-};
-
 // String reference
 // Useful for storing string data in other structure
 // and manage ownership, checking for memory location
@@ -187,9 +173,9 @@ struct StringView
     {
     }
 
-    inline StringView(ConstCharPtr buffer)
-        : Buffer(buffer.Data)
-        , Length(-1)
+    inline StringView(const char* buffer, int length)
+        : Buffer(buffer)
+        , Length(length)
         , IsOwned(false)
         , IsConst(false)
     {

@@ -20,8 +20,6 @@ String StringFormatArgv(I32 bufferSize, StringView format, ArgList argv);
 String StringFormat(void* buffer, I32 bufferSize, StringView format, ...);
 String StringFormatArgv(void* buffer, I32 bufferSize, StringView format, ArgList argv);
 
-bool   IsStringEmpty(String target);
-
 I32    StringCompare(String str0, String str1);
 
 I32    StringIndexOf(String target, I32 charCode);
@@ -56,6 +54,25 @@ inline String RefString(StringView source)
 inline String RefString(const char* source, int length)
 {
     return { source, length, 0, false, false };
+}
+
+// -----------------------------------
+// Inline functions
+// -----------------------------------
+
+inline bool IsStringEmpty(String target)
+{
+    return target.Length == 0;
+}
+
+inline bool IsStringEmpty(StringView target)
+{
+    return target.Length == 0;
+}
+
+inline bool IsStringEmpty(const char* target)
+{
+    return target[0] == '\0';
 }
 
 // -----------------------------------
