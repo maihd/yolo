@@ -231,7 +231,9 @@ bool OpenWindow(StringView title, int width, int height)
         return false;
     }
 
-    Runtime.ShouldQuit = false;
+    Runtime.ShouldClose = false;
+    Runtime.ShouldRender = false;
+    
     Runtime.MainWindow = window;
     Runtime.GraphicsContext = graphicsContext;
 
@@ -261,20 +263,38 @@ void CloseWindow(void)
 
     SDL_DestroyWindow(Runtime.MainWindow);
     Runtime.MainWindow = nullptr;
+
+    Runtime.ShouldClose = false;
+    Runtime.ShouldRender = false;
 }
 
-bool HandleWindowEvents(void)
+bool UpdateWindow(void)
 {
-    if (Runtime.MainWindow == nullptr)
+    if (Runtime.MainWindow == nullptr || Runtime.ShouldClose)
     {
         return true;
     }
 
-    Input::NewFrame();
-
-    if (Runtime.ShouldQuit)
+    if (Runtime.ShouldRender)
     {
-        return true;
+        ImGui::Render();
+        ImGuiIO& io = ImGui::GetIO();
+        glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        // Update and Render additional Platform Windows
+        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+        //  For this specific demo app we could also call SDL_GL_MakeCurrent(window, gl_context) directly)
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+            SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+        }
+
+        SDL_GL_SwapWindow(Runtime.MainWindow);
     }
 
     SDL_Event event;
@@ -285,23 +305,24 @@ bool HandleWindowEvents(void)
         switch (event.type)
         {
         case SDL_QUIT:
-            Runtime.ShouldQuit = true;
+            Runtime.ShouldClose = true;
             break;
         }
     }
 
-    Input::EndFrame();
-    return Runtime.ShouldQuit;
-}
+    if (!Runtime.ShouldClose)
+    {
+        Runtime.ShouldRender = true;
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL2_NewFrame(Runtime.MainWindow);
+        ImGui::NewFrame();
+    }
+    else
+    {
+        Runtime.ShouldRender = false;
+    }
 
-void UpdateWindowGraphics(void)
-{
-    SDL_GL_SwapWindow(Runtime.MainWindow);
-}
-
-bool ShouldWindowQuit(void)
-{
-    return Runtime.ShouldQuit;
+    return Runtime.ShouldClose;
 }
 
 Vector2 WindowSize(void)

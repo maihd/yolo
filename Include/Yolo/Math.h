@@ -1310,7 +1310,7 @@ inline float dot(Vector2 a, Vector2 b)
 
 /* Compute squared length of vector
  */
-inline float lensqr(Vector2 v)
+inline float lengthSquare(Vector2 v)
 {
     return dot(v, v);
 }
@@ -1319,7 +1319,7 @@ inline float lensqr(Vector2 v)
  */
 inline float length(Vector2 v)
 {
-    return sqrtf(lensqr(v));
+    return sqrtf(lengthSquare(v));
 }
 
 /* Compute distance from 'a' to b
@@ -1331,16 +1331,16 @@ inline float distance(Vector2 a, Vector2 b)
 
 /* Compute squared distance from 'a' to b
  */
-inline float distsqr(Vector2 a, Vector2 b)
+inline float distanceSquare(Vector2 a, Vector2 b)
 {
-    return lensqr(a - b);
+    return lengthSquare(a - b);
 }
 
 /* Compute normalized vector
  */
 inline Vector2 normalize(Vector2 v)
 {
-    const float lsqr = lensqr(v);
+    const float lsqr = lengthSquare(v);
     if (lsqr > 0.0f)
     {
         const float f = rsqrtf(lsqr);
@@ -1755,7 +1755,7 @@ inline float dot(Vector3 a, Vector3 b)
 
 /* Compute squared length of vector
  */
-inline float lensqr(Vector3 v)
+inline float lengthSquare(Vector3 v)
 {
     return dot(v, v);
 }
@@ -1764,7 +1764,7 @@ inline float lensqr(Vector3 v)
  */
 inline float length(Vector3 v)
 {
-    return sqrtf(lensqr(v));
+    return sqrtf(lengthSquare(v));
 }
 
 /* Compute distance from 'a' to b
@@ -1776,16 +1776,16 @@ inline float distance(Vector3 a, Vector3 b)
 
 /* Compute squared distance from 'a' to b
  */
-inline float distsqr(Vector3 a, Vector3 b)
+inline float distanceSquare(Vector3 a, Vector3 b)
 {
-    return lensqr(a - b);
+    return lengthSquare(a - b);
 }
 
 /* Compute normalized vector
  */
 inline Vector3 normalize(Vector3 v)
 {
-    const float lsqr = lensqr(v);
+    const float lsqr = lengthSquare(v);
     if (lsqr > 0.0f)
     {
         const float f = rsqrtf(lsqr);
@@ -2216,7 +2216,7 @@ inline float dot(Vector4 a, Vector4 b)
 
 /* Compute squared length of vector
  */
-inline float lensqr(Vector4 v)
+inline float lengthSquare(Vector4 v)
 {
     return dot(v, v);
 }
@@ -2225,7 +2225,7 @@ inline float lensqr(Vector4 v)
  */
 inline float length(Vector4 v)
 {
-    return sqrtf(lensqr(v));
+    return sqrtf(lengthSquare(v));
 }
 
 /* Compute distance from 'a' to b
@@ -2237,16 +2237,16 @@ inline float distance(Vector4 a, Vector4 b)
 
 /* Compute squared distance from 'a' to b
  */
-inline float distsqr(Vector4 a, Vector4 b)
+inline float distanceSquare(Vector4 a, Vector4 b)
 {
-    return lensqr(a - b);
+    return lengthSquare(a - b);
 }
 
 /* Compute normalized vector
  */
 inline Vector4 normalize(Vector4 v)
 {
-    const float lsqr = lensqr(v);
+    const float lsqr = lengthSquare(v);
     if (lsqr > 0.0f)
     {
         const float f = rsqrtf(lsqr);
@@ -2286,8 +2286,7 @@ inline Vector4 faceforward(Vector4 n, Vector4 i, Vector4 nref)
 // @region: Quaternion
 //
 
-/* Quaternion multiplication
- */
+/// Quaternion multiplication
 inline Quaternion mul(Quaternion a, Quaternion b)
 {
     const Vector3 a3 = Vector3{ a.x, a.y, a.z };
@@ -2296,6 +2295,17 @@ inline Quaternion mul(Quaternion a, Quaternion b)
     Vector3 v = a3 * b.w + b3 * a.w + cross(a3, b3);
     float  w = a.w * b.w - dot(a3, b3);
     return Quaternion{ v.x, v.y, v.z, w };
+}
+
+
+inline Vector3 mul(Quaternion q, Vector3 v)
+{
+    const Vector3   quatVector = Vector3{ q.x, q.y, q.z };
+    const float     quatScalar = q.w;
+
+    return quatVector * 2.0f * dot(quatVector, v)
+         + v * (quatScalar * quatScalar - lengthSquare(quatVector))
+         + cross(quatVector, v) * 2.0f * quatScalar;
 }
 
 inline Quaternion inverse(Quaternion q)
@@ -2390,12 +2400,12 @@ inline Vector4 QuaternionToAxisAngle(Quaternion q)
     const float ilen = 1.0f / sqrtf(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
     const Vector4 c = q.w != 0.0f
         ? Vector4{ q.x * ilen, q.y * ilen, q.z * ilen, q.w * ilen }
-    : Vector4{ q.x, q.y, q.z, q.w };
+        : Vector4{ q.x, q.y, q.z, q.w };
 
     const float den = sqrtf(1.0f - q.w * q.w);
     const Vector3 axis = (den > 0.0001f)
         ? Vector3{ c.x / den, c.y / den, c.z / den }
-    : Vector3{ 1, 0, 0 };
+        : Vector3{ 1, 0, 0 };
 
     float angle = 2.0f * cosf(c.w);
     return Vector4{ axis.x, axis.y, axis.z, angle };

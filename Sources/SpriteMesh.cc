@@ -4,7 +4,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
-#include <Yolo/Vertex.h>
+#include <Yolo/Graphics.h>
 
 SpriteMesh SpriteMesh::New(void)
 {

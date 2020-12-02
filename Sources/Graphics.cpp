@@ -1,5 +1,5 @@
 #include <Yolo/Math.h>
-#include <Yolo/Time.h>
+#include <Yolo/Timer.h>
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
 #include <Yolo/Graphics.h>
@@ -193,46 +193,6 @@ namespace Graphics
         glClearColor(r, g, b, a);
     }
 
-    bool NewFrame(void)
-    {
-        if (Runtime.GraphicsContext != nullptr)
-        {
-            Clear();
-
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplSDL2_NewFrame(Runtime.MainWindow);
-            ImGui::NewFrame();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    void EndFrame(void)
-    {
-        DrawSpriteBufferOps::Draw(&drawSpriteBuffer, spriteShader, projection);
-
-        ImGui::Render();
-        ImGuiIO& io = ImGui::GetIO();
-        glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        // Update and Render additional Platform Windows
-        // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-        //  For this specific demo app we could also call SDL_GL_MakeCurrent(window, gl_context) directly)
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-            SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-        }
-
-        UpdateWindowGraphics();
-    }
-
     void PresentDrawBuffer(GLenum drawMode)
     {
         DrawBufferUpdateBuffers(&drawBuffer);
@@ -300,6 +260,23 @@ namespace Graphics
     {
         Graphics::projection = projection;
     }
+}
+
+bool BeginDrawing(void)
+{
+    if (Runtime.GraphicsContext != nullptr)
+    {
+        Graphics::Clear();
+
+        return true;
+    }
+
+    return false;
+}
+
+void EndDrawing(void)
+{
+    DrawSpriteBufferOps::Draw(&Graphics::drawSpriteBuffer, Graphics::spriteShader, Graphics::projection);
 }
 
 void DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, I32 segments)

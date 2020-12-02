@@ -145,8 +145,29 @@ do
         path.join(ROOT_DIR, "Games/Spaneon/Sources/*.h"),
         path.join(ROOT_DIR, "Games/Spaneon/Sources/**/*.h"),
 
-        path.join(ROOT_DIR, "Games/Spaneon/Sources/*.cc"),
-        path.join(ROOT_DIR, "Games/Spaneon/Sources/**/*.cc"),
+        path.join(ROOT_DIR, "Games/Spaneon/Sources/*.cpp"),
+        path.join(ROOT_DIR, "Games/Spaneon/Sources/**/*.cpp"),
+    }
+end
+
+project "Animation"
+do
+    kind "ConsoleApp"
+
+    links { 
+        "Yolo"
+    }
+
+    includedirs {
+        path.join(ROOT_DI, "Include"),
+    }
+
+    files {
+        path.join(ROOT_DIR, "Examples/Animation/*.h"),
+        path.join(ROOT_DIR, "Examples/Animation/**/*.h"),
+
+        path.join(ROOT_DIR, "Examples/Animation/*.cpp"),
+        path.join(ROOT_DIR, "Examples/Animation/**/*.cpp"),
     }
 end
 

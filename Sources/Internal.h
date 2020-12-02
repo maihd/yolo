@@ -16,9 +16,11 @@
 
 struct RuntimeState
 {
-    bool             ShouldQuit;
-    SDL_Window*      MainWindow;
-    SDL_GLContext    GraphicsContext;
+    bool            ShouldClose;
+    bool            ShouldRender;
+
+    SDL_Window*     MainWindow;
+    SDL_GLContext   GraphicsContext;
 };
 
 extern RuntimeState Runtime;

@@ -1,14 +1,15 @@
 #include <Yolo/Window.h>
+#include <Yolo/Graphics.h>
 
 int main()
 {
     OpenWindow("SpineView", 800, 600);
 
-    while (ShouldWindowQuit())
+    while (HandleWindowEvents())
     {
-        ClearWindow();
+        Graphics::NewFrame();
 
-        SwapWindowBuffers();
+        Graphics::EndFrame();
     }
 
     CloseWindow();

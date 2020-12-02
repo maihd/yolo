@@ -1,5 +1,5 @@
 #include <Yolo/Math.h>
-#include <Yolo/Time.h>
+#include <Yolo/Timer.h>
 
 #include <Yolo/String.h>
 #include <Yolo/Window.h>
@@ -65,10 +65,10 @@ int main(void)
 
     Graphics::SetVSync(true);
 
-    while (!HandleWindowEvents())
+    while (!UpdateWindow())
     {
         //Graphics::ClearColor(1, 1, 1);
-        if (Graphics::NewFrame())
+        if (BeginDrawing())
         {
             Graphics::SetLineWidth(4.0f);
             DrawRectangle(DrawMode::Fill, { 400, 300 }, { 50, 50 }, { 0.5, 0.5, 0.5, 1 });
@@ -85,12 +85,12 @@ int main(void)
 
             ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags_OpenWindow);
 
-            Graphics::EndFrame();
+            EndDrawing();
         }
 
         angle += GetDeltaTime();
         posX = cosf(angle) * 100;
-        TimeUpdateAndSleep(60);
+        UpdateTimerAndSleep(60);
     }
 
     //FreeFont(&font);

@@ -1,4 +1,4 @@
-#include <Yolo/Time.h>
+#include <Yolo/Window.h>
 
 #include "./Internal.h"
 
@@ -93,7 +93,7 @@ float GetUnscaledDeltaTime(void)
     return Timer.DeltaTime;
 }
 
-void TimeUpdate(void)
+void UpdateTimer(void)
 {
     U64 counter = GetCpuCounter();
     U64 ticks = counter - Timer.PrevCounter;
@@ -113,10 +113,10 @@ void TimeUpdate(void)
     Timer.PrevCounter = counter;
 }
 
-bool TimeUpdateAndSleep(float targetFramerate)
+bool UpdateTimerAndSleep(float limitFramerate)
 {
     U64 frequency  = GetCpuFrequency();
-    U64 limitTicks = (U64)(frequency / (double)(targetFramerate < 1.0f ? 1.0f : targetFramerate));
+    U64 limitTicks = (U64)(frequency / (double)(limitFramerate < 1.0f ? 1.0f : limitFramerate));
 
     U64 counter = GetCpuCounter();
     U64 ticks = Timer.PrevCounter > 0 ? counter - Timer.PrevCounter : limitTicks;

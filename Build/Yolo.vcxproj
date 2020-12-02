@@ -202,9 +202,7 @@
     <ClInclude Include="..\Include\Yolo\Sort.h" />
     <ClInclude Include="..\Include\Yolo\Sprite.h" />
     <ClInclude Include="..\Include\Yolo\String.h" />
-    <ClInclude Include="..\Include\Yolo\Time.h" />
     <ClInclude Include="..\Include\Yolo\Tween.h" />
-    <ClInclude Include="..\Include\Yolo\Vertex.h" />
     <ClInclude Include="..\Include\Yolo\VertexArray.h" />
     <ClInclude Include="..\Include\Yolo\Window.h" />
     <ClInclude Include="..\Sources\DrawBuffer.h" />
@@ -250,7 +248,7 @@
     <ClCompile Include="..\Sources\SpriteBatch.cc" />
     <ClCompile Include="..\Sources\SpriteMesh.cc" />
     <ClCompile Include="..\Sources\String.cpp" />
-    <ClCompile Include="..\Sources\Time.cc" />
+    <ClCompile Include="..\Sources\Window_Timer.cpp" />
     <ClCompile Include="..\Sources\VertexArray.cc" />
     <ClCompile Include="..\Sources\Window.cpp" />
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />

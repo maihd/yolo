@@ -87,13 +87,7 @@
     <ClInclude Include="..\Include\Yolo\String.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Time.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Tween.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Vertex.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\VertexArray.h">
@@ -227,9 +221,6 @@
     <ClCompile Include="..\Sources\String.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Time.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\VertexArray.cc">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -238,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c">
       <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Window_Timer.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
