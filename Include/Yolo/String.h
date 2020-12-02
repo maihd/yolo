@@ -7,8 +7,8 @@
 // Main functions
 // -----------------------------------
 
-String MakeString(void* buffer, int bufferSize);
-String MakeString(void* buffer, int bufferSize, StringView source);
+String MakeString(void* buffer, I32 bufferSize);
+String MakeString(void* buffer, I32 bufferSize, StringView source);
 
 String SaveString(StringView source);
 
@@ -22,13 +22,13 @@ String StringFormatArgv(void* buffer, I32 bufferSize, StringView format, ArgList
 
 I32    StringCompare(StringView str0, StringView str1);
 
-I32    StringIndexOf(StringView target, I32 charCode);
-I32    StringIndexOf(StringView target, StringView substring);
+int    StringIndexOf(StringView target, int charCode);
+int    StringIndexOf(StringView target, StringView substring);
 
-I32    StringLastIndexOf(StringView target, I32 charCode);
-I32    StringLastIndexOf(StringView target, StringView substring);
+int    StringLastIndexOf(StringView target, int charCode);
+int    StringLastIndexOf(StringView target, StringView substring);
 
-String SubString(StringView source, I32 start, I32 end = -1);
+String SubString(StringView source, int start, int end = -1);
 
 // -----------------------------------
 // Constructor functions

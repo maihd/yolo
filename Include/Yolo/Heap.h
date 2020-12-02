@@ -1,6 +1,41 @@
 #pragma once
 
+#include <stdlib.h>
 #include <string.h>
+
+template <typename SuperHeap>
+struct SizeHeap : public SuperHeap
+{
+    inline void* Alloc(int size)
+    {
+        int* item = (int*)SuperHeap::Alloc(sizeof(int) + size);
+        if (item)
+        {
+            *item = size;
+        }
+        return item + 1;
+    }
+
+    inline void* Realloc(void* ptr, int size)
+    {
+        int* newItem = (int*)SuperHeap::Realloc(ptr ? ((int*)ptr - 1) : nullptr, sizeof(int));
+        if (newItem)
+        {
+            *newItem = size;
+        }
+        return newItem + 1;
+    }
+
+    inline void Free(void* ptr)
+    {
+        SuperHeap::Free((int*)ptr - 1);
+    }
+
+    inline int GetSize(void* ptr)
+    {
+        return *((int*)ptr - 1);
+    }
+};
 
 struct StrictSegHeapTraits
 {
@@ -99,5 +134,63 @@ struct StrictSegHeap : public SuperHeap
                 LittleHeaps[sizeBin].Free(ptr);
             }
         }
+    }
+};
+
+struct PagedHeap
+{
+    void*   Alloc(int size);
+    void*   Realloc(void* ptr, int size);
+    void    Free(void* ptr);
+    int     GetSize(void* ptr);
+};
+
+struct PagedFreeList
+{
+    struct Item
+    {
+        Item* Next;
+    };
+
+    struct Page
+    {
+        int   PageSize;
+        int   ItemSize;
+
+        Page* Next;
+    };
+
+    Item*   FreeItem;
+    Page*   AllocedPages;
+
+    void*   Alloc(int size);
+    void    Free(void* ptr);
+    int     GetSize(void* ptr) const;
+
+            ~PagedFreeList();
+
+    inline  PagedFreeList()
+        : FreeItem(nullptr)
+        , AllocedPages(nullptr)
+    {
+    }
+
+};
+
+struct CrtMalloc
+{
+    inline void* Alloc(int size)
+    {
+        return malloc((size_t)size);
+    }
+
+    inline void* Realloc(void* ptr, int size)
+    {
+        return realloc(ptr, (size_t)size);
+    }
+
+    inline void Free(void* ptr)
+    {
+        free(ptr);
     }
 };

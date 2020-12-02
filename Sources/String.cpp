@@ -19,16 +19,14 @@ String MakeString(void* buffer, int bufferSize)
     return { (char*)buffer, 0, bufferSize, true, false };
 }
 
-String MakeString(void* buffer, int bufferSize, const char* source)
+String MakeString(void* buffer, int bufferSize, StringView source)
 {
     DebugAssert(buffer != nullptr, "Invalid buffer");
     DebugAssert(bufferSize > 0, "Invalid bufferSize, which must be > 0");
+    DebugAssert(bufferSize >= source.Length, "Invalid bufferSize, which must be > source.Length");
 
     char* content = (char*)buffer;
-    if (source)
-    {
-        strcpy(content, source);
-    }
+    memcpy(content, source.Buffer, source.Length + 1);
 
     return { content, 0, bufferSize, true, false };
 }
@@ -113,10 +111,9 @@ String StringFormatArgv(void* buffer, I32 bufferSize, StringView format, ArgList
     return { (char*)buffer, length, bufferSize, false, false };
 }
 
-I32 StringIndexOf(StringView target, I32 charCode)
+I32 StringIndexOf(StringView target, int charCode)
 {
-    I32 length = target.Length;
-    for (I32 i = 0; i < length; i++)
+    for (int i = 0; i < target.Length; i++)
     {
         if (target.Buffer[i] == charCode)
         {
@@ -127,12 +124,11 @@ I32 StringIndexOf(StringView target, I32 charCode)
     return -1;
 }
 
-I32 StringIndexOf(StringView target, String substring)
+int StringIndexOf(StringView target, StringView substring)
 {
-    I32 substringLength = substring.Length;
-    for (I32 i = 0, n = target.Length - substringLength; i < n; i++)
+    for (int i = 0, n = target.Length - substring.Length; i < n; i++)
     {
-        if (strncmp(&target.Buffer[i], substring.Buffer, (size_t)substringLength) == 0)
+        if (strncmp(&target.Buffer[i], substring.Buffer, (size_t)substring.Length) == 0)
         {
             return i;
         }
@@ -141,10 +137,9 @@ I32 StringIndexOf(StringView target, String substring)
     return -1;
 }
 
-I32 StringLastIndexOf(StringView target, I32 charCode)
+int StringLastIndexOf(StringView target, int charCode)
 {
-    I32 length = target.Length;
-    for (I32 i = length - 1; i > -1; i--)
+    for (int i = target.Length - 1; i > -1; i--)
     {
         if (target.Buffer[i] == charCode)
         {
@@ -155,12 +150,11 @@ I32 StringLastIndexOf(StringView target, I32 charCode)
     return -1;
 }
 
-I32 StringLastIndexOf(StringView target, StringView substring)
+int StringLastIndexOf(StringView target, StringView substring)
 {
-    I32 substringLength = substring.Length;
-    for (I32 i = target.Length - substringLength - 1; i > -1; i--)
+    for (int i = target.Length - substring.Length - 1; i > -1; i--)
     {
-        if (strncmp(target.Buffer + i, substring.Buffer, (size_t)substringLength) == 0)
+        if (strncmp(target.Buffer + i, substring.Buffer, (size_t)substring.Length) == 0)
         {
             return i;
         }
@@ -169,7 +163,7 @@ I32 StringLastIndexOf(StringView target, StringView substring)
     return -1;
 }
 
-String SubString(StringView source, I32 start, I32 end)
+String SubString(StringView source, int start, int end)
 {
     if (start < 0 || start >= source.Length)
     {

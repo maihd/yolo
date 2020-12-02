@@ -36,6 +36,19 @@
 #   define CPU_LITTLE_ENDIAN 1
 #endif
 
+// --------------------------------
+// Macros
+// --------------------------------
+
+#include <stddef.h>
+
+#undef offsetof
+#ifndef _CRT_USE_BUILTIN_OFFSETOF
+#define offsetof(s, m) (I32)(&((s*)0)->m)
+#else
+#define offsetof(s, m) (I32)__builtin_offsetof(s,m)
+#endif
+
 // ----------------------
 // Assertions
 // ----------------------
@@ -240,11 +253,11 @@ struct Job
 // IO types
 // ----------------------
 
-namespace _FileMode
+namespace FileModes
 {
     enum Type
     {
-        None,
+        None        = 0,
 
         Sync        = 1 << 15,
         DataSync    = 1 << 14,
@@ -257,7 +270,7 @@ namespace _FileMode
         Existing    = 1 << 8,
         Truncate    = 1 << 7,
 
-        Directory   = 1 << 6, 
+        Directory   = 1 << 6,
         ShortLive   = 1 << 5,
         Temporary   = 1 << 4,
 
@@ -270,8 +283,8 @@ namespace _FileMode
     };
 };
 
-using FileMode = _FileMode::Type;
 using File = Handle;
+using FileMode = FileModes::Type;
 
 // ----------------------
 // Graphics Types
@@ -410,15 +423,6 @@ constexpr const float PI = 3.141592653589f;
 // ----------------------
 // Utils work on types
 // ----------------------
-
-#include <stddef.h>
-
-#undef offsetof
-#ifndef _CRT_USE_BUILTIN_OFFSETOF
-#define offsetof(s, m) (I32)(&((s*)0)->m)
-#else
-#define offsetof(s, m) (I32)__builtin_offsetof(s,m)
-#endif
 
 template <typename T, I32 count>
 constexpr I32 CountOf(const T(&_)[count])

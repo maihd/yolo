@@ -1,11 +1,7 @@
 #include <Yolo/Core.h>
+#include <Yolo/Heap.h>
 #include <Yolo/ImGui.h>
 #include <Yolo/Memory.h>
-
-#include <Yolo/Heap/SizeHeap.h>
-#include <Yolo/Heap/PagedHeap.h>
-#include <Yolo/Heap/PagedFreeList.h>
-#include <Yolo/Heap/StrictSegHeap.h>
 
 #include <time.h>
 #include <stdio.h>
@@ -21,7 +17,7 @@ static StrictSegHeap<10, StrictSegHeapTraits, SizeHeap<PagedFreeList>, SizeHeap<
 // Internal types
 // ----------------------
 
-typedef struct AllocDesc
+struct AllocDesc
 {
     void*               Ptr;
     int                 Size;
@@ -37,7 +33,7 @@ typedef struct AllocDesc
     int                 AddressChangedCount;
 
     struct AllocDesc*   Next;
-} AllocDesc;
+};
 
 // ----------------------------
 // Tracking memory helpers

@@ -122,8 +122,8 @@ do
     }
 
     files {
-        path.join(ROOT_DIR, "Tests/*.cc"),
-        path.join(ROOT_DIR, "Tests/**/*.cc"),   
+        path.join(ROOT_DIR, "Tests/*.cpp"),
+        path.join(ROOT_DIR, "Tests/**/*.cpp"),   
     }
 
     filter {}

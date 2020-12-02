@@ -185,14 +185,11 @@
   <ItemGroup>
     <ClInclude Include="..\Include\Yolo\Array.h" />
     <ClInclude Include="..\Include\Yolo\Audio.h" />
+    <ClInclude Include="..\Include\Yolo\Core.h" />
     <ClInclude Include="..\Include\Yolo\File.h" />
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
-    <ClInclude Include="..\Include\Yolo\Heap\CrtMalloc.h" />
-    <ClInclude Include="..\Include\Yolo\Heap\PagedFreeList.h" />
-    <ClInclude Include="..\Include\Yolo\Heap\PagedHeap.h" />
-    <ClInclude Include="..\Include\Yolo\Heap\SizeHeap.h" />
-    <ClInclude Include="..\Include\Yolo\Heap\StrictSegHeap.h" />
+    <ClInclude Include="..\Include\Yolo\Heap.h" />
     <ClInclude Include="..\Include\Yolo\HotDylib.h" />
     <ClInclude Include="..\Include\Yolo\Imgui.h" />
     <ClInclude Include="..\Include\Yolo\Input.h" />
@@ -208,7 +205,6 @@
     <ClInclude Include="..\Include\Yolo\String.h" />
     <ClInclude Include="..\Include\Yolo\Time.h" />
     <ClInclude Include="..\Include\Yolo\Tween.h" />
-    <ClInclude Include="..\Include\Yolo\Core.h" />
     <ClInclude Include="..\Include\Yolo\Vertex.h" />
     <ClInclude Include="..\Include\Yolo\VertexArray.h" />
     <ClInclude Include="..\Include\Yolo\Window.h" />
@@ -228,14 +224,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\Audio.cc" />
+    <ClCompile Include="..\Sources\Core.cpp" />
     <ClCompile Include="..\Sources\DrawBuffer.cpp" />
     <ClCompile Include="..\Sources\DrawSpriteBuffer.cc" />
     <ClCompile Include="..\Sources\DrawTextBuffer.cc" />
     <ClCompile Include="..\Sources\File.cpp" />
-    <ClCompile Include="..\Sources\Graphics_Font.cpp" />
     <ClCompile Include="..\Sources\Graphics.cpp" />
-    <ClCompile Include="..\Sources\Heap\PagedFreeList.cpp" />
-    <ClCompile Include="..\Sources\Heap\PagedHeap.cpp" />
+    <ClCompile Include="..\Sources\Graphics_Font.cpp" />
+    <ClCompile Include="..\Sources\Graphics_Shader.cc" />
+    <ClCompile Include="..\Sources\Graphics_Texture.cpp" />
+    <ClCompile Include="..\Sources\Heap.cpp" />
     <ClCompile Include="..\Sources\HotDylib.cc" />
     <ClCompile Include="..\Sources\Imgui\imgui.cpp" />
     <ClCompile Include="..\Sources\Imgui\imgui_draw.cpp" />
@@ -249,14 +247,11 @@
     <ClCompile Include="..\Sources\Memory.cpp" />
     <ClCompile Include="..\Sources\OpenGL.cc" />
     <ClCompile Include="..\Sources\Random.cc" />
-    <ClCompile Include="..\Sources\Graphics_Shader.cc" />
     <ClCompile Include="..\Sources\Sprite.cc" />
     <ClCompile Include="..\Sources\SpriteBatch.cc" />
     <ClCompile Include="..\Sources\SpriteMesh.cc" />
     <ClCompile Include="..\Sources\String.cpp" />
-    <ClCompile Include="..\Sources\Graphics_Texture.cpp" />
     <ClCompile Include="..\Sources\Time.cc" />
-    <ClCompile Include="..\Sources\Core.cpp" />
     <ClCompile Include="..\Sources\VertexArray.cc" />
     <ClCompile Include="..\Sources\Window.cpp" />
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />
