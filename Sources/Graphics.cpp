@@ -193,16 +193,23 @@ namespace Graphics
         glClearColor(r, g, b, a);
     }
 
-    void NewFrame(void)
+    bool NewFrame(void)
     {
-        Clear();
+        if (Runtime.GraphicsContext != nullptr)
+        {
+            Clear();
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL2_NewFrame(Runtime.MainWindow);
-        ImGui::NewFrame();
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplSDL2_NewFrame(Runtime.MainWindow);
+            ImGui::NewFrame();
+
+            return true;
+        }
+
+        return false;
     }
 
-    void Present(void)
+    void EndFrame(void)
     {
         DrawSpriteBufferOps::Draw(&drawSpriteBuffer, spriteShader, projection);
 
@@ -223,7 +230,7 @@ namespace Graphics
             SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
         }
 
-        WindowSwapBuffer();
+        UpdateWindowGraphics();
     }
 
     void PresentDrawBuffer(GLenum drawMode)

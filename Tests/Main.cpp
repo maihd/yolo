@@ -65,27 +65,28 @@ int main(void)
 
     Graphics::SetVSync(true);
 
-    while (!WindowPollEvents())
+    while (!HandleWindowEvents())
     {
         //Graphics::ClearColor(1, 1, 1);
-        Graphics::NewFrame();
+        if (Graphics::NewFrame())
+        {
+            Graphics::SetLineWidth(4.0f);
+            DrawRectangle(DrawMode::Fill, { 400, 300 }, { 50, 50 }, { 0.5, 0.5, 0.5, 1 });
+            DrawCircle(DrawMode::Line, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
 
-        Graphics::SetLineWidth(4.0f);
-        DrawRectangle(DrawMode::Fill, { 400, 300 }, { 50, 50 }, { 0.5, 0.5, 0.5, 1 });
-        DrawCircle(DrawMode::Line, { 400 + 100 * cosf(angle), 300 }, 50, { 1, 1, 1, 1 });
+            DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
+            DrawTexture(texture, { width * 0.5f, height * 0.5f }, GetTotalTime());
+            DrawTexture(texture, { width * 0.25f, height * 0.25f }, GetTotalTime() * 0.5f, Vector2{ 1, 1 }, Vector4{ 0.5f, 0.5f, 0.5f, 1.0f }, Vector2{ 1.0f, 1.0f });
+            DrawFramerate(font, { 0.0f, (float)height - font.Size });
 
-        DrawText("Hello world", font, { posX + width * 0.5f, height * 0.5f });
-        DrawTexture(texture, { width * 0.5f, height * 0.5f }, GetTotalTime());
-        DrawTexture(texture, { width * 0.25f, height * 0.25f }, GetTotalTime() * 0.5f, Vector2{ 1, 1 }, Vector4{ 0.5f, 0.5f, 0.5f, 1.0f }, Vector2{ 1.0f, 1.0f });
-        DrawFramerate(font, { 0.0f, (float)height - font.Size });
+            ImGui::Begin("Debug");
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::End();
 
-        ImGui::Begin("Debug");
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        ImGui::End();
+            ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags_OpenWindow);
 
-        ImGui::DumpMemoryAllocs(ImGuiDumpMemoryFlags_OpenWindow);
-
-        Graphics::Present();
+            Graphics::EndFrame();
+        }
 
         angle += GetDeltaTime();
         posX = cosf(angle) * 100;

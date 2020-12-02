@@ -149,3 +149,16 @@ do
         path.join(ROOT_DIR, "Games/Spaneon/Sources/**/*.cc"),
     }
 end
+
+-- project "SpineView"
+-- do
+--     kind "ConsoleApp"
+
+--     links {
+--         "Yolo"
+--     }
+
+--     includedirs {
+
+--     }
+-- end

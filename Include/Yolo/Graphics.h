@@ -30,8 +30,8 @@ namespace Graphics
     void    SetClearColor(Vector4 color);
     void    SetClearColor(float r, float g, float b, float a = 1.0f);
 
-    void    NewFrame(void);
-    void    Present(void);
+    bool    NewFrame(void);
+    void    EndFrame(void);
 
     bool    IsVSync(void);
     void    SetVSync(bool enable);

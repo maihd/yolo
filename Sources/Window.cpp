@@ -161,7 +161,7 @@ namespace Graphics
     void CreateDefaultObjects(void);
 }
 
-bool OpenWindow(const char* title, int width, int height)
+bool OpenWindow(StringView title, int width, int height)
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
     {
@@ -169,7 +169,7 @@ bool OpenWindow(const char* title, int width, int height)
     }
 
     DWORD winFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
-    SDL_Window* window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, winFlags);
+    SDL_Window* window = SDL_CreateWindow(title.Buffer, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, winFlags);
     if (!window)
     {
         return false;
@@ -263,8 +263,13 @@ void CloseWindow(void)
     Runtime.MainWindow = nullptr;
 }
 
-bool WindowPollEvents(void)
+bool HandleWindowEvents(void)
 {
+    if (Runtime.MainWindow == nullptr)
+    {
+        return true;
+    }
+
     Input::NewFrame();
 
     if (Runtime.ShouldQuit)
@@ -289,7 +294,7 @@ bool WindowPollEvents(void)
     return Runtime.ShouldQuit;
 }
 
-void WindowSwapBuffer(void)
+void UpdateWindowGraphics(void)
 {
     SDL_GL_SwapWindow(Runtime.MainWindow);
 }

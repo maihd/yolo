@@ -1,7 +1,7 @@
 #pragma once
 
 #include <math.h>
-#include <Yolo/Types.h>
+#include <Yolo/Core.h>
 
 namespace Tween
 {
