@@ -94,9 +94,6 @@ namespace Graphics
     void    SetClearColor(Vector4 color);
     void    SetClearColor(float r, float g, float b, float a = 1.0f);
 
-    bool    IsVSync(void);
-    void    SetVSync(bool enable);
-
     bool    IsWireframe(void);
     void    SetWireframe(bool enable);
 

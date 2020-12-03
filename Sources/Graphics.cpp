@@ -216,16 +216,6 @@ namespace Graphics
 
         glUseProgram(0);
     }
-
-    bool IsVSync(void)
-    {
-        return SDL_GL_GetSwapInterval();
-    }
-
-    void SetVSync(bool enable)
-    {
-        SDL_GL_SetSwapInterval(enable);
-    }
     
     bool IsWireframe(void)
     {

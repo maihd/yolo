@@ -1,9 +1,7 @@
+#include <Yolo/Core.h>
+#include <Yolo/Input.h>
 #include <Yolo/Window.h>
 #include <Yolo/String.h>
-
-#include "./Internal.h"
-#include "./Imgui/imgui_impl_sdl.h"
-#include "./Imgui/imgui_impl_opengl3.h"
 
 #ifdef _WIN32
 #   define VC_EXTRALEAN
@@ -18,8 +16,44 @@
 #   include <unistd.h>  // usleep
 #endif
 
+#include <GL/glew.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+
+#include "./Imgui/imgui_impl_sdl.h"
+#include "./Imgui/imgui_impl_opengl3.h"
+
+static struct
+{
+    bool            ShouldClose;
+    bool            ShouldRender;
+
+    SDL_Window*     MainWindow;
+    SDL_GLContext   GraphicsContext;
+} Runtime;
+
+namespace Input
+{
+    void Setup(void);
+
+    void NewFrame(void);
+    void EndFrame(void);
+
+    void UpdateCharInput(I32 character);
+    void UpdateCharInput(String string);
+
+    void UpdateKey(KeyCode key, bool down);
+
+    void UpdateMouse(MouseButton button, bool down);
+    void UpdateMouseMove(float x, float y);
+    void UpdateMouseWheel(float h, float v);
+
+    void UpdateGamepadAxis(I32 gamepadID, GamepadAxis axis, float value);
+    void UpdateGamepadButton(I32 gamepadID, GamepadButton button, bool down);
+}
+
 // ------------------------
-// Timer api
+// Timer internal functions
 // ------------------------
 
 static void OpenTimer(int fps);
@@ -32,7 +66,7 @@ static void UpdateTimer(void);
 static bool UpdateTimerAndSleep(void);
 
 // ------------------------------
-// Input helpers
+// Input internal functions
 // ------------------------------
 
 static KeyCode s_keyCodeMap[2048];
@@ -47,7 +81,7 @@ static KeyCode ConvertKeyCode(int nativeKey)
     {
         s_loaded = true;
 
-        s_keyCodeMap[VK_SPACE]      = KeyCode::Space;
+        s_keyCodeMap[SDLK_SPACE]    = KeyCode::Space;
         s_keyCodeMap[VK_BACK]       = KeyCode::Backspace;
         s_keyCodeMap[VK_RETURN]     = KeyCode::Return;
         s_keyCodeMap[VK_TAB]        = KeyCode::Tab;
@@ -358,6 +392,16 @@ bool UpdateWindow(void)
     }
 
     return Runtime.ShouldClose;
+}
+
+bool IsVSync(void)
+{
+    return SDL_GL_GetSwapInterval();
+}
+
+void SetVSync(bool enable)
+{
+    SDL_GL_SetSwapInterval(enable);
 }
 
 Vector2 WindowSize(void)

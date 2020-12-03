@@ -63,7 +63,7 @@ int main(void)
 
     FreeHashTable(&hashTable);
 
-    Graphics::SetVSync(true);
+    SetVSync(true);
 
     while (!UpdateWindow())
     {

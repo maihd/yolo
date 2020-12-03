@@ -42,30 +42,27 @@ struct HotDylib
     String          entryName;
 };
 
-namespace HotDylibOps
-{
-    /**
-     * Open an hot dynamic library, path can be not exists from open moment
-     */
-    HotDylib*       Open(const char* path, const char* entryName);
+/**
+* Open an hot dynamic library, path can be not exists from open moment
+*/
+HotDylib*       OpenHotDylib(const char* path, const char* entryName);
 
-    /**
-     * Close opened files by hot dynamic library
-     */
-    void            Close(HotDylib* lib);
+/**
+ * Close opened files by hot dynamic library
+ */
+void            CloseHotDylib(HotDylib* lib);
 
-    /**
-     * Update lib, check for changed library and reload
-     */
-    HotDylibState   Update(HotDylib* lib);
+/**
+ * Update lib, check for changed library and reload
+ */
+HotDylibState   HotDylibUpdate(HotDylib* lib);
 
-    /**
-     * Get an symbol address from library with symbol's name
-     */
-    void*           GetSymbol(const HotDylib* lib, const char* symbolName);
+/**
+ * Get an symbol address from library with symbol's name
+ */
+void*           HotDylibGetSymbol(const HotDylib* lib, const char* symbolName);
 
-    /**
-     * Get error message of hot dynamic library from last update
-     */
-    const char*     GetError(const HotDylib* lib);
-}
+/**
+ * Get error message of hot dynamic library from last update
+ */
+String          HotDylibGetError(const HotDylib* lib);

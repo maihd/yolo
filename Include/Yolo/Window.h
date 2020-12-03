@@ -15,6 +15,9 @@ bool        UpdateWindow(void);
 // Screen & viewport
 // ----------------------------------------
 
+bool        IsVSync(void);
+void        SetVSync(bool active);
+
 Vector2     WindowSize(void);
 int         WindowWidth(void);
 int         WindowHeight(void);
