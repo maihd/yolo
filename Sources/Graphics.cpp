@@ -4,14 +4,14 @@
 #include <Yolo/Window.h>
 #include <Yolo/Graphics.h>
 
-#include "./Internal.h"
 #include "./SpriteMesh.h"
 #include "./DrawBuffer.h"
 #include "./DrawTextBuffer.h"
 #include "./DrawSpriteBuffer.h"
 
-#include "./Imgui/imgui_impl_sdl.h"
-#include "./Imgui/imgui_impl_opengl3.h"
+#include <GL/glew.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 
 namespace Graphics
 {
@@ -264,14 +264,9 @@ namespace Graphics
 
 bool BeginDrawing(void)
 {
-    if (Runtime.GraphicsContext != nullptr)
-    {
-        Graphics::Clear();
+    Graphics::Clear();
 
-        return true;
-    }
-
-    return false;
+    return true;
 }
 
 void EndDrawing(void)

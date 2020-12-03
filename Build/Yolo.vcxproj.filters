@@ -230,8 +230,5 @@
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c">
       <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\Window_Timer.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

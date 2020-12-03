@@ -248,7 +248,6 @@
     <ClCompile Include="..\Sources\SpriteBatch.cc" />
     <ClCompile Include="..\Sources\SpriteMesh.cc" />
     <ClCompile Include="..\Sources\String.cpp" />
-    <ClCompile Include="..\Sources\Window_Timer.cpp" />
     <ClCompile Include="..\Sources\VertexArray.cc" />
     <ClCompile Include="..\Sources\Window.cpp" />
     <ClCompile Include="..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />

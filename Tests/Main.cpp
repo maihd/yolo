@@ -90,7 +90,6 @@ int main(void)
 
         angle += GetDeltaTime();
         posX = cosf(angle) * 100;
-        UpdateTimerAndSleep(60);
     }
 
     //FreeFont(&font);

@@ -5,6 +5,36 @@
 #include "./Imgui/imgui_impl_sdl.h"
 #include "./Imgui/imgui_impl_opengl3.h"
 
+#ifdef _WIN32
+#   define VC_EXTRALEAN
+#   define WIN32_LEAN_AND_MEAN
+#   include <Windows.h> // GetProcAddress, NtDelayExecution
+#   pragma comment(lib, "OpenGL32.lib")
+#   pragma comment(lib, "SetupAPI.lib")
+#   pragma comment(lib, "Version.lib")
+#   pragma comment(lib, "Imm32.lib")
+#   pragma comment(lib, "Winmm.lib")
+#elif defined(__unix__)
+#   include <unistd.h>  // usleep
+#endif
+
+// ------------------------
+// Timer api
+// ------------------------
+
+static void OpenTimer(int fps);
+static void CloseTimer(void);
+
+static void MicroSleep(U64 microseconds);
+static void FakeMicroSleep(U64 microseconds);
+
+static void UpdateTimer(void);
+static bool UpdateTimerAndSleep(void);
+
+// ------------------------------
+// Input helpers
+// ------------------------------
+
 static KeyCode s_keyCodeMap[2048];
 static KeyCode ConvertKeyCode(int nativeKey)
 {
@@ -161,7 +191,7 @@ namespace Graphics
     void CreateDefaultObjects(void);
 }
 
-bool OpenWindow(StringView title, int width, int height)
+bool OpenWindow(StringView title, int width, int height, int fps)
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
     {
@@ -237,6 +267,8 @@ bool OpenWindow(StringView title, int width, int height)
     Runtime.MainWindow = window;
     Runtime.GraphicsContext = graphicsContext;
 
+    OpenTimer(fps);
+
     // Default settings
     Graphics::ApplyDefaultSettings();
     Graphics::CreateDefaultObjects();
@@ -258,6 +290,8 @@ bool OpenWindow(StringView title, int width, int height)
 
 void CloseWindow(void)
 {
+    CloseTimer();
+
     SDL_GL_DeleteContext(Runtime.GraphicsContext);
     Runtime.GraphicsContext = nullptr;
 
@@ -275,6 +309,7 @@ bool UpdateWindow(void)
         return true;
     }
 
+    UpdateTimerAndSleep();
     if (Runtime.ShouldRender)
     {
         ImGui::Render();
@@ -346,7 +381,193 @@ int WindowHeight(void)
     return height;
 }
 
-Handle GetWindowHandle(void)
+// -----------------------------------------
+// Timer system functions
+// -----------------------------------------
+
+/// NTSTATUS NTAPI NtDelayExecution(BOOL Alerted, PLARGE_INTEGER time);
+/// typedef LONG NTSTATUS; =))
+/// #define NTAPI __stdcall =))
+typedef LONG(__stdcall * NtDelayExecutionFN)(BOOL, PLARGE_INTEGER);
+
+static struct
 {
-    return (Handle)(U64)Runtime.MainWindow;
+    I32     TotalFrames;
+    float   Framerate;
+    float   DeltaTime;
+    float   TotalTime;
+    float   TimeScale;
+
+    float   UpdateFramerateTimer;
+    float   UpdateFramerateInterval;
+
+    U64     PrevCounter;
+
+    U64     CachedLimitTicks;
+    U64     CachedCpuFrequency;
+
+    void(*SleepFunction)(U64 microseconds);
+    NtDelayExecutionFN NtDelayExecution;
+} Timer;
+
+void OpenTimer(int fps)
+{
+    Timer.TotalFrames = 0;
+    Timer.Framerate = 0.0f;
+    Timer.DeltaTime = 0.0f;
+    Timer.TotalTime = 0.0f;
+    Timer.TimeScale = 1.0f;
+
+    Timer.UpdateFramerateTimer = 0.0f;
+    Timer.UpdateFramerateInterval = 1.0f;
+
+    Timer.PrevCounter = 0;
+
+    Timer.CachedCpuFrequency = SDL_GetPerformanceFrequency();
+    Timer.CachedLimitTicks = (U64)(Timer.CachedCpuFrequency / (double)(fps < 1 ? 1000 : fps));
+
+#if defined(_WIN32)
+    // Load sleep function
+    HMODULE module = GetModuleHandle(TEXT("ntdll.dll"));
+    Timer.NtDelayExecution = (NtDelayExecutionFN)GetProcAddress(module, "NtDelayExecution");
+    if (Timer.NtDelayExecution != nullptr)
+    {
+        Timer.SleepFunction = MicroSleep;
+    }
+    else
+    {
+        Timer.SleepFunction = FakeMicroSleep;
+    }
+#else
+    Timer.SleepFunction = MicroSleep;
+#endif
+}
+
+void CloseTimer(void)
+{
+    Timer.SleepFunction = nullptr;
+    Timer.NtDelayExecution = nullptr;
+}
+
+void MicroSleep(U64 microseconds)
+{
+#if defined(_WIN32)
+    LARGE_INTEGER times;
+    times.QuadPart = -(LONGLONG)microseconds * 10;
+    Timer.NtDelayExecution(FALSE, &times);
+#elif defined(__unix__)
+    usleep(microseconds);
+#else
+    U64 counter = GetCpuCounter();
+    while (GetCpuCounter() - counter < microseconds)
+    {
+        // no-op
+    }
+#endif
+}
+
+void FakeMicroSleep(U64 microseconds)
+{
+    SDL_Delay((Uint32)(microseconds / 1000U));
+}
+
+// --------------------------------
+// Manage timer state
+// --------------------------------
+
+float GetFramerate(void)
+{
+    return Timer.Framerate;
+}
+
+I32 GetTotalFrames(void)
+{
+    return Timer.TotalFrames;
+}
+
+float GetTotalTime(void)
+{
+    return Timer.TotalTime;
+}
+
+float GetTimeScale(void)
+{
+    return Timer.TimeScale;
+}
+
+void SetTimeScale(float timeScale)
+{
+    Timer.TimeScale = timeScale;
+}
+
+float GetDeltaTime(void)
+{
+    return Timer.DeltaTime * Timer.TimeScale;
+}
+
+float GetUnscaledDeltaTime(void)
+{
+    return Timer.DeltaTime;
+}
+
+void UpdateTimer(void)
+{
+    U64 counter = SDL_GetPerformanceCounter();
+    if (Timer.PrevCounter > 0)
+    {
+        U64 ticks = counter - Timer.PrevCounter;
+
+        Timer.DeltaTime = (float)((double)ticks / (double)Timer.CachedCpuFrequency);
+        Timer.TotalTime = Timer.TotalTime + Timer.DeltaTime;
+
+        Timer.UpdateFramerateTimer += Timer.DeltaTime;
+        if (Timer.UpdateFramerateTimer >= Timer.UpdateFramerateInterval)
+        {
+            Timer.UpdateFramerateTimer -= Timer.UpdateFramerateInterval;
+            Timer.Framerate = 1.0f / Timer.DeltaTime;
+        }
+
+    }
+
+    Timer.TotalFrames++;
+    Timer.PrevCounter = counter;
+}
+
+bool UpdateTimerAndSleep(void)
+{
+    bool isSleep = false;
+    U64 counter = SDL_GetPerformanceCounter();
+
+    if (Timer.PrevCounter > 0)
+    {
+        U64 frequency = Timer.CachedCpuFrequency;
+        U64 limitTicks = Timer.CachedLimitTicks;
+
+        U64 ticks = Timer.PrevCounter > 0 ? counter - Timer.PrevCounter : limitTicks;
+        if (ticks < limitTicks)
+        {
+            isSleep = true;
+
+            U64 remainTicks = limitTicks - ticks;
+            double remainSeconds = ((double)remainTicks) / frequency;
+            U64 remainMicroSeconds = (U64)(remainSeconds * 1000000ULL);
+            Timer.SleepFunction(remainMicroSeconds);
+
+            ticks = limitTicks;
+        }
+
+        Timer.DeltaTime = (float)((double)ticks / (double)frequency);
+        Timer.TotalTime = Timer.TotalTime + Timer.DeltaTime;
+
+        Timer.UpdateFramerateTimer += Timer.DeltaTime;
+        if (Timer.UpdateFramerateTimer >= Timer.UpdateFramerateInterval)
+        {
+            Timer.UpdateFramerateTimer -= Timer.UpdateFramerateInterval;
+            Timer.Framerate = 1.0f / Timer.DeltaTime;
+        }
+    }
+
+    Timer.TotalFrames++;
+    Timer.PrevCounter = counter;
+    return isSleep;
 }
