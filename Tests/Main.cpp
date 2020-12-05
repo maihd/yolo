@@ -56,9 +56,9 @@ int main(void)
     Texture texture2 = LoadTexture("../Assets/character.png");
 
     HashTable<int> hashTable = MakeHashTable<int>();
-    HashTableSetValue(&hashTable, ConstHash64("ten"), 10);
+    HashTableSetValue(&hashTable, ConstHash64("NumberOfTen"), 10);
 
-    int value = HashTableGetValue(hashTable, ConstHash64("ten"));
+    int value = HashTableGetValue(hashTable, ConstHash64("NumberOfTen"));
 
     FreeHashTable(&hashTable);
 
