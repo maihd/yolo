@@ -62,7 +62,7 @@ int main(void)
 
     FreeHashTable(&hashTable);
 
-    Graphics::SetVSync(true);
+    SetVSync(true);
 
     while (!UpdateWindow())
     {
@@ -89,7 +89,6 @@ int main(void)
 
         angle += GetDeltaTime();
         posX = cosf(angle) * 100;
-        UpdateTimerAndSleep(60);
     }
 
     //FreeFont(&font);

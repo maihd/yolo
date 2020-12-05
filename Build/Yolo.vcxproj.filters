@@ -36,6 +36,9 @@
     <ClInclude Include="..\Include\Yolo\Core.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Yolo\Easing.h">
+      <Filter>Include\Yolo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Yolo\File.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -82,9 +85,6 @@
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\String.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\Yolo\Tween.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Yolo\VertexArray.h">

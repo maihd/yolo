@@ -170,7 +170,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Tests\Array.cpp" />
+    <ClCompile Include="..\Tests\HashTable.cpp" />
     <ClCompile Include="..\Tests\Main.cpp" />
+    <ClCompile Include="..\Tests\String.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Yolo.vcxproj">

@@ -185,6 +185,7 @@
     <ClInclude Include="..\Include\Yolo\Array.h" />
     <ClInclude Include="..\Include\Yolo\Audio.h" />
     <ClInclude Include="..\Include\Yolo\Core.h" />
+    <ClInclude Include="..\Include\Yolo\Easing.h" />
     <ClInclude Include="..\Include\Yolo\File.h" />
     <ClInclude Include="..\Include\Yolo\Graphics.h" />
     <ClInclude Include="..\Include\Yolo\HashTable.h" />
@@ -201,7 +202,6 @@
     <ClInclude Include="..\Include\Yolo\Sort.h" />
     <ClInclude Include="..\Include\Yolo\Sprite.h" />
     <ClInclude Include="..\Include\Yolo\String.h" />
-    <ClInclude Include="..\Include\Yolo\Tween.h" />
     <ClInclude Include="..\Include\Yolo\VertexArray.h" />
     <ClInclude Include="..\Include\Yolo\Window.h" />
     <ClInclude Include="..\Sources\DrawBuffer.h" />
