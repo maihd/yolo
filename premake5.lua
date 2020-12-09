@@ -150,7 +150,7 @@ do
     }
 end
 
-project "Animation"
+project "Examples.Animation"
 do
     kind "ConsoleApp"
 
@@ -171,7 +171,7 @@ do
     }
 end
 
-project "Yolo.TodoMVC"
+project "Examples.TodoMVC"
 do
     kind "ConsoleApp"
 
@@ -190,7 +190,26 @@ do
     filter {}
 end
 
--- project "SpineView"
+project "Examples.Audios"
+do
+    kind "ConsoleApp"
+
+    links {
+        "Yolo"
+    }
+
+    includedirs {
+        path.join(ROOT_DIR, "Include")
+    }
+
+    filedirs {
+        path.join(ROOT_DIR, "Examples/Audios")
+    }
+
+    filter {}
+end
+
+-- project "Examples.SpineView"
 -- do
 --     kind "ConsoleApp"
 
