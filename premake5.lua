@@ -171,6 +171,25 @@ do
     }
 end
 
+project "Yolo.TodoMVC"
+do
+    kind "ConsoleApp"
+
+    links {
+        "Yolo"
+    }
+
+    includedirs {
+        path.join(ROOT_DIR, "Include")
+    }
+
+    filedirs {
+        path.join(ROOT_DIR, "Examples/TodoMVC")
+    }
+
+    filter {}
+end
+
 -- project "SpineView"
 -- do
 --     kind "ConsoleApp"

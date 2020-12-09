@@ -282,7 +282,7 @@ inline bool ArrayErase(Array<T>* array, int index)
         if (index < array->Count - 1)
         {
             int rangeCount = array->Count - index - 1;
-            int moveCount = rangeCount - 1;
+            int moveCount = rangeCount;
 
             memmove(&array->Items[index], &array->Items[index + 1], moveCount * sizeof(T));
         }

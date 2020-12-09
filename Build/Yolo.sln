@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Spaneon", "Spaneon.vcxproj"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yolo", "Yolo.vcxproj", "{C8C38F7C-B4FA-900D-5DE7-761049FD0C0F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yolo.TodoMVC", "Yolo.TodoMVC.vcxproj", "{B29C0727-9EFF-96CB-4785-CF8133C7624E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,6 +51,14 @@ Global
 		{C8C38F7C-B4FA-900D-5DE7-761049FD0C0F}.Release|Win32.Build.0 = Release|Win32
 		{C8C38F7C-B4FA-900D-5DE7-761049FD0C0F}.Release|x64.ActiveCfg = Release|x64
 		{C8C38F7C-B4FA-900D-5DE7-761049FD0C0F}.Release|x64.Build.0 = Release|x64
+		{B29C0727-9EFF-96CB-4785-CF8133C7624E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B29C0727-9EFF-96CB-4785-CF8133C7624E}.Debug|Win32.Build.0 = Debug|Win32
+		{B29C0727-9EFF-96CB-4785-CF8133C7624E}.Debug|x64.ActiveCfg = Debug|x64
+		{B29C0727-9EFF-96CB-4785-CF8133C7624E}.Debug|x64.Build.0 = Debug|x64
+		{B29C0727-9EFF-96CB-4785-CF8133C7624E}.Release|Win32.ActiveCfg = Release|Win32
+		{B29C0727-9EFF-96CB-4785-CF8133C7624E}.Release|Win32.Build.0 = Release|Win32
+		{B29C0727-9EFF-96CB-4785-CF8133C7624E}.Release|x64.ActiveCfg = Release|x64
+		{B29C0727-9EFF-96CB-4785-CF8133C7624E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
