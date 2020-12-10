@@ -170,6 +170,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Examples\Audios\miniaudio.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\Examples\Audios\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
