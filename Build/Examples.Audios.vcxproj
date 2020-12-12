@@ -23,6 +23,7 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Examples.Audios</RootNamespace>
+    <LatestTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</LatestTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -170,9 +171,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Examples\Audios\Audio.h" />
     <ClInclude Include="..\Examples\Audios\miniaudio.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Examples\Audios\Audio.cpp" />
     <ClCompile Include="..\Examples\Audios\Main.cpp" />
   </ItemGroup>
   <ItemGroup>

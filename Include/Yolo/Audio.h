@@ -56,3 +56,5 @@ namespace Audio
     void        StopAllMusics(void);
 }
 
+//bool OpenAudioDevice(void);
+//void CloseAudioDevice(void);

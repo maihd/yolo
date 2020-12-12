@@ -195,3 +195,45 @@ namespace Audio
     }
 }
 
+#if 0
+bool OpenAudioDevice(void)
+{
+    _device = alcOpenDevice(0);
+    if (!_device)
+    {
+        //fprintf(stderr, "audio::init(): Cannot open audio _device '%s'\n", alcGetString(NULL, alcGetError(NULL)));
+        return false;
+    }
+
+    //fprintf(stderr, "audio::init(): %s\n", alcGetString(_device, ALC_DEVICE_SPECIFIER));
+
+    _context = alcCreateContext(_device, 0);
+    if (!_context)
+    {
+        //fprintf(stderr, "audio::init(): Cannot create audio _context '%s'", alcGetString(_device, alcGetError(_device)));
+        return false;
+    }
+
+    if (!alcMakeContextCurrent(_context))
+    {
+        return false;
+    }
+    //printf("Audio version: %s\n", alGetString(AL_VERSION));
+    //printf("Audio renderer: %s\n", alGetString(AL_RENDERER));
+
+    alListener3f(AL_POSITION, 0, 0, 0);
+    alListener3f(AL_VELOCITY, 0, 0, 0);
+
+    ALfloat listenerOri[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
+    alListenerfv(AL_ORIENTATION, listenerOri);
+
+    return true;
+}
+
+void CloseAudioDevice(void)
+{
+    alcDestroyContext(_context);
+    _context = 0;
+    _device = 0;
+}
+#endif
