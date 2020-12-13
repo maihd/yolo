@@ -39,3 +39,22 @@ bool OpenAudioDevice(void);
 void CloseAudioDevice(void);
 bool IsAudioDeviceReady(void);
 void SetAudioDeviceVolume(float volume);
+
+Wave    LoadWave(StringView path);
+void    FreeWave(Wave* wave);
+
+Sound   LoadSound(StringView path);
+Sound   MakeSound(Wave wave);
+void    FreeSound(Sound* sound);
+void    UpdateSoundData(Sound sound, Buffer data, int sampleCount);
+
+void    PlaySound(Sound sound);
+void    StopSound(Sound sound);
+void    PauseSound(Sound sound);
+void    ResumeSound(Sound sound);
+
+void    PlaySoundMulti(Sound sound);
+void    StopSoundMulti(Sound sound);
+
+int     NumSoundsPlaying();
+bool    IsSoundPlaying(Sound sound);
