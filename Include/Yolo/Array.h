@@ -14,70 +14,70 @@
 constexpr int ARRAY_MIN_CAPACITY = 16;
 
 template <typename T>
-Array<T> MakeArray(int capacity = 0);
+Array<T>    MakeArray(int capacity = 0);
 
 template <typename T>
-Array<T> MakeArray(const T* buffer, int count);
+Array<T>    MakeArray(const T* buffer, int count);
 
 template <typename T>
-T* MakeArray(const Array<T> array);
+T*          MakeArray(const Array<T> array);
 
 template <typename T>
-Array<T> MakeArray(int capacity, T value);
+Array<T>    MakeArray(int capacity, T value);
 
 template <typename T>
-void FreeArray(Array<T>* array);
+void        FreeArray(Array<T>* array);
 
 template <typename T>
-int ArraySizeInBytes(const Array<T> array);
+int         ArraySizeInBytes(const Array<T> array);
 
 template <typename T>
-bool ArrayIsEmpty(const Array<T> array);
+bool        ArrayIsEmpty(const Array<T> array);
 
 template <typename T>
-bool ArrayResize(Array<T>* array, int capacity);
+bool        ArrayResize(Array<T>* array, int capacity);
 
 template <typename T>
-bool ArrayEnsure(Array<T>* array, int capacity);
+bool        ArrayEnsure(Array<T>* array, int capacity);
 
 template <typename T>
-bool ArrayEnsure(const Array<T> array, int capacity);
+bool        ArrayEnsure(const Array<T> array, int capacity);
 
 template <typename T>
-int ArrayPush(Array<T>* array, T element);
+int         ArrayPush(Array<T>* array, T element);
 
 template <typename T>
-T ArrayPop(Array<T>* array);
+T           ArrayPop(Array<T>* array);
 
 template <typename T>
-void ArrayClear(Array<T>* array);
+void        ArrayClear(Array<T>* array);
 
 template <typename T>
-int ArrayIndexOf(Array<T> array, T value);
+int         ArrayIndexOf(Array<T> array, T value);
 
 template <typename T>
-int ArrayLastIndexOf(Array<T> array, T value);
+int         ArrayLastIndexOf(Array<T> array, T value);
 
 template <typename T>
-bool ArrayErase(Array<T>* array, int index);
+bool        ArrayErase(Array<T>* array, int index);
 
 template <typename T>
-bool ArrayErase(Array<T>* array, int start, int end);
+bool        ArrayErase(Array<T>* array, int start, int end);
 
 template <typename T>
-bool ArrayUnorderedErase(Array<T>* array, int index);
+bool        ArrayUnorderedErase(Array<T>* array, int index);
 
 template <typename T>
-bool ArrayRemove(Array<T>* array, T value);
+bool        ArrayRemove(Array<T>* array, T value);
 
 template <typename T>
-bool ArrayRemoveLast(Array<T>* array, T value);
+bool        ArrayRemoveLast(Array<T>* array, T value);
 
 template <typename T>
-bool ArrayUnorderedRemove(Array<T>* array, T value);
+bool        ArrayUnorderedRemove(Array<T>* array, T value);
 
 template <typename T>
-bool ArrayUnorderedRemoveLast(Array<T>* array, T value);
+bool        ArrayUnorderedRemoveLast(Array<T>* array, T value);
 
 // --------------------------------------
 // Function definitions

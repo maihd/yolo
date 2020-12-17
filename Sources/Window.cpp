@@ -311,6 +311,8 @@ bool OpenWindow(StringView title, int width, int height, int fps)
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
 
+    ImGui::GetIO().Fonts->AddFontFromFileTTF("../Assets/NotoMono-Regular.ttf", 14);
+
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

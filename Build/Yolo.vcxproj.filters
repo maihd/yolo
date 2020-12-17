@@ -114,9 +114,6 @@
     <ClInclude Include="..\Sources\Imgui\imstb_textedit.h">
       <Filter>Sources\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\Imgui\imstb_truetype.h">
-      <Filter>Sources\Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\Internal.h">
       <Filter>Sources</Filter>
     </ClInclude>

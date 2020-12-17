@@ -212,7 +212,6 @@
     <ClInclude Include="..\Sources\Imgui\imgui_internal.h" />
     <ClInclude Include="..\Sources\Imgui\imstb_rectpack.h" />
     <ClInclude Include="..\Sources\Imgui\imstb_textedit.h" />
-    <ClInclude Include="..\Sources\Imgui\imstb_truetype.h" />
     <ClInclude Include="..\Sources\Internal.h" />
     <ClInclude Include="..\Sources\OpenGL.h" />
     <ClInclude Include="..\Sources\SpriteBatch.h" />
