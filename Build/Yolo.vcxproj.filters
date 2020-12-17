@@ -87,9 +87,6 @@
     <ClInclude Include="..\Include\Yolo\String.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Yolo\VertexArray.h">
-      <Filter>Include\Yolo</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Yolo\Window.h">
       <Filter>Include\Yolo</Filter>
     </ClInclude>
@@ -212,9 +209,6 @@
     <ClCompile Include="..\Sources\String.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\VertexArray.cc">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\Window.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -225,6 +219,9 @@
       <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\Audio.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Graphics_VertexArray.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

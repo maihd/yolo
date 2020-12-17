@@ -2,15 +2,14 @@
 
 #include <Yolo/Math.h>
 #include <Yolo/Array.h>
-#include <Yolo/VertexArray.h>
 
 #include "./OpenGL.h"
 
 DrawBuffer DrawBufferNew()
 {
-    VertexArray vertexArray = VertexArrayOps::New();
-    VertexArrayOps::DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexShapeColor), offsetof(VertexShapeColor, position));
-    VertexArrayOps::DefineAttribute(vertexArray, 1, DataType::Vector4, sizeof(VertexShapeColor), offsetof(VertexShapeColor, color));
+    VertexArray vertexArray = MakeVertexArray();
+    DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexShapeColor), offsetof(VertexShapeColor, position));
+    DefineAttribute(vertexArray, 1, DataType::Vector4, sizeof(VertexShapeColor), offsetof(VertexShapeColor, color));
 
     DrawBuffer drawBuffer = {
         false,
@@ -26,7 +25,7 @@ void DrawBufferFree(DrawBuffer* drawBuffer)
 {
     assert(drawBuffer);
 
-    VertexArrayOps::Free(&drawBuffer->VertexArray);
+    FreeVertexArray(&drawBuffer->VertexArray);
 
     FreeArray(&drawBuffer->Vertices);
     FreeArray(&drawBuffer->Indices);
@@ -85,8 +84,8 @@ void DrawBufferUpdateBuffers(DrawBuffer* drawBuffer)
     {
         drawBuffer->ShouldUpdate = false;
 
-        VertexArrayOps::SetIndexData(drawBuffer->VertexArray, drawBuffer->Indices.Items, ArraySizeInBytes(drawBuffer->Indices), BufferUsage::StreamDraw);
-        VertexArrayOps::SetVertexData(drawBuffer->VertexArray, drawBuffer->Vertices.Items, ArraySizeInBytes(drawBuffer->Vertices), BufferUsage::StreamDraw);
+        SetIndexData(drawBuffer->VertexArray, drawBuffer->Indices.Items, ArraySizeInBytes(drawBuffer->Indices), BufferUsage::StreamDraw);
+        SetVertexData(drawBuffer->VertexArray, drawBuffer->Vertices.Items, ArraySizeInBytes(drawBuffer->Vertices), BufferUsage::StreamDraw);
     }
 }
 

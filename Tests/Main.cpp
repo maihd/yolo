@@ -26,13 +26,6 @@ int main(void)
     StringView viewOfHelloWorld = "Hello world";
     printf("viewOfHelloWorld: %s\n", viewOfHelloWorld.Buffer);
 
-    int intArray[4];
-    intArray[0] = rand();
-    intArray[1] = rand();
-    intArray[2] = rand();
-    intArray[3] = rand();
-    InsertSort(intArray, 4);
-
     if (string1 == string2)
     {
         printf("string1 and string2 is equal!\n");
@@ -54,13 +47,6 @@ int main(void)
     Texture texture = LoadTexture("../Assets/character.png");
     float posX = 0;
     Texture texture2 = LoadTexture("../Assets/character.png");
-
-    HashTable<int> hashTable = MakeHashTable<int>();
-    HashTableSetValue(&hashTable, ConstHash64("NumberOfTen"), 10);
-
-    int value = HashTableGetValue(hashTable, ConstHash64("NumberOfTen"));
-
-    FreeHashTable(&hashTable);
 
     SetVSync(true);
 
@@ -91,7 +77,7 @@ int main(void)
         posX = cosf(angle) * 100;
     }
 
-    //FreeFont(&font);
+    FreeFont(&font);
     CloseWindow();
     return 0;
 }

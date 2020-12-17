@@ -4,7 +4,6 @@
 
 #include <Yolo/Math.h>
 #include <Yolo/Array.h>
-#include <Yolo/VertexArray.h>
 
 namespace DrawSpriteBufferOps
 {
@@ -15,10 +14,10 @@ namespace DrawSpriteBufferOps
 
     DrawSpriteBuffer New(void)
     {
-        VertexArray vertexArray = VertexArrayOps::New();
-        VertexArrayOps::DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexColor), offsetof(VertexColor, position));
-        VertexArrayOps::DefineAttribute(vertexArray, 1, DataType::Vector2, sizeof(VertexColor), offsetof(VertexColor, uv));
-        VertexArrayOps::DefineAttribute(vertexArray, 2, DataType::Vector4, sizeof(VertexColor), offsetof(VertexColor, color));
+        VertexArray vertexArray = MakeVertexArray();
+        DefineAttribute(vertexArray, 0, DataType::Vector3, sizeof(VertexColor), offsetof(VertexColor, position));
+        DefineAttribute(vertexArray, 1, DataType::Vector2, sizeof(VertexColor), offsetof(VertexColor, uv));
+        DefineAttribute(vertexArray, 2, DataType::Vector4, sizeof(VertexColor), offsetof(VertexColor, color));
 
         return DrawSpriteBuffer{
             false,
@@ -34,7 +33,7 @@ namespace DrawSpriteBufferOps
     {
         drawSpriteBuffer->shouldUpdate = false;
         
-        VertexArrayOps::Free(&drawSpriteBuffer->vertexArray);
+        FreeVertexArray(&drawSpriteBuffer->vertexArray);
 
         FreeArray(&drawSpriteBuffer->commands);
         FreeArray(&drawSpriteBuffer->indices);
@@ -166,8 +165,8 @@ namespace DrawSpriteBufferOps
         {
             drawSpriteBuffer->shouldUpdate = false;
 
-            VertexArrayOps::SetIndexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->indices.Items, ArraySizeInBytes(drawSpriteBuffer->indices), BufferUsage::StreamDraw);
-            VertexArrayOps::SetVertexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->vertices.Items, ArraySizeInBytes(drawSpriteBuffer->vertices), BufferUsage::StreamDraw);
+            SetIndexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->indices.Items, ArraySizeInBytes(drawSpriteBuffer->indices), BufferUsage::StreamDraw);
+            SetVertexData(drawSpriteBuffer->vertexArray, drawSpriteBuffer->vertices.Items, ArraySizeInBytes(drawSpriteBuffer->vertices), BufferUsage::StreamDraw);
         }
     }
 
