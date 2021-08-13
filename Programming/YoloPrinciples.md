@@ -37,5 +37,5 @@ Some advices I learn from id Software principles
 More advices
 ------------
 
-1. Proof your code are worked. Test your code each time it were changed. TDD is a start for no-brainers.
+1. Proof your code are worked. Test your code when you writing its. TDD is a start for no-brainers.
 2. Mindfulness about your code. Learn your code, understand your code, explain your code to yourself. Do Feynman technique if you need a starter kit.
