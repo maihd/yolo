@@ -47,7 +47,7 @@
 //  2017-08-25: Inputs: MousePos set to -FLT_MAX,-FLT_MAX when mouse is unavailable/missing (instead of -1,-1).
 //  2016-10-15: Misc: Added a void* user_data parameter to Clipboard function handlers.
 
-#include <Yolo/ImGui.h>
+#include <Graphics/ImGui.h>
 #include "imgui_impl_sdl.h"
 
 // SDL
@@ -531,7 +531,7 @@ static void ImGui_ImplSDL2_CreateWindow(ImGuiViewport* viewport)
     }
     if (use_opengl && backup_context)
         SDL_GL_MakeCurrent(data->Window, backup_context);
-
+    
     viewport->PlatformHandle = (void*)data->Window;
 #if defined(_WIN32)
     SDL_SysWMinfo info;

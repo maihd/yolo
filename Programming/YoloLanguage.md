@@ -6,10 +6,10 @@ Basics principles
 
 - Pass-by-value prefer to pass-by-reference/pass-by-pointer
 - Pointer type is mean to make a loan for the function execution (learn more from Rust Ownership)
-- No OOP, no classes, no methods, no static methods, no free functions (just functions), no inherits (extend by composition), no encapsulations (all thing in header is public, internal and private is the same, contains in source file)
+- No OOP, no classes, no methods, no static methods, no free functions (just functions), no inherits (extend by composition), no encapsulations (all thing in header is public, internal and private are the same, contain in source file).
 - Code and data is seperated.
 - Avoid change data, avoid storing state, use pure data only.
-- Pure function is prefered
+- Pure function is prefered. Maybe a thing called pure procedure exists?
 - Avoid magic features: no RTTI, no exceptions, minimal RAII, minimal metaprogramming.
 
 What should I use?
@@ -23,10 +23,11 @@ What should I use?
 - Data structure is transparent, no hidding anythings from hacker.
 - Prefer free function over methods. We just call this functions.
 - Don't use C++ runtime wrapper for C runtime includes (<cstdio>, <cmath>, etc.), use C runtime instead (<stdio.h>, <math.h>, etc.)
-- Don't use RTTI, exceptions
+- Don't use RTTI
+- Don't use exceptions
 > Exception handling is the only C++ language feature which requires significant support from a complex runtime system, and it's the only C++ feature that has a runtime cost even if you don't use it – sometimes as additional hidden code at every object construction, destruction, and try block entry/exit, and always by limiting what the compiler's optimizer can do, often quite significantly. Yet C++ exception specifications are not enforced at compile time anyway, so you don't even get to know that you didn't forget to handle some error case! And on a stylistic note, the exception style of error handling doesn't mesh very well with the C style of error return codes, which causes a real schism in programming styles because a great deal of C++ code must invariably call down into underlying C libraries.
 
-Coding convention
+Naming convention
 -----------------
 
 - Type name: PascalCase
@@ -55,4 +56,5 @@ Some advices
 ------------
 
 - Use Feynman technique for your code, make the code simpler to understand by simpler words and sentences.
+- If you are a man with principles, read more on [Yolo's principles](YoloPrinciples.md)
 - You only live once.

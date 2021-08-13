@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C8C38F7C-B4FA-900D-5DE7-761049FD0C0F}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Yolo</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>bin\x32\Debug\</OutDir>
+    <IntDir>obj\x32\Debug\Yolo\</IntDir>
+    <TargetName>Yolo</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>bin\x64\Debug\</OutDir>
+    <IntDir>obj\x64\Debug\Yolo\</IntDir>
+    <TargetName>Yolo</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>bin\x32\Release\</OutDir>
+    <IntDir>obj\x32\Release\Yolo\</IntDir>
+    <TargetName>Yolo</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>bin\x64\Release\</OutDir>
+    <IntDir>obj\x64\Release\Yolo\</IntDir>
+    <TargetName>Yolo</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>GLEW_STATIC;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Include;..\..\ThirdParty\Include;..\..\ThirdParty\Sources\stb;..\..\ThirdParty\Sources\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <OmitFramePointers>true</OmitFramePointers>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>SDL2.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\ThirdParty\Libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>GLEW_STATIC;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Include;..\..\ThirdParty\Include;..\..\ThirdParty\Sources\stb;..\..\ThirdParty\Sources\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <OmitFramePointers>true</OmitFramePointers>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>SDL2.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\ThirdParty\Libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>GLEW_STATIC;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Include;..\..\ThirdParty\Include;..\..\ThirdParty\Sources\stb;..\..\ThirdParty\Sources\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <OmitFramePointers>true</OmitFramePointers>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>SDL2.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\ThirdParty\Libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>GLEW_STATIC;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Include;..\..\ThirdParty\Include;..\..\ThirdParty\Sources\stb;..\..\ThirdParty\Sources\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <OmitFramePointers>true</OmitFramePointers>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>SDL2.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\ThirdParty\Libs\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\Concurrency\JobSystem.h" />
+    <ClInclude Include="..\..\Include\Container\Array.h" />
+    <ClInclude Include="..\..\Include\Container\HashTable.h" />
+    <ClInclude Include="..\..\Include\Container\OrderedTable.h" />
+    <ClInclude Include="..\..\Include\Container\Sort.h" />
+    <ClInclude Include="..\..\Include\Graphics\Graphics.h" />
+    <ClInclude Include="..\..\Include\Graphics\Imgui.h" />
+    <ClInclude Include="..\..\Include\Graphics\Sprite.h" />
+    <ClInclude Include="..\..\Include\Graphics\Window.h" />
+    <ClInclude Include="..\..\Include\Math\Easing.h" />
+    <ClInclude Include="..\..\Include\Math\Math.h" />
+    <ClInclude Include="..\..\Include\Math\Shapes.h" />
+    <ClInclude Include="..\..\Include\Misc\Audio.h" />
+    <ClInclude Include="..\..\Include\Misc\HotDylib.h" />
+    <ClInclude Include="..\..\Include\Misc\Testing.h" />
+    <ClInclude Include="..\..\Include\System\Core.h" />
+    <ClInclude Include="..\..\Include\System\FileSystem.h" />
+    <ClInclude Include="..\..\Include\System\Heap.h" />
+    <ClInclude Include="..\..\Include\System\Input.h" />
+    <ClInclude Include="..\..\Include\System\Memory.h" />
+    <ClInclude Include="..\..\Include\Text\Json.h" />
+    <ClInclude Include="..\..\Include\Text\String.h" />
+    <ClInclude Include="..\..\Sources\Graphics\DrawBuffer.h" />
+    <ClInclude Include="..\..\Sources\Graphics\DrawSpriteBuffer.h" />
+    <ClInclude Include="..\..\Sources\Graphics\DrawTextBuffer.h" />
+    <ClInclude Include="..\..\Sources\Graphics\OpenGL.h" />
+    <ClInclude Include="..\..\Sources\Graphics\SpriteBatch.h" />
+    <ClInclude Include="..\..\Sources\Graphics\SpriteMesh.h" />
+    <ClInclude Include="..\..\Sources\Imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\..\Sources\Imgui\imgui_impl_sdl.h" />
+    <ClInclude Include="..\..\Sources\Imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\Sources\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\Sources\Imgui\imstb_textedit.h" />
+    <ClInclude Include="..\..\Sources\Imgui\imstb_truetype.h" />
+    <ClInclude Include="..\..\Sources\Internal.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Sources\Graphics\DrawBuffer.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\DrawSpriteBuffer.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\DrawTextBuffer.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\Graphics.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\Graphics_Font.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\Graphics_Shader.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\Graphics_Texture.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\Graphics_VertexArray.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\OpenGL.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\Sprite.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\SpriteBatch.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\SpriteMesh.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\Window.cpp" />
+    <ClCompile Include="..\..\Sources\Graphics\Window_Timer.cpp" />
+    <ClCompile Include="..\..\Sources\Imgui\imgui.cpp" />
+    <ClCompile Include="..\..\Sources\Imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\Sources\Imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\..\Sources\Imgui\imgui_impl_sdl.cpp" />
+    <ClCompile Include="..\..\Sources\Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\Sources\Internal.cc" />
+    <ClCompile Include="..\..\Sources\Misc\Audio.cpp" />
+    <ClCompile Include="..\..\Sources\Misc\HotDylib.cc" />
+    <ClCompile Include="..\..\Sources\System\Core.cpp" />
+    <ClCompile Include="..\..\Sources\System\FileSystem.cpp" />
+    <ClCompile Include="..\..\Sources\System\Heap.cpp" />
+    <ClCompile Include="..\..\Sources\System\Input.cc" />
+    <ClCompile Include="..\..\Sources\System\Memory.cpp" />
+    <ClCompile Include="..\..\Sources\Text\Json.cpp" />
+    <ClCompile Include="..\..\Sources\Text\String.cpp" />
+    <ClCompile Include="..\..\ThirdParty\Sources\glew-2.1.0\src\glew.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

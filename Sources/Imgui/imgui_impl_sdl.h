@@ -17,7 +17,7 @@
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
 #pragma once
-#include <Yolo/ImGui.h>      // IMGUI_IMPL_API
+#include <Graphics/ImGui.h>      // IMGUI_IMPL_API
 
 struct SDL_Window;
 typedef union SDL_Event SDL_Event;

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <!-- <Type Name="idList&lt;*&gt;">
+    <DisplayString Condition="count == 0"  >[{count}] {{}}</DisplayString>
+    <DisplayString Condition="count == 1"  >[{count}] {{ {*items} }}</DisplayString>
+    <DisplayString Condition="count == 2"  >[{count}] {{ {*items}, {*(items+1)} }}</DisplayString>
+    <DisplayString Condition="count == 3"  >[{count}] {{ {*items}, {*(items+1)}, {*(items+2)} }}</DisplayString>
+    <DisplayString Condition="count == 4"  >[{count}] {{ {*items}, {*(items+1)}, {*(items+2)}, {*(items+3)} }}</DisplayString>
+    <DisplayString Condition="count == 5"  >[{count}] {{ {*items}, {*(items+1)}, {*(items+2)}, {*(items+3)}, {*(items+4)} }}</DisplayString>
+    <DisplayString Condition="count == 6"  >[{count}] {{ {*items}, {*(items+1)}, {*(items+2)}, {*(items+3)}, {*(items+4)}, {*(items+5)} }}</DisplayString>
+    <DisplayString Condition="count &gt; 6">[{count}] {{ {*items}, {*(items+1)}, {*(items+2)}, {*(items+3)}, {*(items+4)}, {*(items+5)}, ... }}</DisplayString>
+      <Expand>
+        <Item Name="[count]">count</Item>
+        <Item Name="[capacity]">capacity</Item>
+        <ArrayItems>
+            <Size>count</Size>
+            <ValuePointer>items</ValuePointer>
+        </ArrayItems>
+      </Expand>
+  </Type>
+
+  <Type Name="idString">
+    <DisplayString>{buffer}</DisplayString>
+    <Expand>
+      <Item Name="[length]">length</Item>
+      <Item Name="[alloced]">alloced</Item>
+    </Expand>
+  </Type> -->
+</AutoVisualizer>

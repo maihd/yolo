@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{6917EFFE-D5F6-6D9A-DE0E-F9704A6DD4FB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Concurrency">
+      <UniqueIdentifier>{43E94A45-AF4A-2853-38B8-6E05A4185F12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Container">
+      <UniqueIdentifier>{7BF63E91-E70C-3D27-3084-C8489CD90DAF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Graphics">
+      <UniqueIdentifier>{C94522F2-B53E-4144-DE70-26C9CAC82050}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Math">
+      <UniqueIdentifier>{E285614B-CEE8-F0EF-776E-29A663B0BC72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Misc">
+      <UniqueIdentifier>{C4A7614B-B00A-F1EF-5990-29A645D2BC72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\System">
+      <UniqueIdentifier>{5D7A8BB9-4948-7FBF-32DC-EFE51E495B24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Text">
+      <UniqueIdentifier>{1D6E654B-09D1-F4EF-B256-2DA69E98C072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{89565304-F535-D29F-FE4D-5D766AAC3801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Graphics">
+      <UniqueIdentifier>{E9880F63-D581-2EB5-FEB3-133AEA0B0EC1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Imgui">
+      <UniqueIdentifier>{9356EF6B-FF16-6BA2-C851-B41F34D1AF7E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Misc">
+      <UniqueIdentifier>{E45AEA8E-D0BD-7933-7943-B2E9658545B6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\System">
+      <UniqueIdentifier>{7D750D02-6943-0108-52D7-712E3E44DD6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Text">
+      <UniqueIdentifier>{3D21EE8E-2984-7D33-D209-B6E9BE4B49B6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{107145F9-FC28-8746-6530-60A251072237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\Sources">
+      <UniqueIdentifier>{834F9704-6F33-585A-D893-52ADC49642DC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\Sources\glew-2.1.0">
+      <UniqueIdentifier>{3D473C6A-A95F-2394-720C-B32DDEE3B72D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\Sources\glew-2.1.0\src">
+      <UniqueIdentifier>{D45B7331-40CA-C8B0-89B3-83B0F560BE4C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\Concurrency\JobSystem.h">
+      <Filter>Include\Concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Container\Array.h">
+      <Filter>Include\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Container\HashTable.h">
+      <Filter>Include\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Container\OrderedTable.h">
+      <Filter>Include\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Container\Sort.h">
+      <Filter>Include\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Graphics\Graphics.h">
+      <Filter>Include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Graphics\Imgui.h">
+      <Filter>Include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Graphics\Sprite.h">
+      <Filter>Include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Graphics\Window.h">
+      <Filter>Include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Math\Easing.h">
+      <Filter>Include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Math\Math.h">
+      <Filter>Include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Math\Shapes.h">
+      <Filter>Include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Misc\Audio.h">
+      <Filter>Include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Misc\HotDylib.h">
+      <Filter>Include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Misc\Testing.h">
+      <Filter>Include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\Core.h">
+      <Filter>Include\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\FileSystem.h">
+      <Filter>Include\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\Heap.h">
+      <Filter>Include\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\Input.h">
+      <Filter>Include\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\Memory.h">
+      <Filter>Include\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Text\Json.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Text\String.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Graphics\DrawBuffer.h">
+      <Filter>Sources\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Graphics\DrawSpriteBuffer.h">
+      <Filter>Sources\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Graphics\DrawTextBuffer.h">
+      <Filter>Sources\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Graphics\OpenGL.h">
+      <Filter>Sources\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Graphics\SpriteBatch.h">
+      <Filter>Sources\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Graphics\SpriteMesh.h">
+      <Filter>Sources\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Imgui\imgui_impl_opengl3.h">
+      <Filter>Sources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Imgui\imgui_impl_sdl.h">
+      <Filter>Sources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Imgui\imgui_internal.h">
+      <Filter>Sources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Imgui\imstb_rectpack.h">
+      <Filter>Sources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Imgui\imstb_textedit.h">
+      <Filter>Sources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Imgui\imstb_truetype.h">
+      <Filter>Sources\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Internal.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Sources\Graphics\DrawBuffer.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\DrawSpriteBuffer.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\DrawTextBuffer.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\Graphics.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\Graphics_Font.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\Graphics_Shader.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\Graphics_Texture.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\Graphics_VertexArray.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\OpenGL.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\Sprite.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\SpriteBatch.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\SpriteMesh.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\Window.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Graphics\Window_Timer.cpp">
+      <Filter>Sources\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Imgui\imgui.cpp">
+      <Filter>Sources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Imgui\imgui_draw.cpp">
+      <Filter>Sources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Imgui\imgui_impl_opengl3.cpp">
+      <Filter>Sources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Imgui\imgui_impl_sdl.cpp">
+      <Filter>Sources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Imgui\imgui_widgets.cpp">
+      <Filter>Sources\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Internal.cc">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Misc\Audio.cpp">
+      <Filter>Sources\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Misc\HotDylib.cc">
+      <Filter>Sources\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\System\Core.cpp">
+      <Filter>Sources\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\System\FileSystem.cpp">
+      <Filter>Sources\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\System\Heap.cpp">
+      <Filter>Sources\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\System\Input.cc">
+      <Filter>Sources\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\System\Memory.cpp">
+      <Filter>Sources\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Text\Json.cpp">
+      <Filter>Sources\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Text\String.cpp">
+      <Filter>Sources\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ThirdParty\Sources\glew-2.1.0\src\glew.c">
+      <Filter>ThirdParty\Sources\glew-2.1.0\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

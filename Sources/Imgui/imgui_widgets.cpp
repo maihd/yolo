@@ -32,7 +32,7 @@ Index of this file:
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include <Yolo/ImGui.h>
+#include <Graphics/ImGui.h>
 
 #ifndef IMGUI_DISABLE
 
