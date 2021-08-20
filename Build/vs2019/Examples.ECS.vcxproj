@@ -84,14 +84,14 @@
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>bin\x32\Release\</OutDir>
     <IntDir>obj\x32\Release\Examples.ECS\</IntDir>
     <TargetName>Examples.ECS</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>bin\x64\Release\</OutDir>
     <IntDir>obj\x64\Release\Examples.ECS\</IntDir>
     <TargetName>Examples.ECS</TargetName>
@@ -143,8 +143,12 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
       <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -152,6 +156,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,8 +168,12 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
       <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -171,10 +181,30 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Examples\ECS\Components\Types.h" />
+    <ClInclude Include="..\..\Examples\ECS\Framework\ECSComponentManager.h" />
+    <ClInclude Include="..\..\Examples\ECS\Framework\ECSCoordinator.h" />
+    <ClInclude Include="..\..\Examples\ECS\Framework\ECSEntityManager.h" />
+    <ClInclude Include="..\..\Examples\ECS\Framework\ECSEventManager.h" />
+    <ClInclude Include="..\..\Examples\ECS\Framework\ECSSystemManager.h" />
+    <ClInclude Include="..\..\Examples\ECS\Framework\ECSTypes.h" />
+    <ClInclude Include="..\..\Examples\ECS\Systems\RenderSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\..\Examples\ECS\ECSMain.cpp" />
+    <ClCompile Include="..\..\Examples\ECS\Framework\ECSComponentManager.cpp" />
+    <ClCompile Include="..\..\Examples\ECS\Framework\ECSCoordinator.cpp" />
+    <ClCompile Include="..\..\Examples\ECS\Framework\ECSEntityManager.cpp" />
+    <ClCompile Include="..\..\Examples\ECS\Framework\ECSEventManager.cpp" />
+    <ClCompile Include="..\..\Examples\ECS\Framework\ECSSystemManager.cpp" />
+    <ClCompile Include="..\..\Examples\ECS\Systems\RenderSystem.cpp" />
+    <ClCompile Include="..\..\Examples\ECS\Tests\Test_EventHandler.cpp" />
+    <ClCompile Include="..\..\Examples\ECS\Tests\Test_Types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Yolo.vcxproj">

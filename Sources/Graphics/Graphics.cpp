@@ -22,6 +22,7 @@ namespace Graphics
     static Shader           shader;
     static Shader           fontShader;
     static Shader           spriteShader;
+
     static SpriteMesh       spriteMesh;
 
     static DrawBuffer       drawBuffer;
@@ -260,6 +261,19 @@ bool BeginDrawing(void)
 void EndDrawing(void)
 {
     DrawSpriteBufferOps::Draw(&Graphics::drawSpriteBuffer, Graphics::spriteShader, Graphics::projection);
+}
+
+void DrawArray(VertexArray vertexArray, Shader shader, I32 count, I32 offset)
+{
+    glBindVertexArray(vertexArray.Handle);
+
+    glUseProgram(shader.Handle);
+
+    glDrawArrays(GL_TRIANGLES, offset, count);
+    
+    glUseProgram(0);
+
+    glBindVertexArray(0);
 }
 
 void DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, I32 segments)

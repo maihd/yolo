@@ -323,6 +323,16 @@ void ImGui::DumpMemoryAllocs(void)
 }
 #endif
 
+void* MemoryInit(void* ptr, const int value, const int size)
+{
+    return memset(ptr, value, (size_t)size);
+}
+
+void* MemoryCopy(void* dst, const void* src, const int size)
+{
+    return memcpy(dst, src, (size_t)size);
+}
+
 // ------------------------------------
 // Memory system information functions
 // ------------------------------------

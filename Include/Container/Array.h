@@ -14,10 +14,10 @@
 constexpr int ARRAY_MIN_CAPACITY = 16;
 
 template <typename T>
-Array<T>    MakeArray(int capacity = 0);
+Array<T>    MakeArray(const I32 capacity = 0);
 
 template <typename T>
-Array<T>    MakeArray(const T* buffer, int count);
+Array<T>    MakeArray(const T* items, const I32 count);
 
 template <typename T>
 T*          MakeArray(const Array<T> array);
@@ -50,7 +50,7 @@ template <typename T>
 bool        ArrayEnsure(const Array<T> array, int capacity);
 
 #ifndef NDEBUG
-#define ArrayPush(array, ...) ArrayPushDebug(array, (__VA_ARGS__), __FUNCTION__, __FILE__, __LINE__)
+#define     ArrayPush(array, ...) ArrayPushDebug(array, (__VA_ARGS__), __FUNCTION__, __FILE__, __LINE__)
 template <typename T>
 int         ArrayPushDebug(Array<T>* array, T element, const char* func, const char* file, int line);
 #else
@@ -80,23 +80,23 @@ template <typename T>
 bool        ArrayEraseFast(Array<T>* array, int index);
 
 template <typename T>
-bool        ArrayRemove(Array<T>* array, T value);
+I32         ArrayRemove(Array<T>* array, T value);
 
 template <typename T>
-bool        ArrayRemoveLast(Array<T>* array, T value);
+I32         ArrayRemoveLast(Array<T>* array, T value);
 
 template <typename T>
-bool        ArrayRemoveFast(Array<T>* array, T value);
+I32         ArrayRemoveFast(Array<T>* array, T value);
 
 template <typename T>
-bool        ArrayRemoveLastFast(Array<T>* array, T value);
+I32         ArrayRemoveLastFast(Array<T>* array, T value);
 
 // ----------------------------------------------------------------------------
 // Function definitions
 // ----------------------------------------------------------------------------
 
 template <typename T>
-inline Array<T> MakeArray(int capacity)
+inline Array<T> MakeArray(const I32 capacity)
 {
     if (capacity <= 0)
     {
@@ -109,7 +109,7 @@ inline Array<T> MakeArray(int capacity)
 }
 
 template <typename T>
-inline Array<T> MakeArray(const T* buffer, int count)
+inline Array<T> MakeArray(const T* items, const I32 count)
 {
     if (!buffer || count <= 0)
     {
@@ -119,7 +119,7 @@ inline Array<T> MakeArray(const T* buffer, int count)
     Array<T> result = {};
     if (ArrayResize(&result, count))
     {
-        MemoryCopy(result, buffer, sizeof(T) * count);
+        MemoryCopy(result, items, sizeof(T) * count);
     }
     return result;
 }
@@ -233,10 +233,16 @@ inline bool ArrayResizeDebug(Array<T>* array, I32 capacity, const char* func, co
     int oldCapacity = array->Capacity;
     int newCapacity = capacity < ARRAY_MIN_CAPACITY ? ARRAY_MIN_CAPACITY : NextPOTwosI32(capacity);
 
-    T* items = (T*)MemoryReallocDebug(array->Items, newCapacity * sizeof(T), func, file, line);
-    if (items)
+    T* newItems = (T*)MemoryAllocDebug(newCapacity * sizeof(T), func, file, line);
+    if (newItems)
     {
-        array->Items = items;
+        if (array->Items)
+        {
+            MemoryCopy(newItems, array->Items, array->Count * sizeof(T));
+            MemoryFree(array->Items);
+        }
+
+        array->Items    = newItems;
         array->Capacity = newCapacity;
 
         return true;
@@ -402,31 +408,35 @@ inline bool ArrayEraseFast(Array<T>* array, int index)
 }
 
 template <typename T>
-inline int ArrayRemove(Array<T>* array, T value)
+inline I32 ArrayRemove(Array<T>* array, T value)
 {
-    int index = ArrayIndexOf(*array, value);
+    I32 index = ArrayIndexOf(*array, value);
     ArrayErase(array, index);
     return index;
 }
 
 template <typename T>
-inline int ArrayRemoveLast(Array<T>* array, T value)
+inline I32 ArrayRemoveLast(Array<T>* array, T value)
 {
-    int index = ArrayLastIndexOf(*array, value);
+    I32 index = ArrayLastIndexOf(*array, value);
     ArrayErase(array, index);
     return index;
 }
 
 template <typename T>
-inline bool ArrayRemoveFast(Array<T>* array, T value)
+inline I32 ArrayRemoveFast(Array<T>* array, T value)
 {
-    return ArrayEraseFast(array, ArrayIndexOf(*array, value));
+    I32 index = ArrayIndexOf(*array, value);
+    ArrayEraseFast(array, index);
+    return index;
 }
 
 template <typename T>
-inline bool ArrayRemoveLastFast(Array<T>* array, T value)
+inline I32 ArrayRemoveLastFast(Array<T>* array, T value)
 {
-    return ArrayEraseFast(array, ArrayLastIndexOf(*array, value));
+    I32 index = ArrayLastIndexOf(*array, value);
+    ArrayEraseFast(array, index);
+    return index;
 }
 
 // ----------------------------------------------------------------------------

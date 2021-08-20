@@ -26,7 +26,6 @@ do
 
     platforms { "x32", "x64" }
 
-
     flags {
         "NoPCH",
         "NoRuntimeChecks",
@@ -46,6 +45,16 @@ do
     exceptionhandling "Off"
 
     startproject "Yolo.Test"
+
+    filter { "configurations:Debug" }
+    do
+        optimize "Off"
+    end
+
+    filter { "configurations:Release" }
+    do
+        optimize "Full"
+    end
 
     filter {}
 end
@@ -192,7 +201,11 @@ do
     }
 
     filedirs {
-        path.join(ROOT_DIR, "Examples/ECS")
+        path.join(ROOT_DIR, "Examples/ECS"),
+        path.join(ROOT_DIR, "Examples/ECS/Tests"),
+        path.join(ROOT_DIR, "Examples/ECS/Framework"),
+        path.join(ROOT_DIR, "Examples/ECS/Systems"),
+        path.join(ROOT_DIR, "Examples/ECS/Components"),
     }
 
     filter {}

@@ -6,7 +6,9 @@ Basics principles
 
 - Pass-by-value prefer to pass-by-reference/pass-by-pointer
 - Pointer type is mean to make a loan for the function execution (learn more from Rust Ownership)
-- No OOP, no classes, no methods, no static methods, no free functions (just functions), no inherits (extend by composition), no encapsulations (all thing in header is public, internal and private are the same, contain in source file).
+- No OOP, no classes, no methods, no static methods, no free functions (just functions)
+- No struct inherits (extend by composition)
+- No struct encapsulations (all thing in header is public, internal and private are the same, contain in source file).
 - Code and data is seperated.
 - Avoid change data, avoid storing state, use pure data only.
 - Pure function is prefered. Maybe a thing called pure procedure exists?

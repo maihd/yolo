@@ -83,6 +83,16 @@ I32 StringCompare(StringView str0, StringView str1)
     return strncmp(str0.Buffer, str1.Buffer, min(str0.Length, str1.Length));
 }
 
+bool StringEquals(StringView str0, StringView str1)
+{
+    return str0.Length == str1.Length && memcmp(str0.Buffer, str1.Buffer, str0.Length) == 0;
+}
+
+bool StringNotEquals(StringView str0, StringView str1)
+{
+    return str0.Length != str1.Length || memcmp(str0.Buffer, str1.Buffer, str0.Length) != 0;
+}
+
 String StringFormat(I32 bufferSize, StringView format, ...)
 {
     ArgList argv;

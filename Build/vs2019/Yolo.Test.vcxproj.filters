@@ -9,6 +9,9 @@
     <ClCompile Include="..\..\Tests\Cases\Test_Array.cpp">
       <Filter>Cases</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Tests\Cases\Test_Hash.cpp">
+      <Filter>Cases</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Tests\Cases\Test_HashTable.cpp">
       <Filter>Cases</Filter>
     </ClCompile>
@@ -19,6 +22,9 @@
       <Filter>Cases</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Tests\Cases\Test_String.cpp">
+      <Filter>Cases</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Tests\Cases\Test_Symbol.cpp">
       <Filter>Cases</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Tests\TestsMain.cpp" />

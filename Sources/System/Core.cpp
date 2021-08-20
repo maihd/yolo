@@ -155,8 +155,9 @@ I64 RandomNextI64()
 
 U32 RandomNextU32()
 {
-    U32 result = (U32)time(nullptr);
+    static U32 result = 0;
 
+    result += (U32)time(nullptr);
     result ^= (result >> 13);
     result ^= (result << 17);
     result ^= (result >> 5);

@@ -84,7 +84,7 @@ void DebugPrintInternal(const char* func, const char* file, int line, const char
 // Primitive types
 // ----------------------
 
-using I8        = signed char;
+using I8        = char;
 using I16       = signed short;
 using I32       = signed int;
 using I64       = signed long long;
@@ -233,6 +233,21 @@ struct StringView
     }
 };
 
+/// Symbol
+/// Like string but specify to use for name, symbol, id
+/// Note:
+///     As debug build, contain an pointer to name of symbol
+///     As release build, the name will be exclude
+///     So use the name of symbol with care
+struct Symbol
+{
+    U64             Hash;
+
+    #ifndef NDEBUG
+    String          Name;
+    #endif
+};
+
 // ----------------------
 // Container types
 // ----------------------
@@ -367,16 +382,6 @@ constexpr const float PI = 3.141592653589f;
 // Utils work on types
 // ----------------------
 
-inline Handle MakeHandle(U32 generation, U32 index)
-{
-    return ((generation & 0xffU) << 24U) | (index & 0x00ffffffU);
-}
-
-inline Handle MakeHandle(void* pointer)
-{
-    return (Handle)(UPtr)pointer;
-}
-
 template <typename T, I32 count>
 constexpr I32 CountOf(const T(&_)[count])
 {
@@ -417,18 +422,19 @@ inline I64 NextPOTwosI64(I64 x)
 U32 CalcHash32(const void* buffer, I32 length, U32 seed = 0);
 U64 CalcHash64(const void* buffer, I32 length, U64 seed = 0);
 
-template <U32 length>
-constexpr U32 ConstHash32(const char(&buffer)[length], U32 seed = 0)
+constexpr U32 ConstHash32(StringView string, U32 seed = 0)
 {
     // Murmur hash: multiply (mu) and rotate (r) x2
     constexpr U32 mul = 0xcc9e2d51;
     constexpr U32 rot = 17; // should be prime number
 
-    const U8* target = (U8*)buffer;
-    const U32 l = length - 1;
+    const U32 length = string.Length;
+    const I8* target = string.Buffer;
+
+    const U32 l = length;
     const U32 n = (l >> 3) << 3;
 
-    U64 h = seed ^ (l | mul);
+    U32 h = seed ^ (l | mul);
     for (U32 i = 0; i < n; i += 4)
     {
         U32 b0 = target[i + 0];
@@ -451,9 +457,9 @@ constexpr U32 ConstHash32(const char(&buffer)[length], U32 seed = 0)
 
     switch (l & 3)
     {
-    case 3: h ^= (U32)((target + n)[2]) << 16;   /* fall through */
-    case 2: h ^= (U32)((target + n)[1]) <<  8;   /* fall through */
-    case 1: h ^= (U32)((target + n)[0]) <<  0;   /* fall through */
+    case 3: h ^= (U32)((target + n)[2]) << 16U;   /* fall through */
+    case 2: h ^= (U32)((target + n)[1]) <<  8U;   /* fall through */
+    case 1: h ^= (U32)((target + n)[0]) <<  0U;   /* fall through */
     };
 
     h *= mul;
@@ -464,16 +470,16 @@ constexpr U32 ConstHash32(const char(&buffer)[length], U32 seed = 0)
     return h;
 }
 
-template <U64 length>
-constexpr U64 ConstHash64(const char (&buffer)[length], U64 seed = 0)
+constexpr U64 ConstHash64(StringView string, U64 seed = 0)
 {
     // Murmur hash: multiply (mu) and rotate (r) x2
     constexpr U64 mul = 0xc6a4a7935bd1e995ULL;
     constexpr U64 rot = 47; // should be prime number
 
-    const U8* target = (U8*)buffer;
+    const U32 length = string.Length;
+    const I8* target = string.Buffer;
 
-    const U32 l = length - 1;
+    const U32 l = length;
     const U32 n = (l >> 3) << 3;
 
     U64 h = seed ^ (l | mul);
@@ -503,13 +509,13 @@ constexpr U64 ConstHash64(const char (&buffer)[length], U64 seed = 0)
 
     switch (l & 7)
     {
-    case 7: h ^= (U64)((target + n)[6]) << 48;   /* fall through */
-    case 6: h ^= (U64)((target + n)[5]) << 40;   /* fall through */
-    case 5: h ^= (U64)((target + n)[4]) << 32;   /* fall through */
-    case 4: h ^= (U64)((target + n)[3]) << 24;   /* fall through */
-    case 3: h ^= (U64)((target + n)[2]) << 16;   /* fall through */
-    case 2: h ^= (U64)((target + n)[1]) <<  8;   /* fall through */
-    case 1: h ^= (U64)((target + n)[0]) <<  0;   /* fall through */
+    case 7: h ^= (U64)((target + n)[6]) << 48U;   /* fall through */
+    case 6: h ^= (U64)((target + n)[5]) << 40U;   /* fall through */
+    case 5: h ^= (U64)((target + n)[4]) << 32U;   /* fall through */
+    case 4: h ^= (U64)((target + n)[3]) << 24U;   /* fall through */
+    case 3: h ^= (U64)((target + n)[2]) << 16U;   /* fall through */
+    case 2: h ^= (U64)((target + n)[1]) <<  8U;   /* fall through */
+    case 1: h ^= (U64)((target + n)[0]) <<  0U;   /* fall through */
     };
 
     h *= mul;
@@ -546,6 +552,52 @@ inline U64 CalcHashPtr64(void* ptr, U32 seed = 0)
     value =  value * magic;
     value =  value ^ (value >> 37);
     return value;
+}
+
+// ------------------------------------
+// Simple type constructors
+// ------------------------------------
+
+constexpr Symbol ConstSymbol(StringView name)
+{
+    U64 hash = ConstHash64(name);
+    #ifndef NDEBUG
+    String savedName = {};
+    savedName.Buffer = name.Buffer;
+    savedName.Length = name.Length;
+    savedName.Alloced = 0;
+    savedName.IsConst = name.IsConst;
+    savedName.IsOwned = name.IsOwned;
+    return { hash, savedName };
+    #else
+    return { hash };
+    #endif
+}
+
+inline Symbol MakeSymbol(StringView name)
+{
+    U64 hash = CalcHash64(name.Buffer, name.Length);
+    #ifndef NDEBUG
+    String savedName = {};
+    savedName.Buffer = name.Buffer;
+    savedName.Length = name.Length;
+    savedName.Alloced = 0;
+    savedName.IsConst = name.IsConst;
+    savedName.IsOwned = name.IsOwned;
+    return { hash, savedName };
+    #else
+    return { hash };
+    #endif
+}
+
+inline Handle MakeHandle(U32 generation, U32 index)
+{
+    return ((generation & 0xffU) << 24U) | (index & 0x00ffffffU);
+}
+
+inline Handle MakeHandle(void* pointer)
+{
+    return (Handle)(UPtr)pointer;
 }
 
 // ------------------------------------
@@ -591,4 +643,119 @@ constexpr U64 RandomAsCompileTimeU64(U64 seed = 0)
     timeNumber |= (U64)time[7] << (U64)(0 * 8);
 
     return seed ^ timeNumber;
+}
+
+template <typename T>
+constexpr auto GetTypeNameHelper()
+{
+    #if defined(_MSC_VER)
+    #define __FUNC__ __FUNCSIG__
+    #else
+    #define __FUNC__ __PRETTY_FUNCTION__
+    #endif
+
+    int head = 0;
+    int tail = 0;
+    for (int i = 0; i < sizeof(__FUNC__); i++)
+    {
+        if (__FUNC__[i] == '<')
+        {
+            if (head == 0)
+            {
+                head = i + 1;
+            }
+        }
+        else if (__FUNC__[i] == '>')
+        {
+            tail = i - 1;
+        }
+    }
+
+    struct Result
+    {
+        char TypeName[sizeof(__FUNC__)];
+    };
+
+    Result result = { "" };
+
+    int index = head;
+    char* typeName = result.TypeName;
+    const char* funcName = __FUNC__ + head;
+    while (*funcName != '\0' && index <= tail)
+    {
+        // Skip 'struct' modifier
+        if (true
+            && funcName[0] == 's'
+            && funcName[1] == 't'
+            && funcName[2] == 'r'
+            && funcName[3] == 'u'
+            && funcName[4] == 'c'
+            && funcName[5] == 't'
+            && funcName[6] == ' ')
+        {
+            funcName += 7;
+            index += 7;
+            continue;
+        }
+
+        // Skip 'class' modifier
+        if (true
+            && funcName[0] == 'c'
+            && funcName[1] == 'l'
+            && funcName[2] == 'a'
+            && funcName[3] == 's'
+            && funcName[4] == 's'
+            && funcName[5] == ' ')
+        {
+            funcName += 6;
+            index += 6;
+            continue;
+        }
+
+        // Skip 'union' modifier
+        if (true
+            && funcName[0] == 'u'
+            && funcName[1] == 'n'
+            && funcName[2] == 'i'
+            && funcName[3] == 'o'
+            && funcName[4] == 'n'
+            && funcName[5] == ' ')
+        {
+            funcName += 6;
+            index += 6;
+            continue;
+        }
+
+        // Skip 'enum' modifier
+        if (true
+            && funcName[0] == 'e'
+            && funcName[1] == 'n'
+            && funcName[2] == 'u'
+            && funcName[3] == 'm'
+            && funcName[4] == ' ')
+        {
+            funcName += 5;
+            index += 5;
+            continue;
+        }
+
+        *typeName++ = *funcName++;
+        index++;
+    }
+
+#undef __FUNC__ // Release __FUNC__ to other usages
+    return result;
+}
+
+template <typename T>
+constexpr StringView GetTypeName()
+{
+    static auto data = GetTypeNameHelper<T>();
+    return data.TypeName;
+}
+
+template <typename T>
+constexpr Symbol GetTypeSymbol()
+{
+    return ConstSymbol(GetTypeName<T>());
 }

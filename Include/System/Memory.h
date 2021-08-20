@@ -9,14 +9,17 @@
 #define MemoryRealloc(ptr, size)    MemoryReallocDebug(ptr, size, __FUNCTION__, __FILE__, __LINE__)
 #define MemoryFree(ptr)             MemoryFreeDebug(ptr, __FUNCTION__, __FILE__, __LINE__)
 
-void* MemoryAllocDebug(int size, const char* func, const char* file, int line);
-void* MemoryReallocDebug(void* ptr, int size, const char* func, const char* file, int line);
-void  MemoryFreeDebug(void* ptr, const char* func, const char* file, int line);
+void*   MemoryAllocDebug(int size, const char* func, const char* file, int line);
+void*   MemoryReallocDebug(void* ptr, int size, const char* func, const char* file, int line);
+void    MemoryFreeDebug(void* ptr, const char* func, const char* file, int line);
 #else
-void* MemoryAlloc(int size);
-void* MemoryRealloc(void* ptr, int size);
-void  MemoryFree(void* ptr);
+void*   MemoryAlloc(int size);
+void*   MemoryRealloc(void* ptr, int size);
+void    MemoryFree(void* ptr);
 #endif
+
+void*   MemoryInit(void* ptr, const int value, const int size);
+void*   MemoryCopy(void* dst, const void* src, const int size);
 
 // --------------------------------------
 // Report memory

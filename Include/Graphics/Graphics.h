@@ -95,9 +95,10 @@ struct VertexShapeColorU32
 
 struct VertexArray
 {
-    U32 Handle;
-    U32 IndexBuffer;
-    U32 VertexBuffer;
+    U32         Handle;
+    U32         IndexBuffer;
+    U32         VertexBuffer;
+    U32         NormalBuffer;
 };
 
 struct Texture
@@ -168,6 +169,9 @@ Shader      LoadShader(StringView vertexFile, StringView pixelsFile);
 Shader      CompileShader(StringView vertexSource, StringView pixelsSource);
 void        FreeShader(Shader* shader);
 
+void        SetShaderVector3(Shader shader, StringView uniform, Vector3 data);
+void        SetShaderMatrix4(Shader shader, StringView uniform, Matrix4 data);
+
 // -----------------------------------
 // Working with vertex array
 // -----------------------------------
@@ -177,8 +181,9 @@ void        FreeVertexArray(VertexArray* vertexArray);
 
 void        SetIndexData(VertexArray vertexArray, const void* data, I32 size, BufferUsage usage);
 void        SetVertexData(VertexArray vertexArray, const void* data, I32 size, BufferUsage usage);
+void        SetNormalData(VertexArray vertexArray, const void* data, I32 size, BufferUsage usage);
 
-void        DefineAttribute(VertexArray vertexArray, I32 location, DataType type, I32 stride, I32 offset);
+void        DefineAttribute(VertexArray vertexArray, I32 location, DataType type, I32 stride, I32 offset, bool normalBuffer = false);
 
 // -----------------------------------
 // Drawing
@@ -186,6 +191,8 @@ void        DefineAttribute(VertexArray vertexArray, I32 location, DataType type
 
 bool        BeginDrawing(void);
 void        EndDrawing(void);
+
+void        DrawArray(VertexArray vertexArray, Shader shader, I32 count, I32 offset = 0);
 
 void        DrawCircle(DrawMode mode, Vector2 position, float radius, Vector4 color, int segments = 30);
 void        DrawRectangle(DrawMode mode, Vector2 position, Vector2 size, Vector4 color);

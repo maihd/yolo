@@ -2430,6 +2430,29 @@ inline Quaternion QuaternionFromAxisAngle(Vector3 axis, float angle)
     return Quaternion{};
 }
 
+/// Create a quaternion with euler coordinate
+/// Returns result quaternion
+inline Quaternion QuaternionEuler(Vector3 axis)
+{
+    const float r = axis.z * 0.5f; // raw
+    const float p = axis.x * 0.5f; // pitch
+    const float y = axis.y * 0.5f; // yaw
+
+    const float c1 = cosf(y);
+    const float c2 = cosf(p);
+    const float c3 = cosf(r);
+    const float s1 = sinf(y);
+    const float s2 = sinf(p);
+    const float s3 = sinf(r);
+
+    return Quaternion {
+        s1 * s2 * c3 + c1 * c2 * s3,
+        s1 * c2 * c3 + c1 * s2 * s3,
+        c1 * s2 * c3 - s1 * c2 * s3,
+        c1 * c2 * c3 - s1 * s2 * s3
+    };
+}
+
 inline Matrix4 Matrix4Ortho(float l, float r, float b, float t, float n, float f)
 {
     const float x = 1.0f / (r - l);
@@ -2604,6 +2627,15 @@ inline Matrix4 Matrix4Transform(Vector2 position, float rotation, Vector2 scale)
 inline Matrix4 Matrix4Transform(Vector3 position, Quaternion rotation, Vector3 scale)
 {
     return mul(mul(Matrix4Translation(position), Matrix4Rotation(rotation)), Matrix4Scalation(scale));
+}
+
+inline Matrix4 Matrix4Transform(Vector3 position, Vector3 rotation, Vector3 scale)
+{
+    Matrix4 rotationX = Matrix4RotationX(rotation.x);
+    Matrix4 rotationY = Matrix4RotationY(rotation.y);
+    Matrix4 rotationZ = Matrix4RotationZ(rotation.z);
+
+    return mul(mul(Matrix4Translation(position), mul(mul(rotationX, rotationY), rotationZ)), Matrix4Scalation(scale));
 }
 
 inline Matrix4 Matrix4Transform2D(Vector2 position, float rotation, Vector2 scale, Vector2 pivot)

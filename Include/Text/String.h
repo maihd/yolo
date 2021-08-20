@@ -23,13 +23,19 @@ String  StringFormatArgv(void* buffer, I32 bufferSize, StringView format, ArgLis
 
 I32     StringCompare(StringView str0, StringView str1);
 
-int     StringIndexOf(StringView target, int charCode);
-int     StringIndexOf(StringView target, StringView substring);
+bool    StringEquals(StringView str0, StringView str1);
+bool    StringNotEquals(StringView str0, StringView str1);
 
-int     StringLastIndexOf(StringView target, int charCode);
-int     StringLastIndexOf(StringView target, StringView substring);
+I32     StringIndexOf(StringView target, I32 charCode);
+I32     StringIndexOf(StringView target, StringView substring);
 
-String  SubString(StringView source, int start, int end = -1);
+I32     StringLastIndexOf(StringView target, I32 charCode);
+I32     StringLastIndexOf(StringView target, StringView substring);
+
+String  SubString(StringView source, I32 start, I32 end = -1);
+
+String  RefString(StringView source);
+String  RefString(const char* source, I32 length, bool isOwned = false);
 
 // -----------------------------------
 // Constructor functions
@@ -52,7 +58,7 @@ inline String RefString(StringView source)
     return { source.Buffer, source.Length, 0, false, false };
 }
 
-inline String RefString(const char* source, int length, bool isOwned = false)
+inline String RefString(const char* source, I32 length, bool isOwned)
 {
     return { source, length, 0, isOwned, false };
 }
@@ -80,32 +86,22 @@ inline bool IsStringEmpty(const char* target)
 // Utils functions
 // -----------------------------------
 
-inline U32 CalcHash32(String string, U32 seed = 0)
+inline U32 CalcHash32(StringView string, U32 seed = 0)
 {
     return CalcHash32(string.Buffer, string.Length, seed);
 }
 
-inline U64 CalcHash64(String string, U64 seed = 0)
+inline U64 CalcHash64(StringView string, U64 seed = 0)
 {
     return CalcHash64(string.Buffer, string.Length, seed);
 }
 
-inline bool operator==(String a, String b)
-{
-    return StringCompare(a, b) == 0;
-}
-
-inline bool operator!=(String a, String b)
-{
-    return StringCompare(a, b) != 0;
-}
-
 inline bool operator==(StringView a, StringView b)
 {
-    return StringCompare(a, b) == 0;
+    return StringEquals(a, b);
 }
 
 inline bool operator!=(StringView a, StringView b)
 {
-    return StringCompare(a, b) != 0;
+    return StringNotEquals(a, b);
 }

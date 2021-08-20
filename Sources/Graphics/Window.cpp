@@ -365,10 +365,12 @@ bool UpdateWindow(void)
             ImGui::RenderPlatformWindowsDefault();
             SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
         }
-
+        
+        // Present the result to monitor
         SDL_GL_SwapWindow(Runtime.MainWindow);
     }
-
+    
+    // Handle events
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -381,7 +383,8 @@ bool UpdateWindow(void)
             break;
         }
     }
-
+    
+    // Start new ImGui frame
     if (!Runtime.ShouldClose)
     {
         Runtime.ShouldRender = true;

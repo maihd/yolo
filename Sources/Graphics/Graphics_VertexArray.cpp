@@ -72,19 +72,23 @@ VertexArray MakeVertexArray(void)
     GLuint handle;
     glGenVertexArrays(1, &handle);
 
-    GLuint buffers[2];
-    glGenBuffers(2, buffers);
+    GLuint buffers[3];
+    glGenBuffers(3, buffers);
 
     glBindVertexArray(handle);
     glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[2]);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
     return VertexArray{
         (Handle)handle,
+        (Handle)buffers[2],
         (Handle)buffers[1],
         (Handle)buffers[0],
     };
@@ -94,12 +98,13 @@ void FreeVertexArray(VertexArray* vertexArray)
 {
     assert(vertexArray != nullptr);
 
-    glDeleteBuffers(2, &vertexArray->IndexBuffer);
+    glDeleteBuffers(3, &vertexArray->IndexBuffer);
     glDeleteVertexArrays(1, &vertexArray->Handle);
 
     vertexArray->Handle = 0;
     vertexArray->IndexBuffer = 0;
     vertexArray->VertexBuffer = 0;
+    vertexArray->NormalBuffer = 0;
 }
 
 void SetIndexData(VertexArray vertexArray, const void* data, I32 size, BufferUsage usage)
@@ -120,7 +125,16 @@ void SetVertexData(VertexArray vertexArray, const void* data, I32 size, BufferUs
     glBindVertexArray(0);
 }
 
-void DefineAttribute(VertexArray vertexArray, I32 location, DataType type, I32 stride, I32 offset)
+void SetNormalData(VertexArray vertexArray, const void* data, I32 size, BufferUsage usage)
+{
+    glBindVertexArray(vertexArray.Handle);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexArray.NormalBuffer);
+    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)size, data, BufferUsageToGLenum(usage));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void DefineAttribute(VertexArray vertexArray, I32 location, DataType type, I32 stride, I32 offset, bool normalBuffer)
 {
     if (location < 0)
     {
@@ -131,7 +145,7 @@ void DefineAttribute(VertexArray vertexArray, I32 location, DataType type, I32 s
     GLint  typeComponents = DataTypeComponents(type);
 
     glBindVertexArray(vertexArray.Handle);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexArray.VertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer ? vertexArray.NormalBuffer : vertexArray.VertexBuffer);
 
     glEnableVertexAttribArray((GLuint)location);
     glVertexAttribPointer((GLuint)location, typeComponents, typeEnum, GL_FALSE, stride, (const void*)(GLintptr)offset);

@@ -65,6 +65,7 @@ struct TestCase
 #ifdef TEST_RUNNER
 
 #include <Text/String.h>
+#include <System/Memory.h>
 
 #if defined(_MSC_VER)
 extern "C" __declspec(dllimport) int __stdcall IsDebuggerPresent(void);
